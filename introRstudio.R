@@ -1,7 +1,7 @@
 ## Introduction to R Studio - A tutorial
-## Clinic on Dynamical Approaches to Infectious Disease Data
+## Clinic on Meaningful Modeling of Epidemiological Data
 ## International Clinics on Infectious Disease Dynamics and Data Program
-## University of Florida, Gainesveille, FL, USA
+## African Institute for Mathematical Sciences, Muizenberg, Cape Town, RSA
 ##
 ## Dario Fanucchi, May 2012
 ## Updated by Juliet R.C. Pulliam, December 2014
@@ -9,7 +9,7 @@
 ## CC BY-NC 3.0 (http://creativecommons.org/licenses/by-nc/3.0/)
 ##
 ##
-## RStudio is an Integrated Development Environment (IDE) for the R programming ## language. Much like Emacs,
+## RStudio is an Integrated Development Environment (IDE) for the R programming language. Much like Emacs,
 ## Vim, Gedit and other editors; RStudio provides facilities for editing source files, running lines or
 ## sections of code in the ## R console, typing into the console directly, and exploring/changing the 
 ## working directory. RStudio also offers some R-specific behavior, such as
