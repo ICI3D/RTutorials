@@ -363,17 +363,20 @@ if(c(T,F,F)){1+1}
 ## pharmaceutical company develops a new drug to treat the disease and
 ## tests it on 9 patients. There are no side effects observed in these
 ## patients. 
-## a. What is the probability of treating 9 patients
-## without side effects using the standard medication? 
-## b. Generate a
-## plot of the probability of observing no side effects in patients
-## receiving treatment, as a function of the number of patients in the
-## study. 
-## c. Add a horizontal red line at p = 0.025, visually
-## depicting the number of patients minimally required for a study to
-## show that the new medication produces side effects in fewer
-## patients than the standard treatment (traditional statistical
-## significance).
+
+## a. What is the probability of treating 9 patients without side
+## effects using the standard medication?
+
+## b. Generate a plot of the probability of observing no side effects
+## in patients receiving treatment, as a function of the number of
+## patients in the study, assuming the new drug causes the severe side
+## effect with the same probability as the old.
+
+## c. Add a horizontal red line at p = 0.025, visually depicting the
+## number of patients minimally required for a study to show that the
+## new medication produces side effects in fewer patients than the
+## standard treatment (traditional statistical significance).
+
 #################### 
 
 #################### 
