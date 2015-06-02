@@ -379,7 +379,7 @@ student.data <- data.frame(stud.heights,stud.years)
  
 student.data
  
-## Voila! Your own data frame. But, wait, where our the student names?
+## Voila! Your own data frame. But, wait, where are our the student names?
 ## And can we have better column headings than our redundant variable
 ## names?
  
@@ -390,7 +390,7 @@ names(student.data)
  
 row.names(student.data)
  
-## What we see is vectors of strings corresponding to the columns and
+## What we see are vectors of strings corresponding to the columns and
 ## rows, respectively. We can change these by assigning replacement
 ## strings to the indexed values or by substituting our own vector of
 ## strings.

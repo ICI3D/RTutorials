@@ -191,7 +191,7 @@ qbinom(.8, 10, 1/3)
 ## is what they do…
 
 
-## The semicolon allows, ;, allows you to put two or more commands
+## The semicolon, ";", allows you to put two or more commands
 ## together on a single line. The commands will be executed
 ## sequentially, just as if they had been written on separate lines.
 ## The best use of the semicolon is probably to combine lists of
@@ -265,7 +265,7 @@ ride.test <- function(age){ return(age >= 6) }
 
 ## As an example, consider a function that measures central
 ## tendency. But while you want to avoid the influence of extremely
-## large values by using the median you want to forgo it on very small
+## large values by using the median you want to forgot it on very small
 ## samples, replacing it with the mean. Let us say if we have fewer
 ## than 10 measurements in our sample we want to resort to the mean:
 

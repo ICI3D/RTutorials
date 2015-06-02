@@ -498,7 +498,7 @@ hist(my.randoms)
 ## have drawn from the standard normal distribution.
 
 ## In these last few examples I have used arbitrary or random
-## psuedodata, in lieu of real data, to help you understand the
+## pseudodata, in lieu of real data, to help you understand the
 ## visualization of vectors.  Consequently, labeling axes in this
 ## extreme case is irrelevant.  You should generally label, with a
 ## title and axes, every figure with data. More on this below.
