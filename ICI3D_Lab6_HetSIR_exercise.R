@@ -21,7 +21,7 @@
 ## variance, how skewed it is (i.e. how long is its tail). While it is
 ## not so much important how we have built this distribution (we use a
 ## gamma distribution if you are interested), we are giving you the
-## opportunity to change it the mean and variance of individuals
+## opportunity to change the mean and variance of individuals
 ## contact rates. Using the code below play with the outbreak model
 ## and see if you can understand how heterogeneity is affecting the
 ## disease dynamics, and specifically the distribution of outbreak
