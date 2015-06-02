@@ -3,9 +3,6 @@
 ## AIMS, Muizenberg
 ## (C) Steve Bellan, 2010
 
-## The goal of this tutorial is to acquaint you with ways of
-## displaying infectious disease data in R.
-
 ## NOTE: The comments will guide you through the tutorial but you
 ## should make sure you understand what the code is doing.  Many
 ## plotting parameters are assigned to ?.  This will give you an
@@ -441,5 +438,4 @@ hist(hookworm$epg,
 ## pdf("myfilename.pdf", onefile = FALSE)
 
 ###################################################################### 
-
 
