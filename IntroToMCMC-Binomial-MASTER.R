@@ -1,28 +1,67 @@
-library(boot); library(coda)
+## Introduction to MCMC 1: Estimating a posterior binomial probability
+## Steve Bellan 2015
 
-defaultPar <- par()
+## Meaningful Modeling of Epidemiologic Data, 2012 AIMS, Muizenberg
+
+###################################################################### 
+
+## By the end of this tutorial you should…
+
+## * Understand how to write a flexible prior function for the binomial
+## * Understand the Metropolis-Hasting algorithm and explain it step by step.
+## * Know how the parameter proposal distribution affects MCMC convergence
+## * Know how to assess MCMC convergence with the Gelman-Rubin diagnostic and with trace plots
+
+library(boot); library(coda)
+defaultPar <- par() ## Save the default graphic parameter settings for use later.
+
+## First, let's pretend that we are sampling a population of 100 individuals with a 30% prevalence
+## for some disease and testing each of them. From this, we have a sample prevalence, which is our
+## estimate of the true prevalence. The problem considered in the simulation is to estimate the
+## posterior probability distribution of the prevalence from this sample and from a specified
+## (informative or uninformative) prior probability distribution for the prevalence.
+
 size <- 100
 truePrev <- .3
-## Sample from this distribution once.
-sampPos <- rbinom(1,size,truePrev)
+sampPos <- rbinom(1,size,truePrev) ## Sample from this distribution once.
 sampPrev <- sampPos/size
 
-## Beta Prior: It is uninformative (flat) with parameters shape1=1, shape2=1.
+## Now we need to specify our prior probability distribution. This designates our prior (before we
+## conducted the study) beliefs of what we think the prevalence of this population is. Frequently,
+## we have insufficient prior information to specify and informative prior. In these cases, we will
+## use a flat prior, meaning that for the study we think every possible value of the prevalence has
+## equal probability.
+
+## Our parameter of interest is prevalence, which is bounded between 0 and 1. The beta probability
+## distribution is particularly suited for such parameters and is, in fact, the most commonly used
+## probability distribution for parameters that are, themselves, probabilities. It is uninformative
+## (flat) with parameters shape1=1, shape2=1, and can otherwise have many shapes.
+
+## We calculate both the prior and the likelihood on a log scale because it is easier to take the
+## sum of their log's, than to take their product (particularly in problems with more data).
 logBetaPrior <- function(prevalence
-                         , shape1 = 1  ## Change to make informative
-                         , shape2 = 1) ## Change to make informative
+                         , shape1 = 1  ## Change to make informative (try 8)
+                         , shape2 = 1) ## Change to make informative (try 40)
     dbeta(prevalence, shape1=shape1, shape2=shape2, log = T)
+
+## The likelihood is simply the probability of observing that many individuals test positive given
+## the number tested and a specified prevalence.
 logLikelihood <- function(prevalence,
                           data = list(size=size, sampPos=sampPos))
     dbinom(data$sampPos, size = data$size, prob = prevalence, log = T)
+
+## A convenience function that sums the log-likelihood and the log-prior.
 logLikePrior <- function(prevalence
                          , shape1=1
                          , shape2=1
                          , data = list(size=size, sampPos=sampPos))
     logBetaPrior(prevalence, shape1, shape2) + logLikelihood(prevalence, data)
+
+## Convenience functions that thought the un-logged functions above.
 Prior <- function(x) exp(logBetaPrior(x))
 Likelihood <- function(x) exp(logLikelihood(x))
 LikePrior <- function(x) exp(logLikePrior(x))
+
 
 par(mfrow = c(2,2) ## panels
     , mar = c(3,6,1,1) ## panel margins
@@ -34,23 +73,37 @@ curve(logLikePrior, 0,1, ylab = 'log(likelihood X prior)')
 curve(LikePrior, 0, 1, ylab = 'likelihood X prior')
 mtext('prevalence', 1, 0, outer=T)
 
-## Sample on a logit-probability scale
-runMCMC <- function(iterations, startvalue = runif(1, logit(.01), logit(.99)),
-                    proposerSD = .5,verbose = 0){
+## Explain what each of these plots represents in words.
+
+
+## This functions runs a Markov chain Monte Carlo (MCMC) Metropolis-Hastings algorithm to
+## numerically estimate the posterior probability distribution of the prevalence. For problems this
+## simple, the posterior probability distribution can be solved for analytically. However, for
+## problems more complex than this one (such as the Introduction to MCMC-SI_HIV tutorial), numerical
+## integration using MCMC may be the only way to calculate the posterior probability distribution
+## for parameters.
+
+## We sample the prevalence parameter on the logistic-scale so that it is bounded by [-Inf, Inf] and not [0,1]
+runMCMC <- function(iterations
+                    , startvalue = runif(1, logit(.01), logit(.99)) ## random starting value
+                    , proposerSD = .5 ## standard deviation of the gaussian proposal distribution
+                    , verbose = 0){ ## for debugging
     if(verbose > 0) browser()
-    chain <- array(dim = c(iterations+1, length(startvalue)))
-    chain[1,] <- startvalue
-    for(ii in 1:iterations){
-        proposal <- rnorm(1, chain[ii,], proposerSD)
+    chain <- array(dim = c(iterations+1, 1)) ## initialize empty iterations X 1 array
+    chain[1,] <- startvalue ## set first value
+    for(ii in 1:iterations){ 
+        proposal <- rnorm(1, chain[ii,], proposerSD) ## propose next value
         MHratio <- exp(logLikePrior(inv.logit(proposal)) - 
                        logLikePrior(inv.logit(chain[ii,])))
-        if(runif(1) < MHratio){
+        ## If the MH-ratio is > 1, accept new value. Otherwise, accept it with probability equal to
+        ## the the MH-ratio.
+        if(runif(1) < MHratio){ 
             chain[ii+1,] <- proposal
-        }else{
+        }else{ ## If rejecting it, stay at the last state.
             chain[ii+1,] <- chain[ii,]
         }
     }
-    return(inv.logit(chain))
+    return(inv.logit(chain)) ## 
 }
 
 posteriorSample <- runMCMC(1000, proposerSD = .1) ## sample 1000 times from posterior
