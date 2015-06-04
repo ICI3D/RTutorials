@@ -87,12 +87,12 @@ par(bty='n', lwd = 2)
 with(simDat, plot(time, P, xlab = '', ylab = 'prevalence', type = 'l', ylim = c(0,.4), col='red'))
 
 ## Take cross-sectional sample of individuals to get prevalence estimates at multiple time points
-obsDat <- sampleEpidemic(simDat, verbose = 0)
+myDat <- sampleEpidemic(simDat, verbose = 0)
 points(obsDat$time, obsDat$sampPrev, col = 'red', pch = 16, cex = 2)
 arrows(obsDat$time, obsDat$uci, obsDat$time, obsDat$lci, col = 'red', len = .025, angle = 90, code = 3)
 
 ## Log-Likelihood
-llikelihood <- function(parms = disease_params(), obsDat, verbose = 0) {
+llikelihood <- function(parms = disease_params(), obsDat=myDat, verbose = 0) {
     simDat <- as.data.frame(lsoda(init, tseq, SImod, parms=parms))
     simDat$I <- rowSums(simDat[, Is])
     simDat$N <- rowSums(simDat[, c('S',Is)])
@@ -102,42 +102,7 @@ llikelihood <- function(parms = disease_params(), obsDat, verbose = 0) {
     lls <- dbinom(obsDat$numPos, obsDat$numSamp, prob = simDat$P[matchedTimes], log = T)
     return(sum(lls))
 }
-llikelihood(obsDat=obsDat)
-
-objFXN <- function(fit.params ## paramters to fit
-                   , ref.params =disease_params() ## fixed paramters
-                   , obsDat
-                   , verbose=0) {
-    if(verbose > 3) browser()
-    parms <- within(ref.params, { ## subs fitting parameters into reference parameter vector
-        loggedParms <- names(fit.params)[grepl('log_', names(fit.params))]
-        unloggedParms <- names(fit.params)[!grepl('log_', names(fit.params))]        
-        for(nm in unloggedParms) assign(nm, as.numeric(fit.params[nm]))
-        for(nm in loggedParms) assign(gsub('log_','',nm), exp(as.numeric(fit.params[nm])))
-        rm(nm)
-    })
-    - llikelihood(parms, obsDat = obsDat, verbose) ## then call likelihood
-}
-objFXN(c(log_Beta = log(5), log_alpha = log(8)), ref.params = disease_params(), obsDat=obsDat)
-
-optim.vals <- optim(par = c(log_Beta = .2, log_alpha = 3)
-                    , objFXN
-                    , ref.params = disease_params()
-                    , obsDat = obsDat
-                    , control = list(trace = 0, maxit = 150)
-                    , method = "SANN")
-exp(optim.vals$par)
-trueParms[c('Beta','alpha')]
-
-optim.vals <- optim(par = optim.vals$par
-                    , objFXN
-                    , ref.params = disease_params()
-                    , obsDat = obsDat
-                    , control = list(trace = 1, maxit = 500, reltol = 10^-7)
-                    , method = "Nelder-Mead"
-                    , hessian = T)
-exp(optim.vals$par)
-trueParms[c('Beta','alpha')]
+llikelihood()
 
 ## Log-Prior (assume uninformative)
 lprior <- function(parms=disease_params()) with(parms, {
@@ -251,5 +216,3 @@ mcmcSampler <- function(current.params, ref.params=disease_params(), obsDat, see
     return(list(out = out[1:nrow(out)>(nburn+1),], aratio = aratio, current.params = current.params,
                 ref.params=ref.params))
 }
-
-
