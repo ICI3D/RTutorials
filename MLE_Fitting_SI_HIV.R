@@ -52,7 +52,7 @@ SImod <- function(tt, yy, parms) with(c(parms,as.list(yy)), {
 })
 
 ## Function to run the deterministic model simulation, based on the ODE system defined in SImod().
-simEpidemic <- function(init, tseq = seq(1980, 2010, by = 3), modFunction=SImod, parms = disease_params()) {
+simEpidemic <- function(init, tseq = seq(1980, 2010, by = 1/12), modFunction=SImod, parms = disease_params()) {
     simDat <- as.data.frame(lsoda(init, tseq, modFunction, parms=parms))
     simDat$I <- rowSums(simDat[, Is])
     simDat$N <- rowSums(simDat[, c('S',Is)])
@@ -66,10 +66,9 @@ simEpidemic <- function(init, tseq = seq(1980, 2010, by = 3), modFunction=SImod,
 ## prevalence and associated binomial confidence intervals
 sampleEpidemic <- function(simDat # Simulated data (produced by a call to simEpidemic()) representing the 'true' underlying epidemic trajectory
                            , sampleDates = seq(1980, 2010, by = 3) # Sample every 3 years from 1980 to 2010
-                           , numSamp = rep(80, length(sampleDates)) # Number of individuals sampled at each time point
+                           , numSamp = rep(100, length(sampleDates)) # Number of individuals sampled at each time point
                            ) {
-    simDat$I <- rowSums(simDat[, Is])
-    prev_at_sample_times <- simDat[simDat$time %in% sampleDates, 'I']
+    prev_at_sample_times <- simDat[simDat$time %in% sampleDates, 'P']
     numPos <- rbinom(length(numSamp), numSamp, prev_at_sample_times)
     lci <- mapply(function(x,n) binom.test(x,n)$conf.int[1], x = numPos, n = numSamp)
     uci <- mapply(function(x,n) binom.test(x,n)$conf.int[2], x = numPos, n = numSamp)    
@@ -83,9 +82,9 @@ simDat <- simEpidemic(init, tseq = seq(1976, 2015, by = 1/12), parms = trueParms
 
 par(bty='n', lwd = 2)
 # Plot simulated prevalence through time:
-with(simDat, plot(time, P, xlab = '', ylab = 'prevalence', type = 'l', ylim = c(0,.4), col='red'))
+with(simDat, plot(time, P, xlab = '', ylab = 'prevalence', type = 'l', ylim = c(0,.4), col='red', las = 1))
 ## Take cross-sectional sample of individuals to get prevalence estimates at multiple time points:
-set.seed(1) # Initiate the random number generator
+set.seed(1) # Initiate the random number generator (so everyone's simulation looks the same)
 myDat <- sampleEpidemic(simDat) # Simulate data from the sampling process (function defined above)
 points(myDat$time, myDat$sampPrev, col = 'red', pch = 16, cex = 2) # Plot sample prevalence at each time point
 arrows(myDat$time, myDat$uci, myDat$time, myDat$lci, col = 'red', len = .025, angle = 90, code = 3) # Plot 95% CI's around the sample prevalences
@@ -175,9 +174,10 @@ optim.vals <- optim(par = optim.vals$par
                     , objFXN
                     , fixed.params = disease_params()
                     , obsDat = myDat
-                    , control = list(trace = trace, maxit = 500, reltol = 10^-7)
+                    , control = list(trace = trace, maxit = 800, reltol = 10^-7)
                     , method = "Nelder-Mead"
                     , hessian = T)
+optim.vals
 MLEfits <- optim.vals$par
 trueParms[c('Beta','alpha')]
 exp(MLEfits)
@@ -193,8 +193,6 @@ par(bty='n', lwd = 2, las = 1)
 with(simDat, plot(time, P, xlab = '', ylab = 'prevalence', type = 'l', ylim = c(0,.4), col='red'))
 fitDat <- simEpidemic(init, parms = subsParms(optim.vals$par, trueParms))
 with(fitDat, lines(time, P, col='blue'))
-## Take cross-sectional sample of individuals to get prevalence estimates at multiple time points
-myDat <- sampleEpidemic(simDat)
 points(myDat$time, myDat$sampPrev, col = 'red', pch = 16, cex = 2)
 arrows(myDat$time, myDat$uci, myDat$time, myDat$lci, col = 'red', len = .025, angle = 90, code = 3)
 legend("topleft", c('truth', 'observed', 'fitted'), lty = c(1, NA, 1), pch = c(NA,16, NA),
@@ -205,26 +203,22 @@ legend("topleft", c('truth', 'observed', 'fitted'), lty = c(1, NA, 1), pch = c(N
 
 ## The Hessian matrix gives you the curvature of the likelihood function at the maximum likelihood estimate. In other words, it tells you the second derivative around that point which can be used to estimate the covariance variance matrix of the maximum likelihood estimate of parameters. This estimate of the covariant strength matrix is  known as the Fisher information matrix and can be obtained by inverting the negative of the Hessian.
 fisherInfMatrix <- solve(optim.vals$hessian)
-
 ## we can then plot
-
 plot(1,1, type = 'n', log = 'xy',
      ## xlim = range(alpha.seq), ylim = range(Beta.seq),
-     xlim = c(3,15), ylim = c(.5,2), 
+     xlim = c(3,30), ylim = c(.5,4),
+     las = 1,
      xlab = expression(alpha), ylab = expression(beta),
         main = "-log(likelihood) contours", bty = "n")
 ## Add true parameter values to the plot
-with(trueParms, points(alpha, Beta, pch = 16, cex = 1, col = 'red'))
+with(trueParms, points(alpha, Beta, pch = 16, cex = 2, col = 'red'))
 ## Add MLE to the plot
-
-points(exp(MLEfits['log_alpha']), exp(MLEfits['log_Beta']), pch = 16, cex = 1, col = 'black')
+points(exp(MLEfits['log_alpha']), exp(MLEfits['log_Beta']), pch = 16, cex = 2, col = 'black')
 ##  at 95% contour ellipse
-library(mnormt)
-rmnorm(1, MLEfits
 lines(exp(ellipse(fisherInfMatrix[2:1,2:1], centre = MLEfits[2:1], level = .95)))
 ##      col = makeTransparent(propDistCol,150), lwd = 4)
 legend("topleft", c('truth', 'MLE', '95% Confidence Interval'), lty = c(NA, NA, 1), pch = c(16,16, NA),
-       col = c('red', 'black', 'black'), bg='white')
+       col = c('red', 'black', 'black'), bg='white', bty = 'n')
 
 ######################################################################
 ## Contour plots with likelihood profiles
