@@ -14,7 +14,7 @@
 ## * Create 95% CI's and contours from the hessian matrix
 ## * Create 95% CI's and contours from profile likelihoods
 
-library(boot); library(deSolve); library(ellipse);
+require(boot); require(deSolve); require(ellipse);
 
 ## Function that makes a list of disease parameters with default values
 disease_params <- function(Beta = 0.9
@@ -28,84 +28,80 @@ disease_params <- function(Beta = 0.9
 disease_params()
 disease_params(Beta = .2)
 
-initPrev <- exp(-7) #10^-7 ## 1/10,000 infected at start
+initPrev <- exp(-7) ## infected at start
 init <- c(S=1, I1=initPrev, I2=0, I3=0, I4=0, CI = 0, CD = 0) ## modeling proportion of population
-tseq <- seq(1976, 2015, by = 1/12)
 Is <- paste0('I',1:4) ## for easy indexing
 
-## SI ODE model
-SImod <- function(tt, yy, parms) with(parms, {
-    ## state variables
-    S <- yy[1]  ## Susceptibles
-    I1 <- yy[2] ## HIV stage 1
-    I2 <- yy[3] ## HIV stage 2
-    I3 <- yy[4] ## HIV stage 3
-    I4 <- yy[5] ## HIV stage 4
-    CI <- yy[6] ## cumulative incidence
-    CD <- yy[7] ## cumulative mortality
+## Define the SI ODE model. This model is equivalent to the model in HIV Spreadsheet #3. 
+SImod <- function(tt, yy, parms) with(c(parms,as.list(yy)), {
+    ## State variables are: S, I1, I2, I3, I4
     ## derived quantitties
     I <- I1+I2+I3+I4           ## total infecteds
     N <- I + S                 ## total population
     transmissionCoef <- Beta * exp(-alpha * I/N) ## Infectious contact rate
     ## state variable derivatives (ODE system)
-    deriv <- rep(NA,5)
-    deriv[1] <-	birthRt*N - deathRt*S - transmissionCoef*S*I/N
-    deriv[2] <-	transmissionCoef*S*I/N - progRt*I1 - deathRt*I1
-    deriv[3] <-	progRt*I1 - progRt*I2 - deathRt*I2
-    deriv[4] <-	progRt*I2 - progRt*I3 - deathRt*I3
-    deriv[5] <-	progRt*I3 - progRt*I4 - deathRt*I4
-    deriv[6] <-	transmissionCoef*S*I/N 
-    deriv[7] <-	progRt*I4
+    deriv <- rep(NA,7)
+    deriv[1] <-	birthRt*N - deathRt*S - transmissionCoef*S*I/N ## Instantaneous rate of change: Susceptibles
+    deriv[2] <-	transmissionCoef*S*I/N - progRt*I1 - deathRt*I1 ## Instantaneous rate of change: Infection class I1
+    deriv[3] <-	progRt*I1 - progRt*I2 - deathRt*I2 ## Instantaneous rate of change:  Infection class I2
+    deriv[4] <-	progRt*I2 - progRt*I3 - deathRt*I3 ## Instantaneous rate of change: Infection class I3 
+    deriv[5] <-	progRt*I3 - progRt*I4 - deathRt*I4 ## Instantaneous rate of change: Infection class I4
+    deriv[6] <-	transmissionCoef*S*I/N ## Instantaneous rate of change: Cumulative incidence
+    deriv[7] <-	progRt*I4 ## Instantaneous rate of change: Cumulative mortality
     return(list(deriv))
 })
 
-simEpidemic <- function(init, tseq, SImod=SImod, parms = disease_params()) {
-    simDat <- as.data.frame(lsoda(init, tseq, SImod, parms=parms))
+## Function to run the deterministic model simulation, based on the ODE system defined in SImod().
+simEpidemic <- function(init, tseq = seq(1980, 2010, by = 3), modFunction=SImod, parms = disease_params()) {
+    simDat <- as.data.frame(lsoda(init, tseq, modFunction, parms=parms))
     simDat$I <- rowSums(simDat[, Is])
     simDat$N <- rowSums(simDat[, c('S',Is)])
     simDat$P <- with(simDat, I/N)
-    simDat
+    return(simDat)
 }
 
+## Function to 'sample' the population:
 ## From a simulated epidemic, measure prevalence at several time points by performing
-## cross-sectional samples of individual at each time, testing them, and then calculated sample
+## cross-sectional samples of individuals at each time, testing them, and then calculating sample
 ## prevalence and associated binomial confidence intervals
-sampleEpidemic <- function(simDat, tseq = seq(1980, 2010, by = 3), numSamp = rep(80, length(tseq)), verbose=0) {
-    if(verbose>0) browser()
+sampleEpidemic <- function(simDat # Simulated data (produced by a call to simEpidemic()) representing the 'true' underlying epidemic trajectory
+                           , sampleDates = seq(1980, 2010, by = 3) # Sample every 3 years from 1980 to 2010
+                           , numSamp = rep(80, length(sampleDates)) # Number of individuals sampled at each time point
+                           ) {
     simDat$I <- rowSums(simDat[, Is])
-    prev_at_sample_times <- simDat[simDat$time %in% tseq, 'I']
+    prev_at_sample_times <- simDat[simDat$time %in% sampleDates, 'I']
     numPos <- rbinom(length(numSamp), numSamp, prev_at_sample_times)
     lci <- mapply(function(x,n) binom.test(x,n)$conf.int[1], x = numPos, n = numSamp)
     uci <- mapply(function(x,n) binom.test(x,n)$conf.int[2], x = numPos, n = numSamp)    
-    return(data.frame(time = tseq, numPos, numSamp, sampPrev =  numPos/numSamp,
+    return(data.frame(time = sampleDates, numPos, numSamp, sampPrev =  numPos/numSamp,
                       lci = lci, uci = uci))
 }
 
 ## Run system of ODEs for "true" parameter values
-trueParms <- disease_params()#Beta = .9, alpha = 8, progRt = 1/2.5)
-simDat <- simEpidemic(init, tseq, SImod, parms = trueParms)
+trueParms <- disease_params() # Default model parameters are defined in lines 20-26
+simDat <- simEpidemic(init, tseq = seq(1976, 2015, by = 1/12), parms = trueParms) # Simulated epidemic (underlying process)
 
 par(bty='n', lwd = 2)
+# Plot simulated prevalence through time:
 with(simDat, plot(time, P, xlab = '', ylab = 'prevalence', type = 'l', ylim = c(0,.4), col='red'))
-## Take cross-sectional sample of individuals to get prevalence estimates at multiple time points
-set.seed(1)
-myDat <- sampleEpidemic(simDat, verbose = 0)
-points(myDat$time, myDat$sampPrev, col = 'red', pch = 16, cex = 2)
-arrows(myDat$time, myDat$uci, myDat$time, myDat$lci, col = 'red', len = .025, angle = 90, code = 3)
+## Take cross-sectional sample of individuals to get prevalence estimates at multiple time points:
+set.seed(1) # Initiate the random number generator
+myDat <- sampleEpidemic(simDat) # Simulate data from the sampling process (function defined above)
+points(myDat$time, myDat$sampPrev, col = 'red', pch = 16, cex = 2) # Plot sample prevalence at each time point
+arrows(myDat$time, myDat$uci, myDat$time, myDat$lci, col = 'red', len = .025, angle = 90, code = 3) # Plot 95% CI's around the sample prevalences
 
-## To start, we need to write a -log likelihood function that gives the probability that a given
-## (Beta, alpha) would generate the observed data. Remember that if we are assuming that there is some
+## To start, we need to write a -log likelihood function that gives the probability that a given parameter set
+## (Beta, alpha values) would generate the observed data. Remember that we are assuming that there is some
 ## true underlying epidemic curve that is deterministic and the data we observe are only noisy
 ## because of sampling/observation error (not because the underying curve is also
-## noisy--i.e. process error--which is particularly likely for small epidemics).
+## noisy--i.e. process error--which would be particularly likely for epidemics in small populations).
 
-## We have binomial sampling errors. So we can write the -log-likelihood as the probability of
-## observing the observed # positive out of each sample if the prevalence is the value generated by
+## We assume binomial sampling errors. So we can write the -log-likelihood as the probability of
+## observing the observed number positive out of each sample if the prevalence is the value generated by
 ## a model parameterized by a given set of parameters:
 
-nllikelihood <- function(parms = disease_params(), obsDat=myDat, verbose = 0) {
-    simDat <- simEpidemic(init, tseq, SImod, parms=parms)
-    if(verbose > 5) browser()
+nllikelihood <- function(parms = disease_params(), obsDat=myDat) {
+    simDat <- simEpidemic(init, parms=parms)
     ## What are the rows from our simulation at which we have observed data?
     matchedTimes <- simDat$time %in% obsDat$time
     nlls <- -dbinom(obsDat$numPos, obsDat$numSamp, prob = simDat$P[matchedTimes], log = T)
@@ -114,7 +110,7 @@ nllikelihood <- function(parms = disease_params(), obsDat=myDat, verbose = 0) {
 nllikelihood(trueParms) ## loglikelihood of the true parameters (which we usually never know)
 nllikelihood(disease_params(Beta = 3, alpha = 1))  ## vs some random guessed parameters
 
-## First remind yourself how optim() works. The more you read through the help
+## First look up how optim() works. The more you read through the help
 ## file the easier this will be!!! In particular make sure you understand that
 ## the first argument of optim must be the initial values of the parameters to
 ## be fitted (i.e. Beta & alpha) and that any other parameters to be fixed are
@@ -141,11 +137,9 @@ subsParms(guess.params, disease_params())
 ## Make likelihood a function of fixed and fitted parameters.
 objFXN <- function(fit.params ## paramters to fit
                    , fixed.params =disease_params() ## fixed paramters
-                   , obsDat=myDat
-                   , verbose=0) {
-    if(verbose > 3) browser()
+                   , obsDat=myDat) {
     parms <- subsParms(fit.params, fixed.params)
-    nllikelihood(parms, obsDat = obsDat, verbose) ## then call likelihood
+    nllikelihood(parms, obsDat = obsDat) ## then call likelihood
 }
 objFXN(guess.params, disease_params())
 
@@ -193,10 +187,10 @@ trueParms[c('Beta','alpha')]
 ## Plot MLE fit time series
 par(bty='n', lwd = 2, las = 1)
 with(simDat, plot(time, P, xlab = '', ylab = 'prevalence', type = 'l', ylim = c(0,.4), col='red'))
-fitDat <- simEpidemic(init, tseq, SImod, parms = subsParms(optim.vals$par, trueParms))
+fitDat <- simEpidemic(init, parms = subsParms(optim.vals$par, trueParms))
 with(fitDat, lines(time, P, col='blue'))
 ## Take cross-sectional sample of individuals to get prevalence estimates at multiple time points
-myDat <- sampleEpidemic(simDat, verbose = 0)
+myDat <- sampleEpidemic(simDat)
 points(myDat$time, myDat$sampPrev, col = 'red', pch = 16, cex = 2)
 arrows(myDat$time, myDat$uci, myDat$time, myDat$lci, col = 'red', len = .025, angle = 90, code = 3)
 legend("topleft", c('truth', 'observed', 'fitted'), lty = c(1, NA, 1), pch = c(NA,16, NA),
@@ -286,3 +280,4 @@ legend("topleft", c('truth', 'MLE', '95% Confidence Interval'), lty = c(NA, NA, 
        col = c('red', 'black', 'black'), bg='white')
 
 lines(exp(ellipse(optim.vals$hessian, centre = optim.vals$par, level = .95)))
+# FINISH THIS, STEVE!!!
