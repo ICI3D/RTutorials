@@ -201,10 +201,15 @@ legend("topleft", c('truth', 'observed', 'fitted'), lty = c(1, NA, 1), pch = c(N
 
 ######################################################################
 ## Contour plots with the hessian
+######################################################################
+## The Hessian matrix gives you the curvature of the likelihood function at the maximum likelihood
+## estimate (MLE) of the fitted paramters. In other words, it tells you the second derivative around
+## MLE, which can be used to estimate the covariance variance matrix of the MLE. This estimate of
+## the covariance varance matrix is known as the Fisher information matrix and can be obtained by
+## inverting the Hessian.
+fisherInfMatrix <- solve(optim.vals$hessian) ## invert the Hessian, to estimate the covar-var matrix of parameter estimates
 
-## The Hessian matrix gives you the curvature of the likelihood function at the maximum likelihood estimate. In other words, it tells you the second derivative around that point which can be used to estimate the covariance variance matrix of the maximum likelihood estimate of parameters. This estimate of the covariant strength matrix is  known as the Fisher information matrix and can be obtained by inverting the negative of the Hessian.
-fisherInfMatrix <- solve(optim.vals$hessian)
-## we can then plot
+## Initialize plot of parameters
 plot(1,1, type = 'n', log = 'xy',
      ## xlim = range(alpha.seq), ylim = range(Beta.seq),
      xlim = c(2,15), ylim = c(.5,2),
@@ -215,9 +220,8 @@ plot(1,1, type = 'n', log = 'xy',
 with(trueParms, points(alpha, Beta, pch = 16, cex = 2, col = 'red'))
 ## Add MLE to the plot
 points(exp(MLEfits['log_alpha']), exp(MLEfits['log_Beta']), pch = 16, cex = 2, col = 'black')
-##  at 95% contour ellipse
+##  at 95% contour ellipse from Hessian
 lines(exp(ellipse(fisherInfMatrix, centre = MLEfits, level = .95)))
-##      col = makeTransparent(propDistCol,150), lwd = 4)
 legend("topleft", c('truth', 'MLE', '95% Confidence Interval'), lty = c(NA, NA, 1), pch = c(16,16, NA),
        col = c('red', 'black', 'black'), bg='white', bty = 'n')
 
