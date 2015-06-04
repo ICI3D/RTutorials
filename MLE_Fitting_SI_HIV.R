@@ -29,6 +29,7 @@ disease_params()
 disease_params(Beta = .2)
 
 initPrev <- exp(-7) ## infected at start
+tseqMonth <- seq(1976, 2015, by = 1/12)
 init <- c(S=1, I1=initPrev, I2=0, I3=0, I4=0, CI = 0, CD = 0) ## modeling proportion of population
 Is <- paste0('I',1:4) ## for easy indexing
 
@@ -52,7 +53,7 @@ SImod <- function(tt, yy, parms) with(c(parms,as.list(yy)), {
 })
 
 ## Function to run the deterministic model simulation, based on the ODE system defined in SImod().
-simEpidemic <- function(init, tseq = seq(1980, 2010, by = 1/12), modFunction=SImod, parms = disease_params()) {
+simEpidemic <- function(init, tseq = tseqMonth, modFunction=SImod, parms = disease_params()) {
     simDat <- as.data.frame(lsoda(init, tseq, modFunction, parms=parms))
     simDat$I <- rowSums(simDat[, Is])
     simDat$N <- rowSums(simDat[, c('S',Is)])
@@ -66,7 +67,7 @@ simEpidemic <- function(init, tseq = seq(1980, 2010, by = 1/12), modFunction=SIm
 ## prevalence and associated binomial confidence intervals
 sampleEpidemic <- function(simDat # Simulated data (produced by a call to simEpidemic()) representing the 'true' underlying epidemic trajectory
                            , sampleDates = seq(1980, 2010, by = 3) # Sample every 3 years from 1980 to 2010
-                           , numSamp = rep(1000, length(sampleDates)) # Number of individuals sampled at each time point
+                           , numSamp = rep(80, length(sampleDates)) # Number of individuals sampled at each time point
                            ) {
     prev_at_sample_times <- simDat[simDat$time %in% sampleDates, 'P']
     numPos <- rbinom(length(numSamp), numSamp, prev_at_sample_times)
@@ -78,7 +79,7 @@ sampleEpidemic <- function(simDat # Simulated data (produced by a call to simEpi
 
 ## Run system of ODEs for "true" parameter values
 trueParms <- disease_params() # Default model parameters are defined in lines 20-26
-simDat <- simEpidemic(init, tseq = seq(1976, 2015, by = 1/12), parms = trueParms) # Simulated epidemic (underlying process)
+simDat <- simEpidemic(init, parms = trueParms) # Simulated epidemic (underlying process)
 
 par(bty='n', lwd = 2)
 # Plot simulated prevalence through time:
@@ -206,7 +207,7 @@ fisherInfMatrix <- solve(optim.vals$hessian)
 ## we can then plot
 plot(1,1, type = 'n', log = 'xy',
      ## xlim = range(alpha.seq), ylim = range(Beta.seq),
-     xlim = c(3,30), ylim = c(.5,4),
+     xlim = c(2,15), ylim = c(.5,2),
      las = 1,
      xlab = expression(alpha), ylab = expression(beta),
         main = "-log(likelihood) contours", bty = "n")
