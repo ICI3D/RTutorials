@@ -147,7 +147,7 @@ objFXN(guess.params, disease_params())
 ## bad set of parameters. You can always try the true values as a starting point
 ## for this problem, although that's rarely possible in real problems.
 
-init.pars <- c(log_Beta = log(.1), log_alpha = log(30))
+init.pars <- c(log_alpha = log(30), log_Beta = log(.1))
 ## We will start with SANN optimization since it is stochastic and therefore
 ## less likely to get stuck in a local minima. But then finish with Nelder-Mead
 ## optimization which is much faster.
@@ -165,7 +165,7 @@ optim.vals <- optim(par = init.pars
                     , control = list(trace = trace, maxit = 150)
                     , method = "SANN")
 exp(optim.vals$par)
-trueParms[c('Beta','alpha')]
+trueParms[c('alpha','Beta')]
 
 ## Normally we use SANN first and then follow with Nelder-Mead since SANN is stochastic and will
 ## make sure to help you be sure that you aren't at local minima. We feed the last parameters of
@@ -179,11 +179,11 @@ optim.vals <- optim(par = optim.vals$par
                     , hessian = T)
 optim.vals
 MLEfits <- optim.vals$par
-trueParms[c('Beta','alpha')]
+trueParms[c('alpha','Beta')]
 exp(MLEfits)
 
-log_Beta.fit <- MLEfits["log_Beta"]
 log_alpha.fit <- MLEfits["log_alpha"]
+log_Beta.fit <- MLEfits["log_Beta"]
 
 ## Look at the output of optim. Understand what it means. Did the algorithm
 ## converge? Look at ?optim to understand it.
