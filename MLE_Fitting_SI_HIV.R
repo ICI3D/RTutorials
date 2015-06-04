@@ -66,7 +66,7 @@ simEpidemic <- function(init, tseq = seq(1980, 2010, by = 1/12), modFunction=SIm
 ## prevalence and associated binomial confidence intervals
 sampleEpidemic <- function(simDat # Simulated data (produced by a call to simEpidemic()) representing the 'true' underlying epidemic trajectory
                            , sampleDates = seq(1980, 2010, by = 3) # Sample every 3 years from 1980 to 2010
-                           , numSamp = rep(100, length(sampleDates)) # Number of individuals sampled at each time point
+                           , numSamp = rep(1000, length(sampleDates)) # Number of individuals sampled at each time point
                            ) {
     prev_at_sample_times <- simDat[simDat$time %in% sampleDates, 'P']
     numPos <- rbinom(length(numSamp), numSamp, prev_at_sample_times)
@@ -215,7 +215,7 @@ with(trueParms, points(alpha, Beta, pch = 16, cex = 2, col = 'red'))
 ## Add MLE to the plot
 points(exp(MLEfits['log_alpha']), exp(MLEfits['log_Beta']), pch = 16, cex = 2, col = 'black')
 ##  at 95% contour ellipse
-lines(exp(ellipse(fisherInfMatrix[2:1,2:1], centre = MLEfits[2:1], level = .95)))
+lines(exp(ellipse(fisherInfMatrix, centre = MLEfits, level = .95)))
 ##      col = makeTransparent(propDistCol,150), lwd = 4)
 legend("topleft", c('truth', 'MLE', '95% Confidence Interval'), lty = c(NA, NA, 1), pch = c(16,16, NA),
        col = c('red', 'black', 'black'), bg='white', bty = 'n')
