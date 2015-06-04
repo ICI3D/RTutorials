@@ -232,49 +232,48 @@ legend("topleft", c('truth', 'MLE', '95% Confidence Interval'), lty = c(NA, NA, 
 ## This function simply takes values log_Beta and log_alpha and feeds them into
 ## objFXN above as a single variable called logpars, you'll see why this is
 ## useful below.
-objXBeta_alpha <- function(Beta, alpha, fixed.params = disease_params(), browse=F)
-    objFXN(fit.params = c(log_Beta = log(Beta), log_alpha = log(alpha))
+objXalpha_Beta <- function(alpha, Beta, fixed.params = disease_params(), browse=F)
+    objFXN(fit.params = c(log_alpha = log(alpha), log_Beta = log(Beta))
                , fixed.params = fixed.params)
 
 ## Now instead of giving a single argument on the log scale we give 2
 ## on the untransformed scale.
-objFXN(c(log_Beta = log(25), log_alpha = log(1/5)))
-objXBeta_alpha(25, 1/5)
+objFXN(c(log_alpha = log(1/5), log_Beta = log(25)))
+objXalpha_Beta(1/5, 25)
 
 ## If we try to give this function multiple values of R0 or gamma,
 ## however, it gets confused and only analyzes the first one.
-objXBeta_alpha(c(25:30), c(1/5:8))
+objXalpha_Beta(c(1/5:8), 25:30)
 
 ## So we "Vectorize" this function so it can take in vectors of the parameters
-## and return the output. objXBeta_alphaVEC then calls on objXBeta_alpha() to
-## take xx,yy as pairwise values and objXBeta_alpha() for all pairs
-objXBeta_alphaVEC <- Vectorize(objXBeta_alpha, list("Beta","alpha"))
+## and return the output. objXalpha_BetaVEC then calls on objXalpha_Beta() to
+## take xx,yy as pairwise values and objXalpha_Beta() for all pairs
+objXalpha_BetaVEC <- Vectorize(objXalpha_Beta, list("alpha", "Beta"))
 
 ## Task 4: Explain how the following three lines are related.
-objXBeta_alpha(25, 1/5)
-objXBeta_alpha(26, 1/6)
-objXBeta_alphaVEC(c(25:26), c(1/5,1/6))
+objXalpha_Beta(25, 1/5)
+objXalpha_Beta(26, 1/6)
+objXalpha_Beta(8, .9)
+objXalpha_BetaVEC(c(25:26), c(1/5,1/6))
 
-## Now we use the R function outer() to evaluate objXBeta_alphaVEC() over a grid
+## Now we use the R function outer() to evaluate objXalpha_BetaVEC() over a grid
 ## of {R0, gamma} combinations. This can take a long time because we have to do
 ## res^2 evaluations of nll.fn(), and recall that each time we do this we are
 ## running lsoda() inside nll.fn()
 
 ## Grid resolution resXres, increasing it makes contours smoother but takes a lot longer
-res <- 30
-
-## Now create a sequence of Beta values for the grid
-## let's have the sequence be spaced arouund that
-Beta.seq <- exp(seq(log_Beta.fit-2, log_Beta.fit + 2, l = res))
-Beta.seq
+res <- 15
 
 ## Now create a sequence of alpha values for the grid
-
-alpha.seq <- exp(seq(log_alpha.fit-3, log_alpha.fit+3, l = res))
+alpha.seq <- exp(seq(log_alpha.fit-1, log_alpha.fit+1, l = res))
 alpha.seq
 
-## The function outer() now evaluates objXBeta_alphaVEC on this grid. ?outer
-mat <- outer(Beta.seq, alpha.seq, objXBeta_alphaVEC) # this can take a long time
+## Now create a sequence of Beta values for the grid 
+Beta.seq <- exp(seq(log_Beta.fit-1, log_Beta.fit + 1, l = res))
+Beta.seq
+
+## The function outer() now evaluates objXalpha_BetaVEC on this grid. ?outer
+mat <- outer(alpha.seq, Beta.seq, objXalpha_BetaVEC) # this can take a long time
 
 ## Make a contour plot that shows the confidence intervals in red.  Likelihood
 ## Ratio Test confidence intervals uses chi squared distribution cutoff with
@@ -283,21 +282,23 @@ ml.val <- optim.vals$value
 conf.cutoff <- ml.val + qchisq(.95,2)/2
 
 ## Show likelihood contours
+par(cex = 1.2)
 plot(1,1, type = 'n', log = 'xy',
      ## xlim = range(alpha.seq), ylim = range(Beta.seq),
      xlim = c(3,15), ylim = c(.5,2), 
      xlab = expression(alpha), ylab = expression(beta),
         main = "-log(likelihood) contours", bty = "n")
 .filled.contour(alpha.seq, Beta.seq, mat, levels = seq(min(mat), max(mat), l=20), col = topo.colors(20))
-## Add red contour for 95% CI
+## Add contour for 95% CI from profile likelihood
 contour(alpha.seq, Beta.seq, mat, levels = c(conf.cutoff),
         col = "black", lwd = 2, labels = "", labcex = .2, add = T)
+## Add contour for 95% CI from Hessian
+lines(exp(ellipse(fisherInfMatrix, centre = MLEfits, level = .95)), lty = 2)
 ## Add MLE to the plot
 points(exp(log_alpha.fit), exp(log_Beta.fit), pch = 16, cex = 1, col = 'black')
 ## Add true parameter values to the plot
 with(trueParms, points(alpha, Beta, pch = 16, cex = 1, col = 'red'))
-legend("topleft", c('truth', 'MLE', '95% Confidence Interval'), lty = c(NA, NA, 1), pch = c(16,16, NA),
-       col = c('red', 'black', 'black'), bg='white')
-
-lines(exp(ellipse(optim.vals$hessian, centre = optim.vals$par, level = .95)))
-# FINISH THIS, STEVE!!!
+legend("topleft",
+       c('truth', 'MLE', '95% contour (profile likelihood)', '95% contour (Fisher information matrix)')
+       , lty = c(NA, NA, 1, 2), pch = c(16,16, NA, NA),
+       col = c('red', rep('black',3)), bg='white', bty = 'n')
