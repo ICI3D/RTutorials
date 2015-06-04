@@ -184,8 +184,12 @@ optim.vals <- optim(par = optim.vals$par
                     , control = list(trace = trace, maxit = 500, reltol = 10^-7)
                     , method = "Nelder-Mead"
                     , hessian = T)
-exp(optim.vals$par)
+MLEfits <- optim.vals$par
 trueParms[c('Beta','alpha')]
+exp(MLEfits)
+
+log_Beta.fit <- MLEfits["log_Beta"]
+log_alpha.fit <- MLEfits["log_alpha"]
 
 ## Look at the output of optim. Understand what it means. Did the algorithm
 ## converge? Look at ?optim to understand it.
@@ -204,7 +208,29 @@ legend("topleft", c('truth', 'observed', 'fitted'), lty = c(1, NA, 1), pch = c(N
 
 ######################################################################
 ## Contour plots with the hessian
-optim.vals$hessian
+
+## The Hessian matrix gives you the curvature of the likelihood function at the maximum likelihood estimate. In other words, it tells you the second derivative around that point which can be used to estimate the covariance variance matrix of the maximum likelihood estimate of parameters. This estimate of the covariant strength matrix is  known as the Fisher information matrix and can be obtained by inverting the negative of the Hessian.
+fisherInfMatrix <- solve(optim.vals$hessian)
+
+## we can then plot
+
+plot(1,1, type = 'n', log = 'xy',
+     ## xlim = range(alpha.seq), ylim = range(Beta.seq),
+     xlim = c(3,15), ylim = c(.5,2), 
+     xlab = expression(alpha), ylab = expression(beta),
+        main = "-log(likelihood) contours", bty = "n")
+## Add true parameter values to the plot
+with(trueParms, points(alpha, Beta, pch = 16, cex = 1, col = 'red'))
+## Add MLE to the plot
+
+points(exp(MLEfits['log_alpha']), exp(MLEfits['log_Beta']), pch = 16, cex = 1, col = 'black')
+##  at 95% contour ellipse
+library(mnormt)
+rmnorm(1, MLEfits
+lines(exp(ellipse(fisherInfMatrix[2:1,2:1], centre = MLEfits[2:1], level = .95)))
+##      col = makeTransparent(propDistCol,150), lwd = 4)
+legend("topleft", c('truth', 'MLE', '95% Confidence Interval'), lty = c(NA, NA, 1), pch = c(16,16, NA),
+       col = c('red', 'black', 'black'), bg='white')
 
 ######################################################################
 ## Contour plots with likelihood profiles
@@ -249,13 +275,12 @@ objXBeta_alphaVEC(c(25:26), c(1/5,1/6))
 res <- 30
 
 ## Now create a sequence of Beta values for the grid
-log_Beta.fit <- optim.vals$par["log_Beta"]
 ## let's have the sequence be spaced arouund that
 Beta.seq <- exp(seq(log_Beta.fit-2, log_Beta.fit + 2, l = res))
 Beta.seq
 
 ## Now create a sequence of alpha values for the grid
-log_alpha.fit <- optim.vals$par["log_alpha"]
+
 alpha.seq <- exp(seq(log_alpha.fit-3, log_alpha.fit+3, l = res))
 alpha.seq
 
