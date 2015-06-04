@@ -15,20 +15,20 @@
 library(boot); library(deSolve); library(coda)
 
 ## Function that makes a list of disease parameters with default values
-disease_params <- function(Beta = 0.3
-                           , alpha = 1 ## rate of beta decline with prevalence
-                           , progRt = (1/10)*4 ## rate of of progression through each of the I classes, for 10 years total
-                           , birthRt = .03 ## birth rate, 3% of people give birth per year
-                           , deathRt = 1/60 ## 60 year natural life expectancy
+disease_params <- function(Beta = 0.9
+                           , alpha = 8 ## rate of beta decline with prevalence
+                           , progRt = 1-exp(-1/2.77) #(1/10)*4 ## rate of of progression through each of the I classes, for 10 years total
+                           , birthRt = .029 #.03 ## birth rate, 3% of people give birth per year
+                           , deathRt = .018 #1/60 ## 60 year natural life expectancy
                            )
     return(as.list(environment()))
 
 disease_params()
 disease_params(Beta = .2)
 
-initPrev <- 10^-4 ## 1/10,000 infected at start
-init <- c(S=1-initPrev, I1=initPrev, I2=0, I3=0, I4=0, CI = 0, CD = 0) ## modeling proportion of population
-tseq <- seq(1970, 2015, by = 1/12)
+initPrev <- exp(-7) #10^-7 ## 1/10,000 infected at start
+init <- c(S=1, I1=initPrev, I2=0, I3=0, I4=0, CI = 0, CD = 0) ## modeling proportion of population
+tseq <- seq(1976, 2015, by = 1/12)
 Is <- paste0('I',1:4) ## for easy indexing
 
 ## SI ODE model
@@ -39,24 +39,31 @@ SImod <- function(tt, yy, parms) with(parms, {
     I2 <- yy[3] ## HIV stage 2
     I3 <- yy[4] ## HIV stage 3
     I4 <- yy[5] ## HIV stage 4
-    CI <- yy[7] ## cumulative incidence
-    CD <- yy[8] ## cumulative mortality
+    CI <- yy[6] ## cumulative incidence
+    CD <- yy[7] ## cumulative mortality
     ## derived quantitties
     I <- I1+I2+I3+I4           ## total infecteds
     N <- I + S                 ## total population
-    mort <- progRt * I4 / N ## HIV-related mortality
-    FOI <- Beta * exp(-alpha * I/N) ## Force of infection
+    transmissionCoef <- Beta * exp(-alpha * I/N) ## Infectious contact rate
     ## state variable derivatives (ODE system)
-    deriv <- rep(NA,5)  
-    deriv[1]<-	birthRt*N - deathRt*S - FOI*S*I/N
-    deriv[2]<-	FOI*S*I/N - progRt*I1 - deathRt*I1
-    deriv[3]<-	progRt*I1 - progRt*I2 - deathRt*I2
-    deriv[4]<-	progRt*I2 - progRt*I3 - deathRt*I3
-    deriv[5]<-	progRt*I3 - progRt*I4 - deathRt*I4
-    deriv[6]<-	FOI*S*I/N 
-    deriv[7]<-	progRt*I4
+    deriv <- rep(NA,5)
+    deriv[1] <-	birthRt*N - deathRt*S - transmissionCoef*S*I/N
+    deriv[2] <-	transmissionCoef*S*I/N - progRt*I1 - deathRt*I1
+    deriv[3] <-	progRt*I1 - progRt*I2 - deathRt*I2
+    deriv[4] <-	progRt*I2 - progRt*I3 - deathRt*I3
+    deriv[5] <-	progRt*I3 - progRt*I4 - deathRt*I4
+    deriv[6] <-	transmissionCoef*S*I/N 
+    deriv[7] <-	progRt*I4
     return(list(deriv))
 })
+
+simEpidemic <- function(init, tseq, SImod=SImod, parms = disease_params()) {
+    simDat <- as.data.frame(lsoda(init, tseq, SImod, parms=parms))
+    simDat$I <- rowSums(simDat[, Is])
+    simDat$N <- rowSums(simDat[, c('S',Is)])
+    simDat$P <- with(simDat, I/N)
+    simDat
+}
 
 ## From a simulated epidemic, measure prevalence at several time points by performing
 ## cross-sectional samples of individual at each time, testing them, and then calculated sample
@@ -74,26 +81,63 @@ sampleEpidemic <- function(simDat, tseq = seq(1978, 2010, by = 2), numSamp = rep
 
 ## Run system of ODEs for "true" parameter values
 set.seed(4)
-trueParms <- disease_params(Beta = .9, alpha = 8, progRt = 1/2.5)
-simDat <- as.data.frame(lsoda(init, tseq, SImod, parms=trueParms))
-simDat$I <- rowSums(simDat[, Is])
-simDat$N <- rowSums(simDat[, c('S',Is)])
-plot(simDat$time, simDat$I, xlab = '', ylab = 'prevalence', type = 'l', ylim = c(0,.4), col='red')
+trueParms <- disease_params()#Beta = .9, alpha = 8, progRt = 1/2.5)
+simDat <- simEpidemic(init, tseq, SImod, parms = trueParms)
+par(bty='n', lwd = 2)
+with(simDat, plot(time, P, xlab = '', ylab = 'prevalence', type = 'l', ylim = c(0,.4), col='red'))
 
 ## Take cross-sectional sample of individuals to get prevalence estimates at multiple time points
 obsDat <- sampleEpidemic(simDat, verbose = 0)
 points(obsDat$time, obsDat$sampPrev, col = 'red', pch = 16, cex = 2)
-arrows(obsDat$time, obsDat$uci, obsDat$time, obsDat$lci, col = makeTransparent('red'), len = .025, angle = 90, code = 3)
+arrows(obsDat$time, obsDat$uci, obsDat$time, obsDat$lci, col = 'red', len = .025, angle = 90, code = 3)
 
 ## Log-Likelihood
 llikelihood <- function(parms = disease_params(), obsDat, verbose = 0) {
     simDat <- as.data.frame(lsoda(init, tseq, SImod, parms=parms))
     simDat$I <- rowSums(simDat[, Is])
+    simDat$N <- rowSums(simDat[, c('S',Is)])
+    simDat$P <- with(simDat, I/N)
     if(verbose > 5) browser()
-    lls <- dbinom(obsDat$numPos, obsDat$numSamp, prob = simDat$I[simDat$time %in% obsDat$time], log = T)
+    matchedTimes <- simDat$time %in% obsDat$time
+    lls <- dbinom(obsDat$numPos, obsDat$numSamp, prob = simDat$P[matchedTimes], log = T)
     return(sum(lls))
 }
 llikelihood(obsDat=obsDat)
+
+objFXN <- function(fit.params ## paramters to fit
+                   , ref.params =disease_params() ## fixed paramters
+                   , obsDat
+                   , verbose=0) {
+    if(verbose > 3) browser()
+    parms <- within(ref.params, { ## subs fitting parameters into reference parameter vector
+        loggedParms <- names(fit.params)[grepl('log_', names(fit.params))]
+        unloggedParms <- names(fit.params)[!grepl('log_', names(fit.params))]        
+        for(nm in unloggedParms) assign(nm, as.numeric(fit.params[nm]))
+        for(nm in loggedParms) assign(gsub('log_','',nm), exp(as.numeric(fit.params[nm])))
+        rm(nm)
+    })
+    - llikelihood(parms, obsDat = obsDat, verbose) ## then call likelihood
+}
+objFXN(c(log_Beta = log(5), log_alpha = log(8)), ref.params = disease_params(), obsDat=obsDat)
+
+optim.vals <- optim(par = c(log_Beta = .2, log_alpha = 3)
+                    , objFXN
+                    , ref.params = disease_params()
+                    , obsDat = obsDat
+                    , control = list(trace = 0, maxit = 150)
+                    , method = "SANN")
+exp(optim.vals$par)
+trueParms[c('Beta','alpha')]
+
+optim.vals <- optim(par = optim.vals$par
+                    , objFXN
+                    , ref.params = disease_params()
+                    , obsDat = obsDat
+                    , control = list(trace = 1, maxit = 500, reltol = 10^-7)
+                    , method = "Nelder-Mead"
+                    , hessian = T)
+exp(optim.vals$par)
+trueParms[c('Beta','alpha')]
 
 ## Log-Prior (assume uninformative)
 lprior <- function(parms=disease_params()) with(parms, {
@@ -207,3 +251,5 @@ mcmcSampler <- function(current.params, ref.params=disease_params(), obsDat, see
     return(list(out = out[1:nrow(out)>(nburn+1),], aratio = aratio, current.params = current.params,
                 ref.params=ref.params))
 }
+
+
