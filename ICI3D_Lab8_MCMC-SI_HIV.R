@@ -190,24 +190,24 @@ mcmcSampler <- function(init.params, ## initial parameter guess
     out <- matrix(NA, nr = niter, nc=length(current.params)+1)
     out[1,] <- c(current.params, ll = -curVal) ## add first value
     colnames(out) <- c(names(current.params), 'll') ## name columns
-    max_index <- dim(out)[1] ## maximum number of iterations to fill
     ## Store original covariance matrix
     if(proposer$type=='block') originalCovar <- get('covar', envir = environment(proposer$fxn)) 
-    while(vv <= max_index) {
+    while(vv <= niter) {
         if ((verbose > 1) || (verbose && (vv%%tell == 0))) print(paste("on iteration",vv,"of", niter + 1))
-        ## Adaptive MCMC
-        ## adapt covariance every 50 iterations
+        ## Adaptive MCMC: adapt covariance every 50 iterations (don't
+        ## do it more often because it adds to coputational burden.
         if(adaptiveMCMC & proposer$type=='block' & vv > startAdapt & vv %% 50 == 0) {
             adptBurn <- min((startAdapt-50), adptBurn)
-            ## will converge for vv large
-            adaptedCovar <- 2.38^2 / nfitted * cov.wt(log(out[adptBurn:(vv-1),1:nfitted]))$cov 
+            ## Below equation gives ideal covariance-variance matrix based on posterior
+            adaptedCovar <- 2.38^2 / nfitted * cov.wt(log(out[adptBurn:(vv-1),1:nfitted]))$cov
+            ## Take a weighted average of the original & the empirical cov-var matrices to ensure
+            ## that we never let the matrix collapse to zero (ie if the empirical one is zero
+            ## because we haven't accepted anything yet)
             adaptedCovar <- adaptedCovar*.95 + originalCovar*.05 ## 95% adapted & 5% original
             rownames(adaptedCovar) <- colnames(adaptedCovar) <- names(current.params)
             assign('covar', adaptedCovar, envir = environment(proposer$fxn))
         }
         proposal0 <- proposer$fxn(logParms(current.params))
-        onpar <- proposal0$onpar
-        propt <- proposal0$type
         proposal <- unlogParms(proposal0$proposal)
         propVal <- llikePrior(proposal, ref.params = ref.params, obsDat=obsDat)
         lmh <- propVal - curVal ## likelihood ratio = log likelihood difference
