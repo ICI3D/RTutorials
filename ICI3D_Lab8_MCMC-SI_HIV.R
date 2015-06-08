@@ -13,7 +13,7 @@
 ## * Know how to assess multivariate MCMC chains for convergence both with trace plots and the Gelman-Rubin diagnostic.
 ## * Create 95% credible intervals (CrI's) and contours from the posterior
 
-require(boot); require(deSolve); require(ellipse); require(coda); require(parallel); require(mnormt)
+require(boot); require(deSolve); require(ellipse); require(coda); require(parallel); require(mnormt); require(emdbook)
 
 ## Function that makes a list of disease parameters with default values
 disease_params <- function(Beta = 0.9
@@ -115,6 +115,8 @@ lprior <- function(parms=disease_params()) with(parms, {
     return(lp)
 })
 
+## Convenience function that sums log-likelihood & log-prior for
+## evaluation inside MCMC sampler.
 llikePrior <- function(fit.params=NULL, ## parameters to fit
                        ref.params = disease_params(), ## reference parameters
                        obsDat=myDat) { ## observed data
@@ -126,11 +128,13 @@ llikePrior <- function(fit.params=NULL, ## parameters to fit
 }
 llikePrior(obsDat=myDat)
 
+## Want to be able to easily log and unlog parameters
 logParms <- function(fit.params) {
     fit.params <- log(fit.params)
     names(fit.params) <- paste0('log',names(fit.params))
     return(fit.params)
 }
+logParms(c(alpha = 3, Beta=.3))
 unlogParms <- function(fit.params) {
     fit.params <- exp(fit.params)
     names(fit.params) <- sub('log','', names(fit.params))
@@ -160,30 +164,37 @@ initRand <- function(fit.params) {
 initRand(c(alpha = 3, Beta = 1)) 
 initRand(c(alpha = NA, Beta = NA)) ## independent of the inputs, just requires the parameter vector names
 
-mcmcSampler <- function(init.params, ref.params=disease_params(),
-                        obsDat = myDat, seed = 1,
-                        proposer = sequential.proposer(sdProps=sdProps),
-                        adaptiveMCMC = F, startAdapt = 300,
-                        plotterLoops = NULL, ## repeat plot of some iterations more to lengthen their display
-                        showing = showingFXN(),
-                        plotter = plotterTS, randInit = T, niter = 100, nburn = 0, adptBurn = 200,
-                        verbose=0, plotNM=NULL, tell = 100) {
+## Flexible Metropolis-Hastings Sampler
+mcmcSampler <- function(init.params, ## initial parameter guess
+                        randInit = T, ## if T then randomly sample initial parameters instead of above value
+                        seed = 1, ## RNG seed
+                        ref.params=disease_params(), ## fixed parameters
+                        obsDat = myDat, ## data
+                        proposer = sequential.proposer(sdProps=sdProps), ## proposal distribution
+                        niter = 100, ## MCMC iterations
+                        nburn = 0, ## iterations to automatically burn
+                        adaptiveMCMC = F, ## adapt proposal distribution?
+                        startAdapt = 150, ## start adapting at what iteration?
+                        adptBurn = 200, ## ignore first so many iterations for adapting posterior
+                        verbose=0, ## if >2 browses, if >1 prints progress
+                        tell = 100) { ## how often to print progress
     if(verbose>2) browser()
     if(randInit) init.params <- initRand(init.params)
     current.params <- init.params
-    nfitted <- length(current.params)
-    vv <- 2 ## mcmc iteration
-    accept <- 0
+    nfitted <- length(current.params) ## number fitted parameters
+    vv <- 2 ## mcmc iteration (started at 1 so we're already on 2
+    accept <- 0 ## initialize proportion of iterations accepted
+    ## Calculate log(likelihood X prior) for first value
     curVal <- llikePrior(current.params, ref.params = ref.params, obsDat=obsDat)
+    ## Initialize matrix to store MCMC chain
     out <- matrix(NA, nr = niter, nc=length(current.params)+1)
-    out[1,] <- c(current.params, ll = -curVal)
-    colnames(out) <- c(names(current.params), 'll')
-    max_index <- dim(out)[1]
-    last.it <- 0
+    out[1,] <- c(current.params, ll = -curVal) ## add first value
+    colnames(out) <- c(names(current.params), 'll') ## name columns
+    max_index <- dim(out)[1] ## maximum number of iterations to fill
     ## Store original covariance matrix
     if(proposer$type=='block') originalCovar <- get('covar', envir = environment(proposer$fxn)) 
     while(vv <= max_index) {
-        if ((verbose > 1) || (verbose && (vv%%tell == 0))) print(paste("on iteration",vv,"of",last.it + niter + 1))
+        if ((verbose > 1) || (verbose && (vv%%tell == 0))) print(paste("on iteration",vv,"of", niter + 1))
         ## Adaptive MCMC
         ## adapt covariance every 50 iterations
         if(adaptiveMCMC & proposer$type=='block' & vv > startAdapt & vv %% 50 == 0) {
@@ -263,35 +274,56 @@ class(samp_Seq$samp)
 par('ps'=16, las = 1)
 plot(samp_Seq$samp)
 
-## Rather than specify the parameters every time, let's make a list and edit it as we tweak the
-## algorithm.
+## Parallelization in R
+?mclapply
+
+out1 <- mclapply(X = 1, function(x) rnorm(10^7)) ## What does this do?
+out2 <- mclapply(X = 1:2, function(x) rnorm(10^7)) ## What does this do?
+
+class(out1)
+class(out2)
+
+lapply(out2, summary)
+
+## Let's parallel chain sampling in the same way. First, rather than
+## specify the parameters every time, let's make a list and edit it as
+## we tweak the algorithm.
 mcmcParams <- list(init.params = c(alpha=8, Beta=.9)
                       , seed = 1
                       , proposer = sequential.proposer(sdProps=c(.15,.15))
                       , randInit = T
                       , niter = 10)
 
-## Parallel MCMC
+## Parallel MCMC: Let's write a function that uses mclapply to call on
+## mcmcSampler once for each seed on a different core. We need a
+## different seed to make sure each chain has different random number
+## generation. It's good practice to always initiate a seed so that
+## bugs are always reproducible.
 doChains <- function(x, mcmcParams) {
     print(system.time(
+        ## Below line uses mclapply to parallelize do.call over seeds
     chains <- mclapply(x, function(x) do.call(mcmcSampler, within(mcmcParams, { seed <- x})))
         ))
-    chains <- lapply(chains, '[[', 'samp')
-    chains <- as.mcmc.list(chains)
-    return(chains)
+    aratio <- mean(unlist(lapply(chains, '[[', 'aratio'))) ## average across chains
+    chains <- lapply(chains, '[[', 'samp') ## pull out posterior samples only
+    chains <- as.mcmc.list(chains) ## make into mcmc.list
+    return(list(chains=chains, aratio = aratio))
 }
 
 ## How does the compute time increase with number of chains?
-chain1 <- doChains(1, mcmcParams) ## do one chain with a seed at 1
-chain2 <- doChains(1:2, mcmcParams) ## do two chains with seeds at 1:2
-chain3 <- doChains(1:3, mcmcParams) ## do two chains with seeds at 1:3
-chain4 <- doChains(1:4, mcmcParams) ## do two chains with seeds at 1:4
-chain5 <- doChains(1:5, mcmcParams) ## do two chains with seeds at 1:5
+run1 <- doChains(1, mcmcParams) ## do one chain with a seed at 1
+run2 <- doChains(1:2, mcmcParams) ## do two chains with seeds at 1:2
+run3 <- doChains(1:3, mcmcParams) ## do two chains with seeds at 1:3
+run4 <- doChains(1:4, mcmcParams) ## do two chains with seeds at 1:4
+run5 <- doChains(1:5, mcmcParams) ## do two chains with seeds at 1:5
 
 ## Can you explain this by how many cores your computer has?
-detectCores()
+detectCores() ## often gives double the # of what you actually have.
 
-class(chain5)
+class(run4$chains)
+## You can index mcmc.lists by variables
+run4$chains[,c('alpha','Beta')]
+run4$aratio
 
 plot(chain5)
 gelman.diag(chain5)
@@ -305,17 +337,50 @@ mcmcParams <- within(mcmcParams, {
     niter <- 500 ## let's increase the # of iterations
 })
 mcmcParams_Adaptive <- within(mcmcParams, {
-                      proposer <- multiv.proposer(covar=matrix(c(.15,0,0,.15),2,2))
+                      proposer <- multiv.proposer(covar=matrix(c(.1,0,0,.1),2,2))
                   })
 
-chain4 <- doChains(1:4, mcmcParams) ## do two chains with seeds at 1:2
-chain4A <- doChains(1:4, mcmcParams_Adaptive) ## do two chains with seeds at 1:2
+run4 <- doChains(1:4, mcmcParams) ## do two chains with seeds at 1:2
+run4A <- doChains(1:4, mcmcParams_Adaptive) ## do two chains with seeds at 1:2
 
-par(oma = c(0,0,2,0))
-plot(chain4)
+run4$aratio
+run4A$aratio
+
+par(oma = c(0,0,2,0), bty='n', 'ps' = 18)
+plot(run4$chains)
 mtext('Sequential Sampling', side = 3, outer = T, line = 0)
-
-par(oma = c(0,0,2,0))
-plot(chain4A)
+ 
+plot(run4A$chains)
 mtext('Adaptive Sampling', side = 3, outer = T, line = 0)
+
+graphics.off()
+
+gelman.diag(run4$chains[,c('alpha','Beta')])
+gelman.diag(run4A$chains[,c('alpha','Beta')])
+
+summary(run4$chains) ## Posterior credible intervals
+summary(run4A$chains)
+
+par(mar = c(5,6,1,1), las = 1, 'ps' = 18, mfrow = c(2,1))
+for(nm in c('4','4A')) {
+    res <- get(paste0('run', nm))$chains
+    plot(unlist(res[,'alpha']), unlist(res[,'Beta']),
+         xlab = expression(alpha),
+         ylab = expression(beta),
+         log = 'xy',
+         type = 'p',
+         cex = .7, pch = 16,
+         xlim = c(1,15),
+         ylim = c(.3, 2))
+}
+
+## Bayesian 95% credible contour calculated by finding highest posterior density region.
+?HPDregionplot
+
+HPDregionplot(run4$chains, 1:2,
+              prob = .95,
+              xlab = expression(alpha),
+              ylab = expression(beta),
+              lwd = 2,
+              log = 'xy') ## ignore warning, still seems to work
 
