@@ -218,7 +218,7 @@ mcmcSampler <- function(init.params, ## initial parameter guess
             ## if MHR >= 1 or a uniform random # in [0,1] is <= MHR, accept otherwise reject
             if ( (lmh >= 0) | (runif(1,0,1) <= exp(lmh)) ) {
                 current.params <- proposal
-                if (vv>nburn) accept <- accept + 1 #only track acceptance after burn-in
+                if (vv>nburn) accept <- accept + 1 ## only track acceptance after burn-in
                 curVal <- propVal
             }
         }
@@ -284,6 +284,7 @@ out2 <- mclapply(X = 1:2, function(x) rnorm(10^7)) ## What does this do?
 class(out1)
 class(out2)
 
+lapply(out1, summary)
 lapply(out2, summary)
 
 ## Let's parallel chain sampling in the same way. First, rather than
@@ -318,7 +319,6 @@ run3 <- doChains(1:3, mcmcParams) ## do two chains with seeds at 1:3
 run4 <- doChains(1:4, mcmcParams) ## do two chains with seeds at 1:4
 run5 <- doChains(1:5, mcmcParams) ## do two chains with seeds at 1:5
 
-
 ## Can you explain this by how many cores your computer has?
 detectCores() ## often gives double the # of what you actually have.
 
@@ -327,23 +327,28 @@ class(run4$chains)
 run4$chains[,c('alpha','Beta')]
 run4$aratio
 
-plot(chain5)
-gelman.diag(chain5)
+plot(run4$chains)
+gelman.diag(run4$chains)
 ## Question: Have your chains converged? How can you tell?
 
 ## Question: Why does the trace of the loglikelihood (ll) look different than other traces?
 
 ####################################################################################################
 ## Adaptive proposals
+####################################################################################################
 mcmcParams <- within(mcmcParams, {
-    niter <- 500 ## let's increase the # of iterations
+    niter <- 2000 ## let's increase the # of iterations
+    verbose <- 1
+    tell <- 100
 })
 mcmcParams_Adaptive <- within(mcmcParams, {
                       proposer <- multiv.proposer(covar=matrix(c(.1,0,0,.1),2,2))
                   })
 
-run4 <- doChains(1:4, mcmcParams) ## do two chains with seeds at 1:2
-run4A <- doChains(1:4, mcmcParams_Adaptive) ## do two chains with seeds at 1:2
+## run4 <- doChains(1:4, mcmcParams) ## do two chains with seeds at 1:2
+## run4A <- doChains(1:4, mcmcParams_Adaptive) ## do two chains with seeds at 1:2
+## save(run4, run4A, file = 'MCMC_SI_runs.Rdata')
+load(file = 'MCMC_SI_runs.Rdata')
 
 run4$aratio
 run4A$aratio
@@ -372,17 +377,15 @@ for(nm in c('4','4A')) {
          log = 'xy',
          type = 'p',
          cex = .7, pch = 16,
-         xlim = c(1,15),
+         col = gray(.5, alpha = .1),
+         xlim = c(2,15),
          ylim = c(.3, 2))
+    ## Bayesian 95% credible contour calculated by finding highest posterior density region.
+    HPDregionplot(res, 1:2,
+                  prob = .95,
+                  n = 40,
+                  lwd = 2,
+                  col = 'red',
+                  add = T) ## add to current plot
 }
-
-## Bayesian 95% credible contour calculated by finding highest posterior density region.
-?HPDregionplot
-
-HPDregionplot(run4$chains, 1:2,
-              prob = .95,
-              xlab = expression(alpha),
-              ylab = expression(beta),
-              lwd = 2,
-              log = 'xy') ## ignore warning, still seems to work
 
