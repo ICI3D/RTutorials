@@ -207,8 +207,8 @@ mcmcSampler <- function(init.params, ## initial parameter guess
             rownames(adaptedCovar) <- colnames(adaptedCovar) <- names(current.params)
             assign('covar', adaptedCovar, envir = environment(proposer$fxn))
         }
-        proposal0 <- proposer$fxn(logParms(current.params))
-        proposal <- unlogParms(proposal0$proposal)
+        proposal <- proposer$fxn(logParms(current.params))
+        proposal <- unlogParms(proposal)
         propVal <- llikePrior(proposal, ref.params = ref.params, obsDat=obsDat)
         lmh <- propVal - curVal ## likelihood ratio = log likelihood difference
         if (is.na(lmh)) { ## if NA, print informative info but don't accept it
@@ -245,9 +245,10 @@ sequential.proposer <- function(sdProps) {
                     proposal <- current
                     proposal[on + 1] <- proposal[on + 1] + rnorm(1, mean = 0, sd = sdProps[on + 1])
                     on <<- (on+1) %% nfitted
-                    list(proposal=proposal, onpar=on+1, type = 'sequential')
+                    proposal
                 }))
 }
+
 
 ## Propose parameters within blocks
 multiv.proposer <- function(covar, blockLS = list(rownames(covar))) {
@@ -258,9 +259,9 @@ multiv.proposer <- function(covar, blockLS = list(rownames(covar))) {
                     proposal <- current + rmnorm(1, mean = 0, varcov = covar)
                     propsosal <- as.vector(proposal)
                     names(proposal) <- names(current)
-                    list(proposal=proposal,  type = 'block', covar=covar, onpar = NA)
+                    proposal
                 }))
-       }
+}
 
 samp_Seq <- mcmcSampler(init.params = c(alpha=8, Beta=.9)
                       , seed = 1
@@ -316,6 +317,7 @@ run2 <- doChains(1:2, mcmcParams) ## do two chains with seeds at 1:2
 run3 <- doChains(1:3, mcmcParams) ## do two chains with seeds at 1:3
 run4 <- doChains(1:4, mcmcParams) ## do two chains with seeds at 1:4
 run5 <- doChains(1:5, mcmcParams) ## do two chains with seeds at 1:5
+
 
 ## Can you explain this by how many cores your computer has?
 detectCores() ## often gives double the # of what you actually have.
