@@ -2,6 +2,12 @@
 ## Meaningful Modeling of Epidemiolgic Data, 2012
 ## (C) Steve Bellan, 2009-2015
 
+## The code is made available under a Creative Commons Attribution 4.0 International License. You
+## are free to reuse this code provided that you give appropriate credit, provide a link to the
+## license, and indicate if changes were made. You may do so in any reasonable manner, but not in
+## any way that suggests the licensor endorses you or your use. Giving appropriate credit includes
+## citation of the original repository.
+
 ## Set margins for plotting.
 par(mar=c(6,4,4,2))
 
