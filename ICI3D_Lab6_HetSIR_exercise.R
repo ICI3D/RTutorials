@@ -32,7 +32,7 @@ rm(list=ls())                   # Clear all variables and functions from the wor
 load("hetSIR_functions.Rdata")               # Load model functions and output
 
 
-par(mfrow=c(1,3))                      # initialize plot window with 1 row & 3 columns
+par(mfrow=c(1,3), 'ps'=14) ## initialize plot window with 1 row & 3 columns & font point size = 12
 
 ## STEP 1
 ## First, let's run the model with very low variance so we can

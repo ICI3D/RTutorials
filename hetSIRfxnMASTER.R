@@ -31,14 +31,15 @@ het.epidemic <- function(runs = 1,
     ## order individuals by riskiness
     mxdst <- mxdst[rev(order(mxdst))]
     breaks <- seq(0, ceiling(max(mxdst)), by = .1)
-    hist(mxdst, col="black", breaks = breaks, xlab = "heterogeneity",
+    hist(mxdst, col="black", breaks = breaks, xlab = "heterogeneity", las = 1,
          xlim = c(0, xmax.het),
          main = "distribution of average R")
     abline(v=beta.mean, col = "red")
     ## make individuals' data frame with mixing distr, time inf & rec
     iframe <- data.frame(id = 1:pop.size, tinf = NA, trec = NA, mxdst = mxdst)
-    plot(0,0,type="l",xlab="Time", bty="n", xlim = c(0, end.time),
+    plot(0,0,type="l",xlab="Time", bty="n", xlim = c(0, end.time), las = 1,
          ylim = c(0, 1.2*pop.size), ylab = "# people", main = "time series")
+    legend("topright", c("Susceptible","Infected","Recovered"), col = c("black","red","blue"), lwd = 1, lty = 1, bty = "n", bg ="white")
     f.size <- rep(NA,runs)
     for(ii in 1:runs)
       {
@@ -107,9 +108,8 @@ het.epidemic <- function(runs = 1,
         lines(fts$time,fts$R, col = "blue")
         f.size[ii] <- sum(!is.na(iframe$tinf))
       }
-    legend("topright", c("Susceptible","Infected","Recovered"), col = c("black","red","blue"), lwd = 1, lty = 1, bty = "n", bg ="white")
-    hist(f.size, breaks = fsize.breaks, xlab = "cumulative # infected (final size)",
-         xlim = c(0, xmax.fsize), ylim = c(0, runs),
+    hist(f.size, breaks = fsize.breaks, xlab = "cumulative # infected (final size)", las = 1,
+         xlim  = c(0, max(xmax.fsize,f.size)), ylim = c(0, runs), col = 'black',
          ylab = "frequency", main = "outbreak size distribution")
     ## final size distribution
     if(return.ts)       return(fts)
@@ -148,6 +148,7 @@ hetSIRS.epidemic <- function(runs = 1,
     iframe <- data.frame(id = 1:pop.size, tinf = NA, trec = NA, tloss = NA,mxdst = mxdst)
     plot(0,0,type="l",xlab="Time", bty="n", xlim = c(0, end.time),
          ylim = c(0, 1.2*pop.size), ylab = "# people", main = "time series")
+    legend("topright", c("Susceptible","Infected","Recovered"), col = c("black","red","blue"), lwd = 1, lty = 1, bty = "n", bg ="white")
     f.size <- rep(NA,runs)
     if(browse) browser()                #debugging
     for(ii in 1:runs)
@@ -228,9 +229,8 @@ hetSIRS.epidemic <- function(runs = 1,
         lines(fts$time,fts$R, col = "blue")
         f.size[ii] <- cumulativeI
       }
-    legend("topright", c("Susceptible","Infected","Recovered"), col = c("black","red","blue"), lwd = 1, lty = 1, bty = "n", bg ="white")
     hist(f.size, breaks = 100, xlab = "cumulative # infected (final size)",
-         xlim = c(0, max(xmax.fsize,f.size)),
+         xlim = c(0, max(xmax.fsize,f.size)), 
          ylab = "frequency", main = "outbreak size distribution", col = "black")
     ## final size distribution
     if(return.ts)       return(fts)
