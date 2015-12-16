@@ -31,13 +31,13 @@ het.epidemic <- function(runs = 1,
     ## order individuals by riskiness
     mxdst <- mxdst[rev(order(mxdst))]
     breaks <- seq(0, ceiling(max(mxdst)), by = .1)
-    hist(mxdst, col="black", breaks = breaks, xlab = "contacts/day (r)", las = 1,
+    hist(mxdst, col="black", breaks = breaks, xlab = "contact rate (1/day)", las = 1,
          xlim = c(0, xmax.het),
          main = "distribution of average R")
     abline(v=beta.mean, col = "red")
     ## make individuals' data frame with mixing distr, time inf & rec
     iframe <- data.frame(id = 1:pop.size, tinf = NA, trec = NA, mxdst = mxdst)
-    plot(0,0,type="l",xlab="Time", bty="n", xlim = c(0, end.time), las = 1,
+    plot(0,0,type="l",xlab="days", bty="n", xlim = c(0, end.time), las = 1,
          ylim = c(0, 1.2*pop.size), ylab = "# people", main = "time series")
     legend("topright", c("Susceptible","Infected","Recovered"), col = c("black","red","blue"), lwd = 1, lty = 1, bty = "n", bg ="white")
     f.size <- rep(NA,runs)
