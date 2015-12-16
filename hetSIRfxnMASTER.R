@@ -31,7 +31,7 @@ het.epidemic <- function(runs = 1,
     ## order individuals by riskiness
     mxdst <- mxdst[rev(order(mxdst))]
     breaks <- seq(0, ceiling(max(mxdst)), by = .1)
-    hist(mxdst, col="black", breaks = breaks, xlab = "heterogeneity", las = 1,
+    hist(mxdst, col="black", breaks = breaks, xlab = "contacts/day (r)", las = 1,
          xlim = c(0, xmax.het),
          main = "distribution of average R")
     abline(v=beta.mean, col = "red")
