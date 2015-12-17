@@ -11,15 +11,15 @@
 ##
 rm(list=ls())
 
-initialPopulationSize <- 10
-mortalityRate <- 0.05
-timeStep <- 1
-maxTime <- 30
+# This tutorial simulates a simple population model
+# where mortality is the only process. The differential
+# equation version of the model is:
+#            dN/dt = - mortalityRate * N
+# where N is the population size at a given time.
 
-par(bty='L',lwd=3,mar=c(4,4,1,1))
-plot(NA,NA,ylim=c(0,initialPopulationSize),xlim=c(0,maxTime),
-		 ylab='Population size',xlab='Time')
-
+# Define a function that calculates the population
+# at time t from the analytical solution to the 
+# differential equation
 analytic <- function(initial = initialPopulationSize,
 										 rate = mortalityRate,
 										 times = seq(0,maxTime,timeStep),plot=T){
@@ -28,6 +28,9 @@ analytic <- function(initial = initialPopulationSize,
 	return(ts)
 }
 
+# Define a function that calculates the population
+# at time t from the discrete time approximation to
+# the differential equation
 discreteTime <- function(initial = initialPopulationSize,
 												 rate = mortalityRate,
 												 stepSize = timeStep,maxT=maxTime,plot=T){
@@ -44,6 +47,10 @@ discreteTime <- function(initial = initialPopulationSize,
 	return(ts)
 }
 
+# Define a function that calculates the population
+# at time t from a stochastic simulation of the 
+# process represented by the differential equation
+# model
 individual <- function(initial = initialPopulationSize,
 											 rate = mortalityRate,
 											 stepSize = timeStep,maxT=maxTime,plot=T){
@@ -57,6 +64,28 @@ individual <- function(initial = initialPopulationSize,
 	return(ts)
 }
 
-analytic()
-discreteTime()
-individual()
+# Set the parameter values
+initialPopulationSize <- 10 # number of individuals
+mortalityRate <- 0.05       # per capital deaths per day
+timeStep <- 1								# days
+maxTime <- 30								# days
+
+# This part of the code sets up the axes for plotting
+par(bty='L',lwd=3,mar=c(4,4,1,1))
+plot(NA,NA,ylim=c(0,initialPopulationSize),xlim=c(0,maxTime),
+		 ylab='Population size',xlab='Time')
+
+# Now run the three functions to see what you get
+analytic()       # black
+discreteTime()   # green
+individual()     # red
+
+# Try running the functions multiple times without 
+# resetting the parameters or re-making the plot. 
+# Which functions give you different outcomes each time?
+# 
+# Now try changing the parameter values above and
+# re-running the functions (you may want to re-make
+# the plot as well). How does changing each of the 
+# values change the output? Can you get the green 
+# curve to diverge from the black curve? How?
