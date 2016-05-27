@@ -1,6 +1,7 @@
 # seir.R
 # JRCP 06.05.09
-# Updated for 2012
+# SEB 05.28.16
+# Updated for 2016
 #
 # NOTE: The model and parameters used in this tutorial modified from:
 #
