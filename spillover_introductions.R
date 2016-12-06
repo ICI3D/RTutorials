@@ -1,12 +1,12 @@
 ## Stochastic SIR simulation
 ## Clinic on Dynamical Approaches to Infectious Disease Data
 ## International Clinics on Infectious Disease Dynamics and Data Program
-## University of Florida, Gainesville, FL, USA
 ##
-## Becky Borchering, 2015
+## Becky Borchering, 2016
 ## Some Rights Reserved
 ## CC BY-NC 3.0 (http://creativecommons.org/licenses/by-nc/3.0/)
 
+# clear stored parameters and data structures
 rm(list=ls())
 
 N=50   # population size
@@ -22,7 +22,7 @@ count.infections= 0
 count.spillovers= 0
 
 ## Compartments:
-## (S,I,R) = (susceptible, infectious,removed)
+## (S,I,R) = (susceptible, infectious, removed)
 
 ## Transitions:
 ## Event                           Change        										Rate
@@ -31,7 +31,7 @@ count.spillovers= 0
 ## Recovery/Removal (I)            (S,I,R)->(S,I-1,R+1)             gamma*I
 
 
-event <- function(time,S,I,R,params,counter){
+event <- function(time,S,I,R,params){
   with(as.list(params),{
     
     # update rates
@@ -66,19 +66,18 @@ event <- function(time,S,I,R,params,counter){
                R <- R+1
              }
       )}
-    counter <- counter+1
     return(data.frame(time=eventTime,S=S,I=I,R=R,
-                      count.spillovers=count.spillovers,count.infections = count.infections,counter=counter))
+                      count.spillovers=count.spillovers,count.infections = count.infections))
   })
 }
 
-simulateSIR <- function(t,y,params,counter){
+simulateSIR <- function(t,y,params){
   with(as.list(y),{
     ts <- data.frame(time=0,S=round(S),I=round(I),R=round(R),
-                     count.spillovers=0,count.infections=0,counter=counter)
+                     count.spillovers=0,count.infections=0)
     nextEvent <- ts
     while(nextEvent$time<final.time){
-      nextEvent <- event(nextEvent$time,nextEvent$S,nextEvent$I,nextEvent$R,params,nextEvent$counter)
+      nextEvent <- event(nextEvent$time,nextEvent$S,nextEvent$I,nextEvent$R,params)
       ts <- rbind(ts,nextEvent)
     }
     return(ts)
@@ -87,21 +86,20 @@ simulateSIR <- function(t,y,params,counter){
 
 final.time=400
 parms=parms
-counter=0
 
 # run the simulation
-tsTest <- simulateSIR(final.time,c(S=N-1,I=1,R=0),parms,counter)
+tsTest <- simulateSIR(final.time,c(S=N-1,I=1,R=0),parms)
 
 # plot the infectious individuals over time
 plot(tsTest$time,tsTest$I,type='s',main="Number Infected", ylim=c(0,N),xlim=c(0,final.time),bty="n",
      xlab="Time",  ylab="", cex.main=2, cex.lab=1.5, cex.axis=1.25, lwd =2)
 
 # plot all compartments over time
-plot(tsTest$time,tsTest$S,type='s',ylim=c(0,N+20),bty="n",ylab="Number of individuals",xlab="time",lwd=2)
-lines(tsTest$time,tsTest$I,type='s',col='red2',lwd=2)
-lines(tsTest$time,tsTest$R,type='s',col='purple',lwd=2)
+plot(tsTest$time,tsTest$S,type='s',ylim=c(0,N+20),bty="n",ylab="Number of individuals",xlab="Time",lwd=3)
+lines(tsTest$time,tsTest$I,type='s',col='darkmagenta',lwd=3)
+lines(tsTest$time,tsTest$R,type='s',col='darkorange2',lwd=3)
 legend(x="topright",c("S","I","R"),
-       lty=1,col=c("black","red2","purple"),bty="n",lwd=2)
+       lty=1,col=c("black","darkmagenta","darkorange2"),bty="n",lwd=3)
 
 # print the total number of infections
 sum(tsTest$count.infections)
