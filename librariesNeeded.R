@@ -7,6 +7,7 @@ libsToLoad <- c(
     ,"date"
     ,"shiny"
     ,"dplyr"
+    ,"devtools"
     ,"tidyverse"
     ,"ellipse"
     ,"parallel"
