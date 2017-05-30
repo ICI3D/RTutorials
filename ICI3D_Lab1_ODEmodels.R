@@ -223,7 +223,7 @@ head(ts.sir)
 
 ## Our data frame has 3 columns, conveniently labeled "time", "S", and "I",
 ## showing the values of time and the two state variables through time. We can
-## now look at the output in other ways. For example, we saw on Sunday that we
+## now look at the output in other ways. For example, we saw yesterday that we
 ## expect the infection to go extinct because there is no source of new
 ## susceptibles in our equations (eg, through births). Let's see what has
 ## happened after a year:
@@ -234,10 +234,10 @@ subset(ts.sir,time==365)
 ## like it takes more than a year for the infection to burn out with these
 ## initial conditions. If we want to see how the epidemic has progressed
 ## through time, we can plot to output from lsoda(). Remember that the
-## parameters we have used are the same as in Jim's spreadsheet example, so
+## parameters we have used are the same as in the live coding example, so
 ## this is a model of a measles epidemic in New York. We'll label the plot
 ## accordingly. (You'll learn a lot more about plotting - and modifying the
-## appearance of plots - in the next tutorial.)
+## appearance of plots - in Tutorial 4.)
 
 plot(ts.sir$time,               # Time on the x axis
      ts.sir$I,                  # Number infected (I) on the y axis
