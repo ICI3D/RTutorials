@@ -194,15 +194,17 @@ table(Choice,Timing)
 ## RRs. These convey the degree of uncertainty (due to sampling) that is present in  
 ## the estimate(s) and represent a range of plausible values for the true measure of 
 ## effect.  Different methods exist for calculating CIs.  We'll rely on R to do the 
-## calculating for us.  One way to obtain CIs is via the 'epicalc' package.  In 
+## calculating for us.  One way to obtain CIs is via the 'epiDisplay' package.  In 
 ## R-studio, it should be listed under the 'Packages' tab.  To load it you need 
-## check its box or, alternatively, type: library(epicalc)
+## check its box or, alternatively, type: library(epiDisplay). If it isn't installed,
+## do install.packages('epiDisplay') and then library(epiDisplay)
+
 ##
 ## If you don't see it listed under the 'Packages' tab, it may not be installed on 
 ## your computer.  You can attempt to do so by clicking the 'Install Packages' button
-## and typing in: epicalc.
+## and typing in: epiDisplay.
 
-## Once epicalc is loaded, you have access to many commands relevant to 
+## Once epiDisplay is loaded, you have access to many commands relevant to 
 ## epidemiological analysis.  The command cci() provides the OR, CI, and results
 ## from a number of hypothesis tests associated 2x2 tables. 
 ?cci
@@ -215,7 +217,7 @@ table(Choice, Timing)
 ## Selecting the appropriate values for the cci command:
 cci(369, 221, 215, 219, graph=FALSE)
 
-## Analagously, metrics associated with the RR can be obtained through epicalc's
+## Analagously, metrics associated with the RR can be obtained through epiDisplay's
 ## csi() command.  Try using csi() to obtain a CI for the RR. Note: csi doesn't 
 ## plot a graph for a 2x2 table, so you don't need to specify graph=FALSE
 

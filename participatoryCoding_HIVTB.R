@@ -1,3 +1,11 @@
+##################################################
+## Introduction to Sampling & Variability
+## Steve Bellan
+## Meaningful Modeling of Epidemiological Data 2015
+## African Institute of Mathematical Sciences, Muizenberg, South Africa
+
+## Pick a research question:
+## 
 ## Does having HIV affect TB
 
 set.seed(1)

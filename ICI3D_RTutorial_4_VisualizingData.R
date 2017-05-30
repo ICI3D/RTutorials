@@ -245,7 +245,7 @@ head(month.char,50)
 print(month.abb)
 
 month.char <- factor(month.char,
-                     levels = month.abb)
+                     labels = month.abb)
 head(month.char,40)
 
 ## We're going to try to look at measles incidence seasonality with
@@ -329,6 +329,13 @@ par(mfrow=c(1,3), mar=c(4,4,4,6))       # Each of the elements of the
                                         # plot, respectively. Change
                                         # the third number to a 2 and
                                         # see what happens.
+
+## some other common graphics tweaks you may find handy
+par('ps'=18,  ## set font size to 18
+    bty = 'n', ## turn off box around plot
+    lwd = 2) ## set all line widths to twice as big
+    
+    
 
 ######################################################################
 ## PROBLEM 2

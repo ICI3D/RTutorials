@@ -1,18 +1,16 @@
 
 #The teaching goals are as follows:
 #Students should be able to 
-#\begin{enumerate}
-#\item Define {\it clinical trial}
-#\item Explain why a clinical trial permits causal inference
-#\item Explain the role of {\it randomization} and {\it masking}
-#\item Understand that not all biomedical questions require a clinical trial
-#\item Explain the three key ethical principles which govern clinical trial conduct
-#\item Understand how to analyze data from a simple clinical trial
-#\end{enumerate}
+# Define  clinical trial
+# Explain why a clinical trial permits causal inference
+# Explain the role of  randomization and  masking
+# Understand that not all biomedical questions require a clinical trial
+# Explain the three key ethical principles which govern clinical trial conduct
+# Understand how to analyze data from a simple clinical trial
 
-#\section{Lab}
+#Lab
 
-#\subsection{What is a clinical trial?}
+#What is a clinical trial?
 #Clinical trials are widely recognized as a powerful and important design.  Evidence from
 #well-designed clinical trials is almost always considered the strongest form of evidence, 
 #so that clinical trials are at the top of a hierarchy of levels of evidence, followed by
@@ -21,35 +19,31 @@
 
 #In general, the goal of clinical studies, whether or observational
 #or experimental, is to determine whether or not a treatment,
-#intervention, or {\it exposure} is related to an outcome.  Such questions may
+#intervention, or exposure is related to an outcome.  Such questions may
 #take many forms, depending on the nature of the exposure or treatment, and the nature
 #of the outcome.  Here is a sample of observational or experimental studies, taken
 #almost at random from the literature.
-#\begin{itemize}
-#\item Is cigarette smoking associated with uveitis? (e.g. [Lin2010]).
-#\item Is prenatal exposure to influenza associated with adult schizophrenia? (e.g. [Ebert2005])
-#\item Are chili peppers associated with increased risk of stomach cancer? (e.g. [LopezCarillo1994])
-#\item Does streptomycin treat tuberculosis? (e.g. [BMRC1948])
-#\item Does hormone replacement therapy help prevent coronary heart disease? (e.g. [Hulley1998])
-#\item Does topiramate help reduce the frequency of migraine? Acupuncture? (e.g. [Silberstein2009,Li2012])
-#\item Does vitamin A supplementation reduce hearing loss in African children? (e.g. [Schmitz2012])
-#\item Does circumcision reduce HIV incidence in men? (e.g. [Gray2007])
-#\item Does intercessory prayer influence recovery from illness? (e.g. [Benson2006], a study funded by
+# Is cigarette smoking associated with uveitis? (e.g. [Lin2010]).
+# Is prenatal exposure to influenza associated with adult schizophrenia? (e.g. [Ebert2005])
+# Are chili peppers associated with increased risk of stomach cancer? (e.g. [LopezCarillo1994])
+# Does streptomycin treat tuberculosis? (e.g. [BMRC1948])
+# Does hormone replacement therapy help prevent coronary heart disease? (e.g. [Hulley1998])
+# Does topiramate help reduce the frequency of migraine? Acupuncture? (e.g. [Silberstein2009,Li2012])
+# Does vitamin A supplementation reduce hearing loss in African children? (e.g. [Schmitz2012])
+# Does circumcision reduce HIV incidence in men? (e.g. [Gray2007])
+# Does intercessory prayer influence recovery from illness? (e.g. [Benson2006], a study funded by
 #a religious foundation)
-#\end{itemize}
 #In some of these, we are interested in a binary (yes/no) outcome, such as the occurrence of stomach cancer.  In others,
 #we are interested in an event rate (such as the frequency of migraine), a continuous variable (hearing loss), or a 
 #possibly censored event time (time to HIV infection).  
 #
 #Friedman et al. [Friedman1998] define a clinical trial as a prospective study comparing the effect of
 #an intervention against a control in humans.  The key features are
-#\begin{enumerate}
-#\item A clinical trial is prospective, so that the assignment is made and then the patients are followed forward in time.
-#\item A clinical trial has a control group.
-#\item A clinical trial is an experiment.
-#\item Clinical trials are governed by ethical principles, and therefore differ from experimental studies in
+# A clinical trial is prospective, so that the assignment is made and then the patients are followed forward in time.
+# A clinical trial has a control group.
+# A clinical trial is an experiment.
+# Clinical trials are governed by ethical principles, and therefore differ from experimental studies in
 #other fields where patient safety is not a factor.
-#\end{enumerate}
 #
 #While some of these questions were suitable for a clinical trial, some questions of interest cannot be studied
 #experimentally.  In some cases, the exposure of interest is
@@ -59,13 +53,13 @@
 #dubious on subject matter grounds (e.g., it is unclear on a priori grounds whether or not prayer is
 #an appropriate subject for a clinical trial).
 #
-#\subsection{What can clinical trials do that other designs cannot?}
+#What can clinical trials do that other designs cannot?
 #Clinical trials permit causal inference.  By experimentally manipulating the exposure, confounding is (in a 
 #probabilistic sense) eliminated.  Moreover, good clinical trial protocols minimize bias by using masked
 #patients and investigators.  Masking and randomization are the twin cornerstones of clinical trial design.
 #
-#\subsection{Why is masking important?}
-#Masking, also called {\it blinding}, removes an important source of bias.  For example, consider a trial of
+#Why is masking important?
+#Masking, also called  blinding, removes an important source of bias.  For example, consider a trial of
 #whether or not acupuncture prevents migraine.  Patients or investigators may have a prior commitment to acupuncture,
 #which is a low-tech traditional intervention.  Belief in the efficacy of the intervention may lead people to 
 #inadvertently understate the frequency of migraine if the patients know they received acupuncture.  This bias may
@@ -73,7 +67,7 @@
 #
 #When both the
 #subjects and investigators are masked, the trial is {\it double masked} (also called
-#{\it double blind}).  
+# double blind).  
 #
 #In certain trials, masking is impossible.  For example, in a trial of a surgical procedure, it
 #is impossible to mask the surgeon, and frequently impossible to mask the patients (it would be impossible
@@ -88,7 +82,7 @@
 #subtle ways in which masking could have been compromised.  For instance, patients may be aware of side effects of
 #the medication, or the medications may be different in some subtle way detectable to trained physicians.
 #
-#\subsection{Why is randomization important?}
+#Why is randomization important?
 #Randomization insures that unknown factors will be balanced in the study arms, in a probabilistic sense.  The 
 #development of randomized experimental designs by R. A. Fisher early in the last century arguably inaugurated the modern
 #era of biomedical research.
@@ -109,12 +103,12 @@
 #%both arms of the MRC tuberculosis trial of 1948.  Simulate a clinical trial in which 55 patients (110 in total) are assigned 
 #%to a treatment or a control group, supposing that the intervention does not work.  
 #
-#\subsection{Why is a control group important?}
+#Why is a control group important?
 #Without a control group, we do not know what would have happened without the treatment, and therefore cannot estimate
 #the effect of the treatment.  The control group may be a masked placebo, or in some cases may be an existing standard of
 #care to which a new intervention is being compared.
 #
-#\subsection{When is a clinical trial needed?}
+#When is a clinical trial needed?
 #Although a clinical trial provides the highest form of evidence, the expense of a clinical 
 #trial implies that a clinical trial should only done when the question is of sufficient importance
 #to warrant a trial.  
@@ -125,31 +119,31 @@
 #is that it seems better on {\it a priori} grounds to use an antifungal agent to treat a fungal infection
 #than to offer no treatment to the patient.
 #
-#\subsection{What are some common clinical trial designs?}
-#\subsubsection{What is a factorial design?}  
+#What are some common clinical trial designs?
+#What is a factorial design?
 #A factorial design assigns study units to all combinations of experimental factors.  In the Mycotic Ulcer 
 #Therapeutic Exploratory Trial, the investigators were interested in drugs and in corneal scraping.  Two drugs were
 #of interest (natamycin and voriconazole, making two levels of this factor), and two scraping protocols (either
 #actually scrape, or don't scrape, making two levels of this factor).  A $2 \times 2$ factorial design was conducted.
 #
-#\subsubsection{What is a noninferiority trial?}
+#What is a noninferiority trial?
 #In some cases, we are interested in a new drug for which there is already an accepted drug or treatment.  It is
 #unethical to withhold treatment, so that ethical considerations preclude the presence of a placebo control.  In this case, we
 #wish to test the hypothesis that the new drug is not worse than the old drug.
 #
-#\subsubsection{What is a group-randomized trial?}
+#What is a group-randomized trial?
 #In some cases, the natural intervention unit is not the individual, but the group or community.
 #
-#\subsection{How can one analyze data from a simple trial?}
+#How can one analyze data from a simple trial?
 #Statistical analysis of clinical trial data depends on the nature of the outcome variable and the
 #trial design.  In the examples below, we will illustrate analysis using data from the 
 #Mycotic Ulcer Therapeutic Exploratory Trial, a $2 \times 2$ factorial trial in which
-#the drug {\bf azithromycin} was compared to {\bf natamycin}, and corneal scraping was compared to
+#the drug  azithromycin was compared to natamycin, and corneal scraping was compared to
 #no corneal scraping.  The trial was conducted by investigators from UCSF and Aravind Eye Hospital, 
 #India (Lietman, Acharya, Srinivasan) in 2008.
 
-#\section*{Warmup Exercises}
-#\subsection*{Normal random variables}
+#Warmup Exercises
+#Normal random variables
 #How can we simulate data from a standard normal distribution with a given mean and standard deviation?
 #To simulate a given number of random variates, use the {\tt rnorm} command.  Here, we simulate 100 
 #standard normal variates with a mean of 10 and a standard deviation of 3:
@@ -163,9 +157,9 @@ hist(v1)
 #Simulate 30 variates with a mean of 1 and a standard deviation of 0.3.  Repeat this exercise 10 times, 
 #plotting the histogram each time.
 
-#\subsection*{Random selection}
+#Random selection
 #How can we simulate random selection of people into a treatment and a control group?  To do so,
-#we use sampling without replacement based on the {\tt sample} command.  Here, we divide 20 subjects
+#we use sampling without replacement based on the sample command.  Here, we divide 20 subjects
 #into a treatment group and a control group.  We select without replacement half of the numbers from
 #1 to 20 (representing the people) into a treatment and a control group.
 
@@ -184,8 +178,8 @@ assignments <- sample( c(rep(1,10),rep(0,10)), size=20, replace=FALSE )
 assignments
 
 
-#The assignment of the first person is found by looking at {\tt assignments[1]}, the second person
-#by looking at {\tt assignments[2]}, and so on.  Assume that 1 corresponds to the treatment group.
+#The assignment of the first person is found by looking at  assignments[1], the second person
+#by looking at  assignments[2], and so on.  Assume that 1 corresponds to the treatment group.
 #We can print the number of the treatment subjects like this:
 
 
@@ -193,7 +187,7 @@ which(assignments==1)
 
 
 #
-#\subsection*{Working with data frames}
+#Working with data frames
 #We will now generate a simulated data set.   Here, we assume the treatment and control groups 
 #do not differ statistically---the mean and standard deviation of the outcome variable are assumed
 #to be the same.
@@ -211,7 +205,7 @@ dset
 rm(dset,n.subjects,assignments)
 
 
-#\section*{Understanding Type I Error]
+#Understanding Type I Error
 #In this section, we will simulate a clinical trial in which the treatment does not work.  To make
 #this easy, we are going to first write a function that generates the data set.  
 
@@ -296,7 +290,7 @@ mean(a3 < 0.05)
 #rejecting the null hypothesis depend on the effect?  As you lower the treatment effect, the power goes
 #up or down?
 #
-#\subsection{Inference}
+#Inference
 #An important advantage of the clinical trial is that it (probabilistically) controls for confounding.  
 #Randomization allocates potential confounders to the two arms with equal probability.  Let's do an
 #example.  Suppose that 10\% of infected individuals have an infection by an organism that is harder to
@@ -342,7 +336,7 @@ repeat.test.ii <- function(nsims, n.subjects, control.mean, treatment.effect, sd
 #argument, instead of rewriting the function as we just did.  What is a graceful way to handle additional
 #arguments required by the data generating function?  (Suggestion: ``rest'' argument {\tt ...} might work.)
 
-#\section*{Exploring some clinical trial data}
+#Exploring some clinical trial data
 #We will examine data from the Mycotic Ulcer Therapeutic Exploratory Trial.  These data can only be used for this lab.  To
 #protect confidentiality, I added a tiny random value to some of the scar values from the actual trial.
 
@@ -378,3 +372,4 @@ summary(lm(scar_3W ~ drug + scrape, data=mutxt))
 #Vitamin A supplementation in preschool children and risk of hearing loss as adolescents and young adults in rural Nepal: randomised trial cohort follow-up study.  {\it BMJ} 344:d7962. {\tt doi: 10.1136/bmj.d7962} 2012.
 #\item[Silberstein2009] Silberstein S, Lipton R, Dodick D, Freitag F, Mathew N, Brandes J, Bigal M, Ascher S, Morein J, Wright P, Greenberg S, Hulihan J.  Topiramate treatment of chronic migraine: a randomized, placebo-controlled trial of quality of life and other efficacy measures.  {\it Headache} 49(8):1153--1162, 2009.
 #\item[Yoshioka1998] Yoshioka A. Use of randomisation in the Medical Research Council's clinical trial of streptomycin in pulmonary tuberculosis in the 1940s. BMJ 317:1220--1223, 1998.
+
