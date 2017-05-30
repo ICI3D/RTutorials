@@ -265,8 +265,8 @@ plot(ts.sir$time,               # Time on the x axis
 ##
 ## Create a new function called sir.bd() that describes the SIR model with
 ## births and deaths (but constant population size), and compare the output
-## to the model defined above. You may want to refer to the lecture notes from
-## Sunday for the model definition. Assume that the life expectancy in the
+## to the model defined above. You may want to refer to yesterday's lecture
+## notes for the model definition. Assume that the life expectancy in the
 ## population is 60 years.
 ##
 ## Question 3:
