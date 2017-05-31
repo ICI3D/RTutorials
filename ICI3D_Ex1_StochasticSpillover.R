@@ -12,7 +12,7 @@ rm(list=ls())
 N=50   # population size
 
 # choose parameter values
-parms=c(lambda=.02,      # spillover rate
+parms=c(lambda=.05,      # spillover rate
         beta=.2,      	 # contact rate
         gamma=.1)        # recovery rate
 
@@ -26,8 +26,8 @@ count.spillovers= 0
 
 ## Transitions:
 ## Event                           Change        										Rate
-## Spillover (S)									 (S,I,R)->(S-1,I+1,R)							lambda
-## Infection (S)                   (S,I,R)->(S-1,I+1,R)             beta*I*S
+## Spillover (S)									 (S,I,R)->(S-1,I+1,R)							lambda*S/N
+## Infection (S)                   (S,I,R)->(S-1,I+1,R)             beta*I*S/N
 ## Recovery/Removal (I)            (S,I,R)->(S,I-1,R+1)             gamma*I
 
 
@@ -35,7 +35,7 @@ event <- function(time,S,I,R,params){
   with(as.list(params),{
     
     # update rates
-    rates <- c(spillover = ifelse(S>0,lambda,0), # no spillover infections if S depleted
+    rates <- c(spillover = lambda*S/N, # no spillover infections if S depleted
                infect = beta*I*S/N,
                recover = gamma*I)
     
