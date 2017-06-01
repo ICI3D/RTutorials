@@ -340,7 +340,7 @@ repeat.test.ii <- function(nsims, n.subjects, control.mean, treatment.effect, sd
 #We will examine data from the Mycotic Ulcer Therapeutic Exploratory Trial.  These data can only be used for this lab.  To
 #protect confidentiality, I added a tiny random value to some of the scar values from the actual trial.
 
-load("Mutxt.Rdata")
+load("MuTxT.Rdata")
 
 #The variables are:
 #"patid"           -- patient ID
