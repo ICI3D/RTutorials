@@ -14,7 +14,7 @@ libsToLoad <- c(
     ,"emdbook"
     ,"Matrix"
    ,"R0"
-#    ,"OutbreakTools"
+   , "rmarkdown"
 )
 install.packages(libsToLoad)
 

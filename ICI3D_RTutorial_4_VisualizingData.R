@@ -47,18 +47,22 @@ pie(c(bots.dat$prevHIV[bots.dat$year == 1994], # Proportion HIV+
 ## categories, bar plots can do the same with another variable
 ## added.
 
+pdf("SummarySlidePlots/bots1.pdf", wid=6, height = 4)
 barplot(bots.dat$prevHIV,
         col = "red")
+dev.off()
 
 ## This is a good start but we should ALWAYS label axes and have a
 ## title.
 
+pdf("SummarySlidePlots/bots2.pdf", wid=6, height = 4)
 barplot(bots.dat$prevHIV * 100,         # *100 yields % 
         names.arg = bots.dat$year,      # labels bars by year
         col = "red",
         xlab = "year",
         ylab = "% HIV+",
         main = "HIV Prevalence in Botswana, 1990-2007")
+dev.off()
 
 ## This is much better, but it doesn't really show the HIV- population
 ## like the pie chart did.  If we want this we can make what's called
@@ -70,7 +74,7 @@ barplot(bots.dat$prevHIV * 100,         # *100 yields %
 
 prev.frame <- 100*rbind(bots.dat$prevHIV,1 - bots.dat$prevHIV)
 prev.frame
-
+pdf("SummarySlidePlots/bots3.pdf", wid=6, height = 4)
 barplot(prev.frame,
         names.arg = bots.dat$year,       # labels of the bars
         xlab = "year",
@@ -78,8 +82,8 @@ barplot(prev.frame,
         main = "HIV Prevalence in Botswana, 1990-2007",
         col = c("red","blue"),
         beside = FALSE,                 # Stacks bars
-        space = ???,                    # TRY 1, .2, 0
-        border = ???)                   # TRY TRUE & FALSE
+        space = 0,                    # TRY 1, .2, 0
+        border = F)                   # TRY TRUE & FALSE
 
 ## We still need to show our audience that red means HIV+ and blue
 ## means HIV- so they don't think its the other way around. To do this
@@ -92,15 +96,17 @@ legend("top",                      # Location of the legend
        pch = ???,                     # TRY 15 or 19 or other integers
        bg = ???,                      # TRY various colors
        cex = ???)                     # TRY .5, 1, 2       
+dev.off()
 
 ## Alternatively we can just plot prevalence as a series of points.
-
+pdf("SummarySlidePlots/bots4.pdf", wid=6, height = 4)
 plot(bots.dat$year,
      bots.dat$prevHIV *100,
      xlab = "year",
      ylab = "% of population",
      main = "HIV Prevalence in Botswana, 1990-2007",
      ylim = c(0,30))                    # Sets y axis limits.
+dev.off()
 
 ######################################################################
 ## Section 2: Plotting incidence.
@@ -157,14 +163,16 @@ plot(measles.Lon$date,                  # X variable
 ## Not bad, right?  But those circles are a little bit big and make
 ## the pattern more difficult to follow.  Let's try some other
 ## options.
-
+for(ii in c('p','l','b','s','h')) {
+pdf(paste0("SummarySlidePlots/msls",ii,"2.pdf"), wid=6, height = 4)
 plot(measles.Lon$date,
      measles.Lon$cases,
-     type = "???",                      # TRY "p","l","b","s","h"
+     type = ii,                      # TRY "p","l","b","s","h"
      xlab = "Time",                     # x axis label
      ylab = "# cases (weekly)",         # y axis label
      main = "London Measles Incidence, 1944-1994") # plot title
-
+dev.off()
+}
 ## Much better!
 
 ######################################################################
@@ -178,10 +186,10 @@ plot(measles.Lon$date,
 vaccine.year <- as.POSIXct("1968-01-01")
 
 arrows(vaccine.year, 5000,             # 1st (x,y) coordinate of arrow
-       vaccine.year, ???,              # TRY 4500 and 2000
-       length = ???,                   # TRY .1 and 1
-       lwd = ???,                      # TRY 2 and 4
-       lty = ???,                      # TRY 1 and 2
+       vaccine.year, 4500,              # 4500 and 2000
+       length = .1,                   # TRY .1 and 1
+       lwd = 2,                      # TRY 2 and 4
+       lty = 1,                      # TRY 1 and 2
        col = "red")
 
 ## Great! But now we should label this arrow, so that readers know
@@ -189,9 +197,9 @@ arrows(vaccine.year, 5000,             # 1st (x,y) coordinate of arrow
 
 text(vaccine.year, 5000,                # (x,y) coordinate of text
      "beginning of vaccination",        # text to plot
-     pos = ???,                         # TRY 1,2,3 and 4
+     pos = 2,                         # TRY 1,2,3 and 4
      col = "red")
-
+dev.off()
 ######################################################################
 ## PROBLEM 1A
 ######################################################################
@@ -235,7 +243,7 @@ measles.LP$date <- as.POSIXct(measles.LP$date)
 ## boxplot.
 
 month.char <- format(measles.Lon$date,
-                     format = "???")    # TRY "%B", "%m", "%b" and
+                     format = "%b")    # TRY "%B", "%m", "%b" and
                                         # "%b-%Y".  Pick the value
                                         # that gives you months as
                                         # three letters.
@@ -252,10 +260,16 @@ head(month.char,40)
 ## several different plots. Often its useful to have multiple panels
 ## in a plot window if you want to see many plots side by side:
 
-par(mfrow = c(1,3))                     # This says that the next two
+pdf("SummarySlidePlots/mslsSeason2.pdf", wid=9, height = 6)
+par(mfrow = c(1,2))                     # This says that the next two
                                         # plots will be plotted in a
                                         # window with 1 row of
                                         # panels and 2 columns.
+## some other common graphics tweaks you may find handy
+par('ps'=17,  ## set font size to 18
+    bty = 'n', ## turn off box around plot
+    lwd = 2, mar = c(6,7,6,.5),
+las = 2) ## set all line widths to twice as big
 
 ## First lets do a simple scatterplot.
 plot(as.numeric(month.char),
@@ -264,10 +278,10 @@ plot(as.numeric(month.char),
                                   # we can do it manually
      bty = "n",                   # Doesn't plot a box around the plot
      xlab = "",                   
-     ylab = "",                        # WHAT IS AN APPROPRIATE LABEL?
-     main = "Weekly Measles Incidence in London by Month",
-     pch = ???,                         # TRY 5, 19, 20, 21
-     cex = ???)                         # TRY 3, 1, .4
+     ylab = "# cases per week",                        # WHAT IS AN APPROPRIATE LABEL?
+     main = "Weekly Measles Incidence\n in London by Month",
+     pch = 16,                         # TRY 5, 19, 20, 21
+     cex = 1)                         # TRY 3, 1, .4
 
 ## In the above example, we did not plot an x-axis so that we could do
 ## it manually. We'll label x axis with the vector:
@@ -302,10 +316,10 @@ lines(1:12,
 ?boxplot
 
 boxplot(measles.Lon$cases ~ month.char,
-        range = ???,                    # TRY 1 and 3
-        ylab ="# of cases (weekly)",    # WHAT IS ON THIS AXIS?
+        range = 1,                    # TRY 1 and 3
+        ylab =''
         bty = "n",
-        main ="Seasonality in measles incidence")
+        main ="Seasonality in \nmeasles incidence")
 
 ## Both these curves focus closely on the distribution of weekly
 ## incidence but don't show trends in the mean very well.  This is
@@ -316,7 +330,8 @@ boxplot(measles.Lon$cases ~ month.char,
 barplot(mean.by.months,
         names.arg = names(mean.by.months),
         ylab = "mean weekly incidence",
-        main = "Mean Weekly Incidence Aggregated by Month in London, 1944-1994")
+        main = "Mean Weekly Incidence Aggregated \nby Month in London, 1944-1994")
+dev.off()
 
 ## Say you have decided that there is not enough space between the
 ## three plots.  If you'd like to change the margins you can use the
