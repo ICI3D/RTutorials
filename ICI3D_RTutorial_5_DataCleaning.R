@@ -6,14 +6,14 @@
 ## (C) Juliet Pulliam, 2011, 2012, 2017
 ##
 ## The goal of this tutorial is to acquaint you with ways of
-## manipulating and cleaning infectious disease data in R.  By 
+## manipulating and cleaning infectious disease data in R.  By
 ## the end of the tutorial you should be able to:
 ##
 ##  * import CSV files into R
 ##  * ensure imported data is interpreted correctly by R
 ##  * identify errors and inconsistencies in a data frame
 ##  * correct identified data errors
-##  * create distinct variables with for each type of information in a 
+##  * create distinct variables with for each type of information in a
 ##    dataset
 ##
 ## NOTE: The comments will guide you through the tutorial but you
@@ -38,24 +38,24 @@ getwd() # shows you what directory you are currently in
 
 setwd("???") # ENTER THE PATH TO THE DIRECTORY WHERE YOUR DATA ARE
 
-## For this tutorial, we will be using an example dataset thtat 
+## For this tutorial, we will be using an example dataset thtat
 ## resembles (but is not) real data from a measles epidemic in
 ## Democratic Republic of Congo. The "data" are made available only
 ## to ICI3D participants and are for use only during the MMED and
 ## DAIDD clinics, and only for the specified purposes.
 
-## We will be using the 'tidyverse' family of R functions to read in 
+## We will be using the 'tidyverse' family of R functions to read in
 ## and clean the data. Let's get started.
 
 require(tidyverse) # Load the tidyverse package
 dat  <-  read_csv("tutorial5.csv") # read in the "data"
 
-## The read_csv() function reads data in as a data frame, a data 
+## The read_csv() function reads data in as a data frame, a data
 ## structure that is very useful because it can contain different
 ## data types in different columns (unlike a matrix or array).
 
 ######################################################################
-## 1B - Let's look at the data to get a feeling for the size of the 
+## 1B - Let's look at the data to get a feeling for the size of the
 ## data set and what variables we have to work with.
 
 dim(dat)			# Determine the number of rows and columns
@@ -69,7 +69,7 @@ dat		        # Look at the beginning of the dataset
 ##  * Age_annes - the person's age in years
 ##  * Age_Mois - the person's age in months
 ##  * Sexe - the person's sex
-##  * Date_dern_vacci - the date when the person was vaccinated against 
+##  * Date_dern_vacci - the date when the person was vaccinated against
 ##    measles
 ##  * DDS - the date of symptom onset
 ##  * test - the result of a diagnostic test for IgM antibodies against
@@ -77,16 +77,16 @@ dat		        # Look at the beginning of the dataset
 
 ## The read_csv() function has read in most of our data as characters.
 ## Note that this is a different behavior from what would have happened
-## using the read.csv() function demonstrated in Jonathan's lecture, and 
+## using the read.csv() function demonstrated in Jonathan's lecture, and
 ## this fixes the problem he demonstrated where factors are sometimes
-## treated as numbers when they shouldn't be. It also gives us some 
+## treated as numbers when they shouldn't be. It also gives us some
 ## useful information about problems we're likely to discover with
-## the dataset as we explore further - for example, the fact that the 
+## the dataset as we explore further - for example, the fact that the
 ## Age_annes column has been read in as characters indicates there are
 ## likely to be some problematic entries.
 
-## We will go through each column in the data set to ensure that 
-## R treats each variable as the appropriate data type. To do this, 
+## We will go through each column in the data set to ensure that
+## R treats each variable as the appropriate data type. To do this,
 ## it will help to know the different ways in which R can store and
 ## interpret data. To see a list of the options for data types:
 
@@ -95,7 +95,7 @@ dat		        # Look at the beginning of the dataset
 #########
 ## Hands off the keyboard! Pick up a writing implement...
 #########
-## 
+##
 ## Decide what data type each variable in the data set should be.
 ## Refer to the lectures on study design or data cleaning, if necessary.
 ##
@@ -124,14 +124,14 @@ dat <- rename(dat
 ##  * ageYears - the person's age in years (integer)
 ##  * ageMonths - the person's age in months (integer)
 ##  * sex - the person's sex (character)
-##  * dateVaccinated - the date when the person was vaccinated against 
+##  * dateVaccinated - the date when the person was vaccinated against
 ##    measles  (character)
 ##  * dateOnset - the date of symptom onset (character)
 ##  * testResult - the result of a diagnostic test for IgM antibodies against
 ##    measles
 ##
 ##  We will also create some new variables as we clean the data:
-##  
+##
 ##  * approxAge - the person's (approximate) age in years, as a continuous
 ##  variable (double)
 ##  * vaccinationStatus - whether the person had been previously
@@ -155,7 +155,7 @@ distinct(dat,ageYears)
 
 ## The distinct() function lists the unique values for a variable or
 ## or set of variables. So far, everything looks fine, but the
-## function only shows us as much of the data as will fit in the 
+## function only shows us as much of the data as will fit in the
 ## console window. We need to look at all of the values to indentify
 ## what's going on:
 
@@ -167,36 +167,37 @@ View(
 ## value of 'ND' which of course is not a number, so read_csv()
 ## decided to treat the entire column as characters. In this dataset,
 ## 'ND' is a way of denoting missing values, and we can correct
-## this easily by telling R that everything in this column should be 
+## this easily by telling R that everything in this column should be
 ## a number. To see what this will do, let's look at the unique values
 ## again after we cast ageYears as an integer:
 
 View(
-  distinct(dat,as.integer(ageYears))
+  dat
+  %>% distinct(.,as.integer(ageYears))
 )
 
 ## We see that 'ND' is no longer in the list of values and has been
 ## replaced by NA, which stands for 'not applicable' and is R's way
 ## of treating missing information. We can see that R is treating NA
-## differently from 'ND' because the NA row is now greyed out. Let's 
+## differently from 'ND' because the NA row is now greyed out. Let's
 ## update the dataset to reflect this correction:
 
-dat <- mutate(dat
-              , ageYears = as.integer(ageYears) # replace
+dat <- (
+  dat
+  %>% mutate(., ageYears = as.integer(ageYears)) # replace
 )
 
-## R returns a warning, in case the NA values were introduced by
-## accident, but in this case it was intentional, so we can safely move
-## on. Let's look more closely at the data in this column to verify
+## Now let's look more closely at the data in this column to verify
 ## that the values make sense:
 
 View(
-  distinct(dat,ageYears)
+  dat
+  %>% distinct(.,ageYears)
   %>% arrange(.,ageYears)
 )
 
 ## This time, instead of just looking at all the values, we've arranged
-## them in ascending order, so we can easily see whether all of the 
+## them in ascending order, so we can easily see whether all of the
 ## numeric values are plausible. We can also look explicitly at the range
 ## of values given:
 
@@ -210,7 +211,7 @@ range(dat$ageYears,na.rm = T)
 
 mode(dat$ageMonths)		# determine the storage mode of a variable
 
-## The variable is stored as a numeric value, as seems appropriate. 
+## The variable is stored as a numeric value, as seems appropriate.
 ## Let's also verify that this numeric value is not representing a
 ## factor:
 
@@ -221,17 +222,72 @@ class(dat$ageMonths)		# determine the object class of a variable
 ## below to take a closer look:
 
 View(
-  distinct(dat,???) # View distinct values for month
+  dat
+  %>% distinct(.,???) # View distinct values for month
   %>% arrange(.,???) # Arrange values in ascending order
 )
 
-## All of the values are numeric, but some of them are greater than 12,
-## indicating that the months column is sometimes used for children
+## All of the values are numeric, but at least one row has a value of 25,
+## indicating that the months column may sometimes be used for children
 ## over 1 year of age. This might not seem like a big deal, but we need
 ## to be careful that we understand how the two age columns relate
-## to each other.
+## to each other, or we could run into trouble at the data analysis phase.
 
+## Let's start by looking at the ageMonths values for the subset of the
+## data that has an ageYears value of 0:
 
+print(
+  dat
+  %>% filter(.,ageYears==0) # subset the rows that have 0 for ageYears
+  %>% group_by(.,ageMonths) # group by ageYears
+  %>% summarize(.,count = n()) # count occurrences of each ageYears value
+)
+
+## All ageMonths values for children with ageYears of 0 are between 0
+## and 11 (inclusive). This seems good because the columns are consistent
+## here. Now let's look the ageYears values for the subset of the data
+## where ageMonths is greater than 11:
+
+print(
+  dat
+  %>% filter(.,???) # fill in the appropriate logical statement
+  %>% group_by(.,ageYears) # group by ageYears
+  %>% summarize(.,count = n()) # count occurrences of each ageMonths value
+)
+
+## There is only one row in the dataset where ageMonths is greater than 11,
+## so let's take a closer look at that particular row:
+
+print(
+  dat
+  %>% filter(.,ageMonths==25)
+)
+
+## How confusing! Both the ageYears and ageMonths values are 25.
+## At this stage, we would like to go back to the souce of the data
+## and double-check the recorded age for this individual. It turns out
+## that in this case, there was a data entry error where the age in years
+## was accidentally entered in both columns. We can easily correct this.
+## At the same time, let's also modify the variable so that all individuals
+## at least 1 year of age have an NA value for their age in months, since
+## it seems this level of precision wasn't recorded for their ages.
+
+View(
+  dat
+  %>% select(.,ageYears,ageMonths)
+  %>% mutate(., ageMonthsNEW = ifelse(ageYears >= 1, NA, ageMonths)) # replace
+)
+
+dat <- (
+  dat
+  %>% mutate(., ageMonths = ifelse(ageYears >= 1, NA, ageMonths)) # replace
+)
+
+## Note that it would be very difficult to pick up errors in this
+## variable if they didn't fall ouside a reasonable range for age in
+## years. To reduce errors that are difficult to spot, data are often
+## entered twice by different people and then values are compared to
+## look for inconsistencies.
 
 
 ## ~~~~~~~~~~~~~~~~~~~~~~
@@ -241,7 +297,7 @@ View(
 ggplot(dat, aes(x=age))
 + geom_histogram()
 
-## The variable is stored as a numeric value, as seems appropriate. 
+## The variable is stored as a numeric value, as seems appropriate.
 ## Let's also verify that this numeric value is not representing a
 ## factor:
 
@@ -254,21 +310,21 @@ class(dat$ageYears)		# determine the object class of a variable
 mean(oswego$age)		# calculate the average age - ERROR
 
 ## This calculation gives us an error because R is not treating the
-## the factor as a numeric value. To understand why, let's look at the 
+## the factor as a numeric value. To understand why, let's look at the
 ## values in the data vector:
 
 oswego$age				# look at the vector of age values
 
 ## Oops! One of the values was entered as "seven" when it should have
 ## been entered as the number 7. Thus, when the data were imported
-## into R, the entire column was read in as character strings and 
+## into R, the entire column was read in as character strings and
 ## the variable was converted to a factor.
 
 ## There are several ways to correct an error of this sort. The most
 ## straightforward would be to edit the data file directly and re-
 ## import the data into R, but this option would not leave a record
 ## of the change. A better option would be to make the change in your
-## data-cleaning script. 
+## data-cleaning script.
 
 ## A good way to do this would be to begin by replacing the level
 ## "seven" with the level "7":
@@ -282,9 +338,9 @@ levels(oswego$age)[levels(oswego$age)=="seven"] <- "7"
 levels(oswego$age)		# the updated levels of the factor
 
 ## Notice that the number of levels has decreased from 47 to 46. This
-## is because there was aleady a level "7" and R has (correctly) 
+## is because there was aleady a level "7" and R has (correctly)
 ## interpreted the renaming of level "seven" to mean that we want that
-## level to become part of the original level "7" (or, rows where the 
+## level to become part of the original level "7" (or, rows where the
 ## value of the variable is 7).
 
 ## The vector of values itself is now:
@@ -295,8 +351,8 @@ oswego$age
 ## we can now think about converting the variable to a numeric class.
 ## We do this by converting the vector first to a set of character
 ## strings, then into a set of numeric values. To make sure we do this
-## properly, we'll create a new variable AGE and check that the 
-## conversion has worked the way we want it to before replacing the 
+## properly, we'll create a new variable AGE and check that the
+## conversion has worked the way we want it to before replacing the
 ## vector in the data frame.
 
 AGE <- as.numeric(as.character(oswego$age))
@@ -311,7 +367,7 @@ AGE						# confirm correct conversion of values
 #########
 ## WARNING!
 #########
-## 
+##
 ## What would have happened if we had converted to a numeric vector
 ## without passing through a character vector first? Why wouldn't this
 ## work as we'd like it to?  You can try this to see that it doesn't.
@@ -340,7 +396,7 @@ hist(oswego$age,		# histogram of age vales
      main="???",  		# CHOOSE an appropriate title
      breaks=???)			# TRY 10, 0:622, seq(0,640,20)
 
-## Looks like most of the values are in a plausible range. To confirm 
+## Looks like most of the values are in a plausible range. To confirm
 ## this, let's look at the subset of the data for which age is over
 ## 100:
 
@@ -349,17 +405,17 @@ subset(oswego,age>100)	# subset of data with age > 100
 ## It's only this one value that is a problem (as far as we can tell).
 ## At this stage, we would like to go back to the souce of the data
 ## and find out what the actual value should be. Here, it turns out
-## there was a data entry error where too many twos were entered, and 
+## there was a data entry error where too many twos were entered, and
 ## the value should have been 62. We can easily make this correction.
 
 age.error <- which(oswego$age>100)	# get index of the appropriate row
-oswego$age[age.error] <- 62			# replace the old value 
+oswego$age[age.error] <- 62			# replace the old value
 oswego[age.error,]					# look at the corrected row
 
-## Note that it would be very difficult to pick up errors in this 
+## Note that it would be very difficult to pick up errors in this
 ## variable if they didn't fall ouside a reasonable range for age in
 ## years. To reduce errors that are difficult to spot, data are often
-## entered twice by different people and then values are compared to 
+## entered twice by different people and then values are compared to
 ## look for inconsistencies.
 
 ######################################################################
@@ -387,7 +443,7 @@ range(oswego$sex)		# range of values
 table(oswego$sex)		# table of how many times each value occurs
 
 ## Hmm... There are only 3 values and mostly the values are 1 and 2.
-## Given the name of the column you can probably guess that 1 and 2 
+## Given the name of the column you can probably guess that 1 and 2
 ## are a numeric code for Male and Female, but you would have to find
 ## out from the data source or code book which is which. If possible,
 ## you should also go to the source to find out whether the value -1
@@ -403,7 +459,7 @@ sex.error <- which(oswego$sex==-1)	# get index of the appropriate row
 oswego$sex[sex.error] <- 1			# replace the erroneous value
 oswego[sex.error,]					# look at the corrected row
 
-## Let's look at the table of values again, now that we've made the 
+## Let's look at the table of values again, now that we've made the
 ## correction:
 
 table(oswego$sex)		# table of how many times each value occurs
@@ -417,7 +473,7 @@ table(oswego$sex)		# table of how many times each value occurs
 
 ?factor					# help for factor()
 
-## Now let's make our factor as a new vector SEX: 
+## Now let's make our factor as a new vector SEX:
 
 SEX <- factor(oswego$sex,	# input the vector of values from the data set
               levels=c(1,2),		# these are the current values of the variable
@@ -425,7 +481,7 @@ SEX <- factor(oswego$sex,	# input the vector of values from the data set
 # these are categorial names for the values
 
 ## Note that our new vector is still stored as a set of numeric values
-## (as are all factors) even though R will correctly interpret the 
+## (as are all factors) even though R will correctly interpret the
 ## object as a factor with categorical values:
 
 mode(SEX)				  # storage mode
@@ -490,8 +546,8 @@ subset(oswego,timesupper<1600) # rows for individuals with odd supper times
 ######################################################################
 ## PROBLEM 1
 ######################################################################
-## 
-## What do you think is the best course of action in this scenario? 
+##
+## What do you think is the best course of action in this scenario?
 ## How likely do you think it is that the supper time for this individual
 ## is accurate? Is it better to leave this datum as is, or to change
 ## the value of time supper to indicate that this value is missing (ie,
@@ -499,7 +555,7 @@ subset(oswego,timesupper<1600) # rows for individuals with odd supper times
 ##
 ## Try to think of arguments in both directions, then make a decision
 ## about what to do.
-## 
+##
 ## If you decide that the best option is to set the value to NA, then do
 ## this now by adding appropriate lines of code below.
 ##
@@ -509,16 +565,16 @@ subset(oswego,timesupper<1600) # rows for individuals with odd supper times
 ## who is listed as eating supper at 11am, did get ill and has an onset
 ## time listed as 3pm. Let's pretend for now that we know the supper in
 ## question occurred on April 18, which also happens to be the onset date
-## for this case. 
+## for this case.
 
 ######################################################################
 ## PROBLEM 2
 ######################################################################
-## 
+##
 ## Repeat Problem 1 for the second individual. Does having the additional
 ## information about the onset date and time help you make your decision,
 ## or does it make the decision more difficult. Why?
-## 
+##
 ## If you decide that the best option is to set the value to NA, or to
 ## make some other change to the dataset based in the early supper time
 ## for this case, then do this now by adding appropriate lines of code
@@ -527,15 +583,15 @@ subset(oswego,timesupper<1600) # rows for individuals with odd supper times
 ######################################################################
 
 ## Once you are satisfied that you have corrected any likely errors in
-## the timesupper column, it is time to convert the data to the date 
+## the timesupper column, it is time to convert the data to the date
 ## format. To do this, we will use the strptime() function.
 
 ?strptime                # help file for strptime()
 
 ## The first argument of strptime() is the value input that you want to
-## convert to a date/time format, and the second argument specifies the 
+## convert to a date/time format, and the second argument specifies the
 ## format for interpreting the date/time information. Under "Details" in
-## the help file, you will find information about how to specify the 
+## the help file, you will find information about how to specify the
 ## current format for conversion. In our case, the times are given as
 ## hours (00-23) and minutes (00-60), which are specified by the strings
 ## "%H" and "%M", respectively. So let's use this information and try to
@@ -549,18 +605,18 @@ SUPPER <- strptime(oswego$timesupper,format="%H%M")  # convert timesupper
 
 head(SUPPER)
 
-## Wait a minute... we said the date was April 18, 1940, but R does not know 
+## Wait a minute... we said the date was April 18, 1940, but R does not know
 ## this and has, by default, interpreted the date to be today. To correct this,
 ## we'll have to tell R we want it to use a different date. Since the
 ## date is the same for all of the times, this is relatively straightforward.
 
-## Let's create a string called supperdate, which defines the date we want to 
+## Let's create a string called supperdate, which defines the date we want to
 ## use, then paste this together with the string that represents the time:
 
 supperdate <- "1940-04-18"         # April 18, 1940
 supper.datetime <- paste(supperdate,oswego$timesupper) # supper date and time
 
-## Now, see what this new vector, representing the dates and times that 
+## Now, see what this new vector, representing the dates and times that
 ## you want in the timesupper column, looks like:
 
 head(supper.datetime)
@@ -583,13 +639,13 @@ oswego$timesupper <- SUPPER  		# replace the old values with the new version
 ######################################################################
 ## PROBLEM 4
 ######################################################################
-## 
+##
 ## Check the values of the information in the two columns onsetdate
 ## and onsettime. Correct any suspected errors.
 ##
 ## Now, use the columns onsetdate and onsettime to create a new column,
 ## onset, of the date/time object class that includes full information
-## about the timing of onset. First, check the values in each of the 
+## about the timing of onset. First, check the values in each of the
 ## two columns and correct any suspected errors.
 ##
 ######################################################################
@@ -598,7 +654,7 @@ oswego$timesupper <- SUPPER  		# replace the old values with the new version
 ######################################################################
 ## PROBLEM 5
 ######################################################################
-## 
+##
 ## The data in all of the remaining columns are currently formatted
 ## as factors with the levels "yes" and "no". Figure out how to convert
 ## a factor of this type to a logical, which has the values TRUE and
@@ -607,7 +663,7 @@ oswego$timesupper <- SUPPER  		# replace the old values with the new version
 ## is an example of where entering data multiple times is essential for
 ## avoiding data errors.)
 ##
-## Convert the ill column from yes/no (stored as a factor) to a logical 
+## Convert the ill column from yes/no (stored as a factor) to a logical
 ## format. Check the new format confirm that the number of TRUE
 ## values matches the number of "yes" entries in the oringial column,
 ## and confirm that the number of FALSE values matches the number of
@@ -629,7 +685,7 @@ oswego$timesupper <- SUPPER  		# replace the old values with the new version
 
 today <- format(Sys.Date(),"%d%b%Y")   # today's date
 
-## Now, create the filename to use, which incorporates the date, so 
+## Now, create the filename to use, which incorporates the date, so
 ## you will be able to easily track version of your data file:
 
 fn <- paste("oswegoClean",today,".Rdata",sep="") # filename
