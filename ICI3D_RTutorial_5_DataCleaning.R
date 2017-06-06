@@ -82,7 +82,7 @@ dat		        # Look at the beginning of the dataset
 ## treated as numbers when they shouldn't be. It also gives us some 
 ## useful information about problems we're likely to discover with
 ## the dataset as we explore further - for example, the fact that the 
-## Age_Mois column has been read in as characters indicates there are
+## Age_annes column has been read in as characters indicates there are
 ## likely to be some problematic entries.
 
 ## We will go through each column in the data set to ensure that 
@@ -132,7 +132,8 @@ dat <- rename(dat
 ##
 ##  We will also create some new variables as we clean the data:
 ##  
-##  * age - the person's age in years, as a continuous variable (double)
+##  * approxAge - the person's (approximate) age in years, as a continuous
+##  variable (double)
 ##  * vaccinationStatus - whether the person had been previously
 ##  vaccinated (logical)
 ##  * testStatus - additional information about the person's diagnostic
@@ -141,15 +142,110 @@ dat <- rename(dat
 ######################################################################
 ## 1C - Cleaning Numeric Data
 ##
-## Let's begin by looking at ageYear, which is stored as an integer.
+## Let's begin by looking at ageYears, which should be stored as a
+## numeric value.
 
-mode(oswego$age)		# determine the storage mode of a variable
+mode(dat$ageYears)		# determine the storage mode of a variable
 
-## The variable is stored as a numeric value, as seems appropriate, 
-## but if we check the variable's class, we see that the data in this
-## column will be treated as a factor by R:
+## As noted above, ageYears is being treated as a character, which
+## likely indicates a problem with some of the entries; let's take
+## a closer look:
 
-class(dat$ageYear)		# determine the object class of a variable
+distinct(dat,ageYears)
+
+## The distinct() function lists the unique values for a variable or
+## or set of variables. So far, everything looks fine, but the
+## function only shows us as much of the data as will fit in the 
+## console window. We need to look at all of the values to indentify
+## what's going on:
+
+View(
+  distinct(dat,ageYears)
+)
+
+## Scrolling down, we can see the problem: some of the entries have a
+## value of 'ND' which of course is not a number, so read_csv()
+## decided to treat the entire column as characters. In this dataset,
+## 'ND' is a way of denoting missing values, and we can correct
+## this easily by telling R that everything in this column should be 
+## a number. To see what this will do, let's look at the unique values
+## again after we cast ageYears as an integer:
+
+View(
+  distinct(dat,as.integer(ageYears))
+)
+
+## We see that 'ND' is no longer in the list of values and has been
+## replaced by NA, which stands for 'not applicable' and is R's way
+## of treating missing information. We can see that R is treating NA
+## differently from 'ND' because the NA row is now greyed out. Let's 
+## update the dataset to reflect this correction:
+
+dat <- mutate(dat
+              , ageYears = as.integer(ageYears) # replace
+)
+
+## R returns a warning, in case the NA values were introduced by
+## accident, but in this case it was intentional, so we can safely move
+## on. Let's look more closely at the data in this column to verify
+## that the values make sense:
+
+View(
+  distinct(dat,ageYears)
+  %>% arrange(.,ageYears)
+)
+
+## This time, instead of just looking at all the values, we've arranged
+## them in ascending order, so we can easily see whether all of the 
+## numeric values are plausible. We can also look explicitly at the range
+## of values given:
+
+range(dat$ageYears,na.rm = T)
+
+## Note that the na.rm argument tells the function whether to drop the
+## missing values before showing us the range. We have set it to TRUE,
+## so we see the range of values after the NAs have been removed.
+
+## Now let's look at the column giving age in months.
+
+mode(dat$ageMonths)		# determine the storage mode of a variable
+
+## The variable is stored as a numeric value, as seems appropriate. 
+## Let's also verify that this numeric value is not representing a
+## factor:
+
+class(dat$ageMonths)		# determine the object class of a variable
+
+## Great! The ageMonths column seems to be in better shape that the
+## ageYears column was. Fill in the missing information in the command
+## below to take a closer look:
+
+View(
+  distinct(dat,???) # View distinct values for month
+  %>% arrange(.,???) # Arrange values in ascending order
+)
+
+## All of the values are numeric, but some of them are greater than 12,
+## indicating that the months column is sometimes used for children
+## over 1 year of age. This might not seem like a big deal, but we need
+## to be careful that we understand how the two age columns relate
+## to each other.
+
+
+
+
+## ~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+ggplot(dat, aes(x=age))
++ geom_histogram()
+
+## The variable is stored as a numeric value, as seems appropriate. 
+## Let's also verify that this numeric value is not representing a
+## factor:
+
+class(dat$ageYears)		# determine the object class of a variable
 
 ## What is going on? It turns out that factors are stored as integers,
 ## even though R does not normally treat them as numeric values. To see
@@ -179,7 +275,7 @@ oswego$age				# look at the vector of age values
 
 levels(oswego$age)		# the original levels of the factor
 levels(oswego$age)[levels(oswego$age)=="seven"] <- "7"
-						# change the level "seven" to "7"
+# change the level "seven" to "7"
 
 ## Now let's look at the levels of the factor again:
 
@@ -204,7 +300,7 @@ oswego$age
 ## vector in the data frame.
 
 AGE <- as.numeric(as.character(oswego$age))
-						# convert the factor to a numeric class
+# convert the factor to a numeric class
 class(AGE)				# check the conversion
 AGE						# view the new version of the variable
 oswego$age
@@ -239,10 +335,10 @@ range(oswego$age)		# range of age values
 ## histogram of the data:
 
 hist(oswego$age,		# histogram of age vales
-	col="dark grey",	# color of the bars
-	xlab="Age in years",# label for the x axis
-	main="???",  		# CHOOSE an appropriate title
-	breaks=???)			# TRY 10, 0:622, seq(0,640,20)
+     col="dark grey",	# color of the bars
+     xlab="Age in years",# label for the x axis
+     main="???",  		# CHOOSE an appropriate title
+     breaks=???)			# TRY 10, 0:622, seq(0,640,20)
 
 ## Looks like most of the values are in a plausible range. To confirm 
 ## this, let's look at the subset of the data for which age is over
@@ -324,9 +420,9 @@ table(oswego$sex)		# table of how many times each value occurs
 ## Now let's make our factor as a new vector SEX: 
 
 SEX <- factor(oswego$sex,	# input the vector of values from the data set
-	levels=c(1,2),		# these are the current values of the variable
-	labels=c("Female","Male"))
-						# these are categorial names for the values
+              levels=c(1,2),		# these are the current values of the variable
+              labels=c("Female","Male"))
+# these are categorial names for the values
 
 ## Note that our new vector is still stored as a set of numeric values
 ## (as are all factors) even though R will correctly interpret the 
@@ -447,10 +543,10 @@ subset(oswego,timesupper<1600) # rows for individuals with odd supper times
 ## SUPPER from the output:
 
 SUPPER <- strptime(oswego$timesupper,format="%H%M")  # convert timesupper
-                                                     # to date/time
+# to date/time
 
 ## Let's see what we get:
-                   
+
 head(SUPPER)
 
 ## Wait a minute... we said the date was April 18, 1940, but R does not know 
