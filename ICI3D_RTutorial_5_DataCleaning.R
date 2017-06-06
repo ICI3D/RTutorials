@@ -132,7 +132,7 @@ dat <- rename(dat
 ##
 ##  We will also create some new variables as we clean the data:
 ##
-##  * approxAge - the person's (approximate) age in years, as a continuous
+##  * ageYearsContinuous - the person's (approximate) age in years, as a continuous
 ##  variable (double)
 ##  * vaccinationStatus - whether the person had been previously
 ##  vaccinated (logical)
@@ -160,7 +160,8 @@ distinct(dat,ageYears)
 ## what's going on:
 
 View(
-  distinct(dat,ageYears)
+  dat
+  %>% distinct(.,ageYears)
 )
 
 ## Scrolling down, we can see the problem: some of the entries have a
@@ -228,30 +229,41 @@ View(
 )
 
 ## All of the values are numeric, but at least one row has a value of 25,
-## indicating that the months column may sometimes be used for children
-## over 1 year of age. This might not seem like a big deal, but we need
+## which is hard to interpret. In particualr, we need
 ## to be careful that we understand how the two age columns relate
 ## to each other, or we could run into trouble at the data analysis phase.
 
-## Let's start by looking at the ageMonths values for the subset of the
+## Let's start by looking at the data with missing values for ageMonths. We
+## can also look at the rows that have missing values for ageYears at the
+## same time:
+
+print(
+  dat
+  %>% filter(.,is.na(ageMonths)|is.na(ageYears)) # subset the rows that have NA for either age variable
+)
+
+## There individual with missing values, and they are missing both year
+## and month information. While it's not ideal to have data, this is a reality
+## in most datasets, and in this case it's not that bad.
+
+## Now let's look at the ageMonths values for the subset of the
 ## data that has an ageYears value of 0:
 
 print(
   dat
   %>% filter(.,ageYears==0) # subset the rows that have 0 for ageYears
-  %>% group_by(.,ageMonths) # group by ageYears
+  %>% group_by(.,ageMonths) # group by ageMonths
   %>% summarize(.,count = n()) # count occurrences of each ageYears value
 )
 
 ## All ageMonths values for children with ageYears of 0 are between 0
-## and 11 (inclusive). This seems good because the columns are consistent
-## here. Now let's look the ageYears values for the subset of the data
-## where ageMonths is greater than 11:
+## and 11 (inclusive). This seems like a good start. Now let's look the
+## ageYears values for the rest of the data:
 
 print(
   dat
-  %>% filter(.,???) # fill in the appropriate logical statement
-  %>% group_by(.,ageYears) # group by ageYears
+  %>% filter(.,???) # subset the rows for ages of at least 1 year
+  %>% group_by(.,ageMonths) # group by ageMonths
   %>% summarize(.,count = n()) # count occurrences of each ageMonths value
 )
 
@@ -264,31 +276,64 @@ print(
 )
 
 ## How confusing! Both the ageYears and ageMonths values are 25.
-## At this stage, we would like to go back to the souce of the data
-## and double-check the recorded age for this individual. It turns out
-## that in this case, there was a data entry error where the age in years
-## was accidentally entered in both columns. We can easily correct this.
-## At the same time, let's also modify the variable so that all individuals
-## at least 1 year of age have an NA value for their age in months, since
-## it seems this level of precision wasn't recorded for their ages.
+## At this stage, we would like to go back to the source of the data
+## and double-check the recorded age for this individual. Let's say we
+## go back to the data source and learn that the individual had just
+## turned 25, meaning that the months entry should be 0 and there was a data
+## entry error where the age in years was accidentally entered in both
+## columns. We can easily correct this.
 
-View(
+## Let's first set up a test case on a simplified version of the dataset:
+
+print(
   dat
-  %>% select(.,ageYears,ageMonths)
-  %>% mutate(., ageMonthsNEW = ifelse(ageYears >= 1, NA, ageMonths)) # replace
+  %>% select(.,ageYears,ageMonths) # reduce the number of columns for test case
+  %>% filter(.,ageYears==25) # subset to look only at the data for 25 year olds
+  %>% mutate(., ageMonthsNEW = ifelse(ageYears == 25 & ageMonths == 25, 0, ageMonths)) # correct the typo
 )
+
+## It looks like the mutate command is appropriately correcting the typo, so we
+## can now be comfortable replacing the values in the actual data frame:
 
 dat <- (
   dat
-  %>% mutate(., ageMonths = ifelse(ageYears >= 1, NA, ageMonths)) # replace
+  %>% mutate(., ageMonths = ifelse(ageYears == 25 & ageMonths == 25, 0, ageMonths))
 )
 
-## Note that it would be very difficult to pick up errors in this
-## variable if they didn't fall ouside a reasonable range for age in
-## years. To reduce errors that are difficult to spot, data are often
-## entered twice by different people and then values are compared to
-## look for inconsistencies.
+## Note that it is very difficult to pick up errors in the age variables if they
+## don't fall outside the range expected for age or years. To reduce errors that
+## are difficult to spot, data are often entered twice by different people
+## and then values are compared to look for inconsistencies.
 
+## Now that we have cleaned versions of both ageYears and ageMonths, let's put
+## them together to create a new variable ageYearsContinuous that treats age as continuous.
+## We can do this using the mutate() function that we saw above. Again, we'll
+## first look at the output for a test case and the update the actual data frame:
+
+View(
+  dat
+  %>% select(.,ageYears,ageMonths) # reduce the number of columns for test case
+  %>% mutate(., ageYearsContinuous = ageYears + ageMonths/12)
+)
+
+## Scan the values of the columns to make sure the conversion has been done right.
+## If you were doing a more complicated transformation, you would probably want to
+## build in additional checks to identify potential errors.
+
+## The transformation looks good, so let's update our data frame to add the new variable.
+## Now that we have a new variable that contains all of the age information, we can also
+## remove the original age variables, which are difficult to interpret.
+
+dat <- (
+  dat
+  %>% mutate(., ageYearsContinuous = ageYears + ageMonths/12) # create new variable
+  %>% select(.,-ageYears,-ageMonths) # remove original age variables
+)
+
+summary(dat)
+
+ggplot(dat, aes(x=ageYearsContinuous))
++ geom_histogram()
 
 ## ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -682,16 +727,4 @@ oswego$timesupper <- SUPPER  		# replace the old values with the new version
 ## Now that you've finished cleaning the dataset, you should save your
 ## cleaned dataset with a date tag for version control. First, create
 ## a variable to represent today's date:
-
-today <- format(Sys.Date(),"%d%b%Y")   # today's date
-
-## Now, create the filename to use, which incorporates the date, so
-## you will be able to easily track version of your data file:
-
-fn <- paste("oswegoClean",today,".Rdata",sep="") # filename
-fn
-
-## Save the dataframe with your cleaned data:
-
-save(oswego,today,file=fn)
 
