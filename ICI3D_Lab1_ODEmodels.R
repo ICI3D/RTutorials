@@ -1,5 +1,6 @@
 ## Introduction to Infectious Disease Dynamics
 ## Clinic on the Meaningful Modeling of Epidemiological Data
+## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
 ## African Institute for Mathematical Sciences, Muizenberg, RSA
 ##
 ## Juliet R.C. Pulliam, 2012, 2017
