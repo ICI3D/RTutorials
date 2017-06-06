@@ -1,8 +1,10 @@
 ## Data management and cleaning in R
-## Meaningful Modeling of Epidemiological Data, 2012
-## AIMS, Muizenberg
-## (C) Juliet Pulliam, 2011, 2012
-
+## Clinic on the Meaningful Modeling of Epidemiological Data
+## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
+## African Institute for Mathematical Sciences, Muizenberg, RSA
+##
+## (C) Juliet Pulliam, 2011, 2012, 2017
+##
 ## The goal of this tutorial is to acquaint you with ways of
 ## manipulating and cleaning infectious disease data in R.  By 
 ## the end of the tutorial you should be able to:
@@ -11,8 +13,8 @@
 ##  * ensure imported data is interpreted correctly by R
 ##  * identify errors and inconsistencies in a data frame
 ##  * correct identified data errors
-##  * develop functions to repeat common data-cleaning tasks
-##  * save your cleaned dataset with a date tag for version control
+##  * create distinct variables with for each type of information in a 
+##    dataset
 ##
 ## NOTE: The comments will guide you through the tutorial but you
 ## should make sure you understand what the code is doing.  Some
@@ -36,14 +38,19 @@ getwd() # shows you what directory you are currently in
 
 setwd("???") # ENTER THE PATH TO THE DIRECTORY WHERE YOUR DATA ARE
 
-## For this tutorial, we will be using a dataset from an outbreak of 
-## food-borne gastrointestinal illness in the US in 1940. The clean
-## data are available as part of the R package epicalc, but we will 
-## be using an "uncleaned" version available on the MMED wiki.
+## For this tutorial, we will be using an example dataset thtat 
+## resembles (but is not) real data from a measles epidemic in
+## Democratic Republic of Congo. The "data" are made available only
+## to ICI3D participants and are for use only during the MMED and
+## DAIDD clinics, and only for the specified purposes.
 
-oswego  <-  read.csv("oswegoTutorial.csv")
+## We will be using the 'tidyverse' family of R functions to read in 
+## and clean the data. Let's get started.
 
-## The read.csv() function reads data in as a data frame, a data 
+require(tidyverse) # Load the tidyverse package
+dat  <-  read_csv("tutorial5.csv") # read in the "data"
+
+## The read_csv() function reads data in as a data frame, a data 
 ## structure that is very useful because it can contain different
 ## data types in different columns (unlike a matrix or array).
 
@@ -51,21 +58,39 @@ oswego  <-  read.csv("oswegoTutorial.csv")
 ## 1B - Let's look at the data to get a feeling for the size of the 
 ## data set and what variables we have to work with.
 
-dim(oswego)			# Determine the number of rows and columns
-head(oswego)		# Look at the first five rows of data
+dim(dat)			# Determine the number of rows and columns
+dat		        # Look at the beginning of the dataset
 
 ## For each individual in our data set, we have the following
 ## information:
 ##
-##  * age - the person's age in years
-##  * sex - the person's gender
-##  * timesupper - the time the person ate (nearest half hour)
-##  * ill - whether the person developed GI illness after the supper
-##  * onsetdate - the date of onset of illness for those who became ill
-##  * onsettime - the time that the person reported first feeling ill
-##    (nearest half hour)
-##  * 15 variables indicating whether the person reported eating specific 
-##    food items at the supper
+##  * Province - the province where the case occurred
+##  * ZS - the health zone where the case occurred
+##  * Age_annes - the person's age in years
+##  * Age_Mois - the person's age in months
+##  * Sexe - the person's sex
+##  * Date_dern_vacci - the date when the person was vaccinated against 
+##    measles
+##  * DDS - the date of symptom onset
+##  * test - the result of a diagnostic test for IgM antibodies against
+##    measles
+
+## The read_csv() function has read in most of our data as characters.
+## Note that this is a different behavior from what would have happened
+## using the read.csv() function demonstrated in Jonathan's lecture, and 
+## this fixes the problem he demonstrated where factors are sometimes
+## treated as numbers when they shouldn't be. It also gives us some 
+## useful information about problems we're likely to discover with
+## the dataset as we explore further - for example, the fact that the 
+## Age_Mois column has been read in as characters indicates there are
+## likely to be some problematic entries.
+
+## We will go through each column in the data set to ensure that 
+## R treats each variable as the appropriate data type. To do this, 
+## it will help to know the different ways in which R can store and
+## interpret data. To see a list of the options for data types:
+
+?typeof
 
 #########
 ## Hands off the keyboard! Pick up a writing implement...
@@ -76,17 +101,47 @@ head(oswego)		# Look at the first five rows of data
 ##
 #########
 
+## Before we start working with the data itself, let's rename the columns
+## so they're easier to interpret.
+
+dat <- rename(dat
+              , province = Province
+              , healthZone = ZS
+              , ageYears = Age_annes
+              , ageMonths = Age_Mois
+              , sex = Sexe
+              , dateVaccinated = Date_dern_vacci
+              , dateOnset = DDS
+              , testResultIgM = test
+)
+
+## Here is a cleaned up version of the data key, with the new
+## column names and information about the data types we will end up
+## with after cleaning the data:
+##
+##  * province - the province where the case occurred (character)
+##  * healthZone - the health zone where the case occurred (character)
+##  * ageYears - the person's age in years (integer)
+##  * ageMonths - the person's age in months (integer)
+##  * sex - the person's sex (character)
+##  * dateVaccinated - the date when the person was vaccinated against 
+##    measles  (character)
+##  * dateOnset - the date of symptom onset (character)
+##  * testResult - the result of a diagnostic test for IgM antibodies against
+##    measles
+##
+##  We will also create some new variables as we clean the data:
+##  
+##  * age - the person's age in years, as a continuous variable (double)
+##  * vaccinationStatus - whether the person had been previously
+##  vaccinated (logical)
+##  * testStatus - additional information about the person's diagnostic
+##  status (character)
+
 ######################################################################
 ## 1C - Cleaning Numeric Data
 ##
-## We will go through each column in the data set to ensure that 
-## R treats each variable as the appropriate data type. To do this, 
-## it will help to know the different ways in which R can store and
-## interpret data. To see a list of the options for data types:
-
-?mode
-
-## Let's begin by looking at how the age variable is stored.
+## Let's begin by looking at ageYear, which is stored as an integer.
 
 mode(oswego$age)		# determine the storage mode of a variable
 
@@ -94,7 +149,7 @@ mode(oswego$age)		# determine the storage mode of a variable
 ## but if we check the variable's class, we see that the data in this
 ## column will be treated as a factor by R:
 
-class(oswego$age)		# determine the object class of a variable
+class(dat$ageYear)		# determine the object class of a variable
 
 ## What is going on? It turns out that factors are stored as integers,
 ## even though R does not normally treat them as numeric values. To see
