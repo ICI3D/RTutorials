@@ -335,12 +335,25 @@ summary(dat)
 ggplot(dat, aes(x=ageYearsContinuous))
 + geom_histogram()
 
+
+ggplot(dat, aes(x=ageYearsContinuous)) + geom_histogram()
+
+######################################################################
+## PROBLEM
+######################################################################
+##
+## So far we've been correcting errors in a somewhat adhoc manner. In
+## the lecture, Jonathan showed us how to do this is a more robust way
+## using a correction table. Follow the examples from the lecture to
+## correct the province names for Kasai Oriental and Kasai Occidental
+## in the using the correction table kasaiCorrectionTable.csv
+##
+######################################################################
+
+corTab <- read_csv('kasaiCorrectionTable.csv')
+
 ## ~~~~~~~~~~~~~~~~~~~~~~
 
-
-
-ggplot(dat, aes(x=age))
-+ geom_histogram()
 
 ## The variable is stored as a numeric value, as seems appropriate.
 ## Let's also verify that this numeric value is not representing a
