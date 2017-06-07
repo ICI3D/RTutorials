@@ -332,9 +332,6 @@ dat <- (
 
 summary(dat)
 
-ggplot(dat, aes(x=ageYearsContinuous))
-+ geom_histogram()
-
 
 ggplot(dat, aes(x=ageYearsContinuous)) + geom_histogram()
 
