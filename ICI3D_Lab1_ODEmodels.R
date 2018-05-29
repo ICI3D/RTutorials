@@ -3,7 +3,7 @@
 ## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
 ## African Institute for Mathematical Sciences, Muizenberg, RSA
 ##
-## Juliet R.C. Pulliam, 2012, 2017
+## Juliet R.C. Pulliam, 2012-2018
 ##
 ##
 ## The goal of this tutorial is to acquaint you with ways of
@@ -89,10 +89,10 @@ sir <- function(t,y,parms){
 
 time <- 0
 
-## We will reproduce the measles outbreak model that was introduced in the live
-## coding session, so let our initial population size (N0) be
+## We will use parameter values that reflect a measles outbreak that occurred
+## in New York City (many years ago!), so let our initial population size (N0) be
 
-N0 <- 7781984
+N0 <- 7780000
 
 ## The second argument of the sir() function defined above is y, which I have
 ## said is a vector giving the current value of the state variables. Let's
