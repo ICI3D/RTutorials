@@ -291,7 +291,7 @@ axis(1,
 
 ?tapply                                 # WHAT DOES tapply() do?
 
-mean.by.months <- tapply(measles.Lon$cases, factor(month.char,levels=month.abb), mean)
+mean.by.months <- tapply(measles.Lon$cases, month.char, mean)
 
 print(mean.by.months)
 
@@ -310,7 +310,7 @@ lines(1:12,
 
 boxplot(measles.Lon$cases ~ month.char,
         range = 1,                    # TRY 1 and 3
-        ylab =''
+        ylab ='',                     # ADD AN APPROPORIATE LABEL
         bty = "n",
         main ="Seasonality in \nmeasles incidence")
 
@@ -324,7 +324,6 @@ barplot(mean.by.months,
         names.arg = names(mean.by.months),
         ylab = "mean weekly incidence",
         main = "Mean Weekly Incidence Aggregated \nby Month in London, 1944-1994")
-dev.off()
 
 ## Say you have decided that there is not enough space between the
 ## three plots.  If you'd like to change the margins you can use the
@@ -367,7 +366,7 @@ par(mfrow=c(1,1),                       # Let's reset our paneling and
     mar=c(4,4,4,4))                     # margin parameters back to
                                         # their original values.
 
-hookworm <- read.csv("~/Documents/R files/MMED 2010/R Tutorials/Data Sets/hookworms.csv")
+hookworm <- read.csv("hookworms.csv")
 
 head(hookworm)
 nrow(hookworm)
