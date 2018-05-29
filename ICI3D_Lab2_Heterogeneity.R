@@ -29,7 +29,7 @@
 
 
 rm(list=ls())                   # Clear all variables and functions from the workspace
-load("hetSIR_functions.Rdata")               # Load model functions and output
+load("HetSIR_functions.Rdata")               # Load model functions and output
 
 
 par(mfrow=c(1,3))                      # initialize plot window with 1 row & 3 columns
