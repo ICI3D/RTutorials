@@ -1,7 +1,9 @@
 ## Visualizing infectious disease data in R
-## Meaningful Modeling of Epidemiologic Data, 2010
-## AIMS, Muizenberg
+## Clinic on the Meaningful Modeling of Epidemiological Data
+## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
+## African Institute for Mathematical Sciences, Muizenberg, RSA
 ## (C) Steve Bellan, 2010
+## Updated by Juliet Pulliam, 2018
 
 ## NOTE: The comments will guide you through the tutorial but you
 ## should make sure you understand what the code is doing.  Many
@@ -20,15 +22,20 @@
 
 getwd() # shows you what directory you are currently in
 
-## Next you should change the working directory to where the data is kept,
-## and you can replace it with where you have saved the data set.
-setwd("~/mydir/MMED files/")
+## Next, you should change the working directory to where the data is kept.
+## Define a variable "path" that gives the file path to the directory 
+## where the data are stored.
 
-bots.dat <- read.csv("HIV Botswana.csv")
+path <- ??? # Replace the question marks with a character string telling R
+						# where to look for the data
+
+## and you can replace it with where you have saved the data set.
+setwd(path)
+
 ######################################################################
 ## 2A - Loading and exploring the data.  
 
-bots.dat <- read.csv("~/Documents/R files/MMED 2010/R Tutorials/Data Sets/HIV Botswana.csv")
+bots.dat <- read.csv('HIV_Botswana.csv')
 head(bots.dat, 5)
 
 ## Let's plot a pie chart of the HIV prevalence in 1994. 
@@ -47,22 +54,18 @@ pie(c(bots.dat$prevHIV[bots.dat$year == 1994], # Proportion HIV+
 ## categories, bar plots can do the same with another variable
 ## added.
 
-pdf("SummarySlidePlots/bots1.pdf", wid=6, height = 4)
 barplot(bots.dat$prevHIV,
         col = "red")
-dev.off()
 
 ## This is a good start but we should ALWAYS label axes and have a
 ## title.
 
-pdf("SummarySlidePlots/bots2.pdf", wid=6, height = 4)
 barplot(bots.dat$prevHIV * 100,         # *100 yields % 
         names.arg = bots.dat$year,      # labels bars by year
         col = "red",
         xlab = "year",
         ylab = "% HIV+",
         main = "HIV Prevalence in Botswana, 1990-2007")
-dev.off()
 
 ## This is much better, but it doesn't really show the HIV- population
 ## like the pie chart did.  If we want this we can make what's called
@@ -74,7 +77,6 @@ dev.off()
 
 prev.frame <- 100*rbind(bots.dat$prevHIV,1 - bots.dat$prevHIV)
 prev.frame
-pdf("SummarySlidePlots/bots3.pdf", wid=6, height = 4)
 barplot(prev.frame,
         names.arg = bots.dat$year,       # labels of the bars
         xlab = "year",
@@ -96,29 +98,26 @@ legend("top",                      # Location of the legend
        pch = ???,                     # TRY 15 or 19 or other integers
        bg = ???,                      # TRY various colors
        cex = ???)                     # TRY .5, 1, 2       
-dev.off()
 
 ## Alternatively we can just plot prevalence as a series of points.
-pdf("SummarySlidePlots/bots4.pdf", wid=6, height = 4)
 plot(bots.dat$year,
      bots.dat$prevHIV *100,
      xlab = "year",
      ylab = "% of population",
      main = "HIV Prevalence in Botswana, 1990-2007",
      ylim = c(0,30))                    # Sets y axis limits.
-dev.off()
 
 ######################################################################
 ## Section 2: Plotting incidence.
 ######################################################################
 
 ## We'll be plotting measles data in this example. The data was
-## provided by Benjamin Bolker (Princeton University and is available
+## provided by Benjamin Bolker and is available
 ## online from the International Infectious Disease Data Archive
 ## (IIDDA) at http://iidda.mcmaster.ca.
 
 
-measles.Lon <- read.csv("~/Documents/R files/MMED 2010/R Tutorials/Data Sets/measlesCleanLon.csv")
+measles.Lon <- read.csv("measlesCleanLon.csv")
 
 ######################################################################
 ## 2A - Now let's explore the data we've imported.
@@ -142,11 +141,11 @@ class(measles.Lon$cases)
 
 class(measles.Lon$date)
 ## Uh oh, it thinks that date is a factor.  Factors are categorical
-## variables, but time is continuous.  The best way to deal with this
-## is to convert the date to a time format that R understands well
-## called "POSIXct".
+## variables, but time is continuous.  To deal with this, you will
+## want to convert the dates to a format that R understands as a date.
+## One way to do this is using the build-in as.Date() function.
 
-measles.Lon$date <- as.POSIXct(measles.Lon$date)
+measles.Lon$date <- as.Date(as.character(measles.Lon$date))
 head(measles.Lon)
 class(measles.Lon$date)
 range(measles.Lon$date)
@@ -163,27 +162,24 @@ plot(measles.Lon$date,                  # X variable
 ## Not bad, right?  But those circles are a little bit big and make
 ## the pattern more difficult to follow.  Let's try some other
 ## options.
-for(ii in c('p','l','b','s','h')) {
-pdf(paste0("SummarySlidePlots/msls",ii,"2.pdf"), wid=6, height = 4)
 plot(measles.Lon$date,
-     measles.Lon$cases,
-     type = ii,                      # TRY "p","l","b","s","h"
-     xlab = "Time",                     # x axis label
-     ylab = "# cases (weekly)",         # y axis label
-     main = "London Measles Incidence, 1944-1994") # plot title
-dev.off()
-}
+		 measles.Lon$cases,
+		 type = ii,                      # TRY "p","l","b","s","h"
+		 xlab = "Time",                     # x axis label
+		 ylab = "# cases (weekly)",         # y axis label
+		 main = "London Measles Incidence, 1944-1994" # plot title
+)
 ## Much better!
 
 ######################################################################
 ## 2D - What other information can we add to make this
 ## plot more insightful?  Well, measles vaccine was introduced
-## publically in 1968. Let's see if this helps our audience understand
+## publically in 1968. Let's see if this helps us understand
 ## the trends better.
 
 ## First let's define the year in which vaccination began in R's time
 ## format:n
-vaccine.year <- as.POSIXct("1968-01-01")
+vaccine.year <- as.Date("1968-01-01")
 
 arrows(vaccine.year, 5000,             # 1st (x,y) coordinate of arrow
        vaccine.year, 4500,              # 4500 and 2000
@@ -199,7 +195,6 @@ text(vaccine.year, 5000,                # (x,y) coordinate of text
      "beginning of vaccination",        # text to plot
      pos = 2,                         # TRY 1,2,3 and 4
      col = "red")
-dev.off()
 ######################################################################
 ## PROBLEM 1A
 ######################################################################
@@ -224,8 +219,8 @@ dev.off()
 
 ?par
 
-measles.LP <- read.csv("~/Documents/R files/MMED 2010/R Tutorials/Data Sets/measlesCleanLP.csv")
-measles.LP$date <- as.POSIXct(measles.LP$date)
+measles.LP <- read.csv("measlesCleanLP.csv")
+measles.LP$date <- as.Date(measles.LP$date)
 
 ## lines() & points() add more lines/points to an already open plot
 
@@ -243,7 +238,7 @@ measles.LP$date <- as.POSIXct(measles.LP$date)
 ## boxplot.
 
 month.char <- format(measles.Lon$date,
-                     format = "%b")    # TRY "%B", "%m", "%b" and
+                     format = ???)    # TRY "%B", "%m", "%b" and
                                         # "%b-%Y".  Pick the value
                                         # that gives you months as
                                         # three letters.
@@ -252,15 +247,13 @@ head(month.char,50)
 ## equal to month.abb, a default vector in R that gives:
 print(month.abb)
 
-month.char <- factor(month.char,
-                     labels = month.abb)
+month.char <- factor(month.char,levels=month.abb)
 head(month.char,40)
 
 ## We're going to try to look at measles incidence seasonality with
 ## several different plots. Often its useful to have multiple panels
 ## in a plot window if you want to see many plots side by side:
 
-pdf("SummarySlidePlots/mslsSeason2.pdf", wid=9, height = 6)
 par(mfrow = c(1,2))                     # This says that the next two
                                         # plots will be plotted in a
                                         # window with 1 row of
@@ -272,13 +265,13 @@ par('ps'=17,  ## set font size to 18
 las = 2) ## set all line widths to twice as big
 
 ## First lets do a simple scatterplot.
-plot(as.numeric(month.char),
+plot(as.numeric(as.character(month.char)),
      measles.Lon$cases,
      xaxt = "n",                  # Tells R not to plot an x-axis so
                                   # we can do it manually
      bty = "n",                   # Doesn't plot a box around the plot
      xlab = "",                   
-     ylab = "# cases per week",                        # WHAT IS AN APPROPRIATE LABEL?
+     ylab = ???,                  # WHAT IS AN APPROPRIATE LABEL?
      main = "Weekly Measles Incidence\n in London by Month",
      pch = 16,                         # TRY 5, 19, 20, 21
      cex = 1)                         # TRY 3, 1, .4
