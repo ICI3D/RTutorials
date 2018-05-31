@@ -1,3 +1,22 @@
+## Content from .ignore
+local.mk
+target.mk
+.*.sw*
+make.log
+.gitignore 
 .Rproj.user
 .Rhistory
 .RData
+
+## content from makestuff
+local.mk
+makestuff
+commit.time
+commit.default
+dotdir/
+clonedir/
+up.time
+all.time
+.clean_dir
+*.oldfile
+*.olddiff
