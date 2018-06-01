@@ -23,15 +23,15 @@
 
 ######################################################################
 ## First, you need to import the data you will be working with.
-## As in earlier tutorials, you should make sure you are in the same
+## You should make sure you are in the same
 ## working directory as your data.
 
-getwd() # shows you what directory you are currently in
+## You presumably downloaded the data and this script to the same place
+## You can make sure R studio is "there" by clicking on Session/Set Working Directory/To Source File Location
 
-## Next you should change the working directory to where the data is
-## kept, and you can replace it with where you have saved the data set.
+## If you have files in a different place than the script, you can use Session/Set Working Directory (or a keyboard shortcut) to navigate there.
 
-setwd("???") # ENTER THE PATH TO THE DIRECTORY WHERE YOUR DATA ARE
+## We generally don't recommend using setwd() in scripts, because it causes difficulties in sharing and collaboration.
 
 ## For this tutorial, we will be using an example dataset thtat
 ## resembles (but is not) real data from a measles epidemic in
