@@ -1,5 +1,8 @@
 library(tidyverse)
 
+## NEED TO REWRITE THIS NOW THAT WE LIKE THE STUDY SCRIPT
+## SEE flu FOR MORE COMPLETED VERSION
+
 ## Is our novel drug better for treating malaria than cotrim?
 
 ## Individual-based RCT study: cotrim vs. aidamycin
@@ -9,25 +12,35 @@ library(tidyverse)
 ## Hypothesize that 80% will resolve under new treatment
 
 ## Parameters
-failure_base <- 0.4 ## Proportion who fail to clear under soc
-prot <- 0.5 ## Additional proportion protected
+base_odds <- 1.5 ## Odds that cotrim will clear
+new_odds <- 2 ## Odds ratio due to aidamycin
+participants <- 800000
 participants <- 80
-seed <- 0228
+seed <- 228
 
-## Derived
+### Calculate protection proportions
+oddProb <- function(o){
+	return(o/(o+1))
+}
+
+## Derived quantities
+base_cure <- oddProb(base_odds)
+new_cure <- oddProb(base_odds*new_odds)
+print(c(base_cure=base_cure, new_cure=new_cure))
+## Not exactly what we expected, maybe.
+## Odds can be confusing, but they're our friends
+
+## Participants in each arm
 socNum <- floor(participants/2)
 newNum <- participants-socNum
 
 set.seed(seed)
 
-base_cure <- 1 - failure_base
-new_cure <- 1 - failure_base*(1-prot)
-
 setup <- tibble(
 	people = as.factor(1:participants)
 	, treatment = sample(c(
 		rep("cotrim", socNum)
-		, rep("aida", newNum)
+		, rep("new", newNum)
 	))
 )
 
