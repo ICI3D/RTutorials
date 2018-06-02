@@ -1,0 +1,7 @@
+## Content from .ignore
+local.mk
+target.mk
+.*.sw*
+make.log
+.gitignore 
+
