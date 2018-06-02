@@ -16,3 +16,10 @@ all.time
 .clean_dir
 *.oldfile
 *.olddiff
+*.page.pdf
+*.wide.pdf
+*.RData
+*.Rlog
+.Rhistory
+*.Rout*
+*.wrapR.*
