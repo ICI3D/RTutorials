@@ -1,7 +1,8 @@
 ## Tutorial on study designs and measures of effect
+## Clinic on the Meaningful Modeling of Epidemiological Data
+## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
+## African Institute for Mathematical Sciences, Muizenberg, RSA
 ## Jim Scott 2012
-
-## Meaningful Modeling of Epidemiologic Data, 2012 AIMS, Muizenberg
 
 ## Identifying study designs
 
@@ -294,7 +295,7 @@ cci(63, 18, 87, 132, graph=FALSE) ## Malaria is associated with working outside
 ## For those of you that are already familiar with these types of models, you can
 ## use R to fit a logistic model to these data using the following commands:
 
-my.model <- glm(Malaria ~ Gender + Workplace, family=binomial)
+my.model <- glm(Malaria=='case' ~ Gender + Workplace, family=binomial)
 summary(my.model)
 
 ## The adjusted OR for malaria and gender after controlling for workplace can be

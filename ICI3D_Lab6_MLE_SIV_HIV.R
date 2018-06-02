@@ -1,7 +1,8 @@
 ## Introduction to Likelihood 2: Fitting an SI model to an HIV epidemic with Maximum Likelihood Estimation
-## Steve Bellan 2015
-
-## Meaningful Modeling of Epidemiologic Data, 2015 AIMS, Muizenberg
+## Clinic on the Meaningful Modeling of Epidemiological Data
+## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
+## African Institute for Mathematical Sciences, Muizenberg, RSA
+## (C) Steve Bellan, 2015
 
 ###################################################################### 
 
@@ -33,7 +34,7 @@ tseqMonth <- seq(1976, 2015, by = 1/12)
 init <- c(S=1, I1=initPrev, I2=0, I3=0, I4=0, CI = 0, CD = 0) ## modeling proportion of population
 Is <- paste0('I',1:4) ## for easy indexing
 
-## Define the SI ODE model. This model is equivalent to the model in HIV Spreadsheet #3. 
+## Define the SI ODE model. This model is equivalent to the third model in the HIV in Harare tutorial. 
 SImod <- function(tt, yy, parms) with(c(parms,as.list(yy)), {
     ## State variables are: S, I1, I2, I3, I4
     ## derived quantitties
