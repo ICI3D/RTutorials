@@ -1,8 +1,5 @@
 library(tidyverse)
 
-## NEED TO REWRITE THIS NOW THAT WE LIKE THE STUDY SCRIPT
-## SEE flu FOR MORE COMPLETED VERSION
-
 ## Is our novel drug better for treating malaria than cotrim?
 
 ## Individual-based RCT study: cotrim vs. aidamycin

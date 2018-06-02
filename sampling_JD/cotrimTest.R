@@ -4,6 +4,9 @@ library(tidyverse)
 
 ## Redo study.R as a function
 
+## NEED TO REWRITE THIS NOW THAT WE LIKE THE STUDY SCRIPT
+## SEE flu FOR MORE COMPLETED VERSION
+
 ## Parameters
 base_odds <- 1.5 ## Proportion who fail to clear under soc
 new_odds <- 1 ## Additional proportion protected
