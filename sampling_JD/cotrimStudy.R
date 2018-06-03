@@ -11,8 +11,8 @@ library(tidyverse)
 ## Parameters
 base_odds <- 1.5 ## Odds that cotrim will clear
 new_odds <- 2 ## Odds ratio due to aidamycin
-participants <- 800000
 participants <- 80
+participants <- 800000
 seed <- 228
 
 ### Calculate protection proportions
