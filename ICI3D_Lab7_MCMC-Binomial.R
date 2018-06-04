@@ -69,8 +69,8 @@ par(mfrow = c(2,2) ## panels
     , oma = c(1.5,0,0,0)) ## outer margins
 curve(Prior(x), 0, 1, ylab = 'prior')
 curve(Likelihood, 0, 1, ylab = 'likelihood')
-curve(logLikePrior, 0,1, ylab = 'log(likelihood X prior)')
 curve(LikePrior, 0, 1, ylab = 'likelihood X prior')
+curve(logLikePrior, 0,1, ylab = 'log(likelihood X prior)')
 mtext('prevalence', 1, 0, outer=T)
 
 ## runMCMC runs a Markov chain Monte Carlo (MCMC) Metropolis-Hastings algorithm to
@@ -110,7 +110,7 @@ plot(posteriorSample, xlab='iteration', ylab = 'prevalence', main = 'posterior s
 
 ## Compare proposal distributions
 par(mfrow = c(2,2), oma = c(0,0,2,0))
-for(sdVal in c(.05, .1, .5, 1)) {
+for(sdVal in c(.05, .1, .5, 2)) {
     posteriorSample <- runMCMC(1000, proposerSD = sdVal) 
     plot(posteriorSample, xlab='iteration', ylab = 'prevalence',
          main = bquote(sigma==.(sdVal)),
