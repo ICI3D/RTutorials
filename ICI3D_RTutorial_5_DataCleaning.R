@@ -27,11 +27,14 @@
 ## working directory as your data.
 
 ## You presumably downloaded the data and this script to the same place
-## You can make sure R studio is "there" by clicking on Session/Set Working Directory/To Source File Location
+## You can make sure R studio is "there" by clicking on Session/Set Working
+## Directory/To Source File Location
 
-## If you have files in a different place than the script, you can use Session/Set Working Directory (or a keyboard shortcut) to navigate there.
+## If you have files in a different place than the script, you can use
+##Session/Set Working Directory (or a keyboard shortcut) to navigate there.
 
-## We generally don't recommend using setwd() in scripts, because it causes difficulties in sharing and collaboration.
+## We generally don't recommend using setwd() in scripts, because it causes
+## difficulties in sharing and collaboration.
 
 ## For this tutorial, we will be using an example dataset thtat
 ## resembles (but is not) real data from a measles epidemic in
@@ -45,9 +48,10 @@
 require(tidyverse) # Load the tidyverse package
 dat  <-  read_csv("tutorial5.csv") # read in the "data"
 
-## The read_csv() function reads data in as a data frame, a data
+## The read_csv() function reads data in as a tibble, a data
 ## structure that is very useful because it can contain different
-## data types in different columns (unlike a matrix or array).
+## data types in different columns (similar to a data frame, but unlike
+## a matrix or array).
 
 ######################################################################
 ## Let's look at the data to get a feeling for the size of the
@@ -127,7 +131,8 @@ dat <- rename(dat
 ##
 ##  We will also create some new variables as we clean the data:
 ##
-##  * ageYearsContinuous - the person's (approximate) age in years, as a continuous
+##  * ageYearsContinuous - the person's (approximate) age in years, as a
+##  continuous
 ##  variable (double)
 ##  * vaccinationStatus - whether the person had been previously
 ##  vaccinated (logical)
@@ -236,9 +241,9 @@ print(
   %>% filter(.,is.na(ageMonths)|is.na(ageYears)) # subset the rows that have NA for either age variable
 )
 
-## There individual with missing values, and they are missing both year
-## and month information. While it's not ideal to have data, this is a reality
-## in most datasets, and in this case it's not that bad.
+## There is one individual with missing values, and they are missing both year
+## and month information. While it's not ideal to have missing data, this is
+## a reality in most datasets, and in this case it's not that bad.
 
 ## Now let's look at the ageMonths values for the subset of the
 ## data that has an ageYears value of 0:
