@@ -13,7 +13,7 @@
 ## * Know how to assess multivariate MCMC chains for convergence both with trace plots and the Gelman-Rubin diagnostic.
 ## * Create 95% credible intervals (CrI's) and contours from the posterior
 
-require(boot); require(deSolve); require(ellipse); require(coda); require(parallel); require(mnormt); require(emdbook)
+library(boot); library(deSolve); library(ellipse); library(coda); library(parallel); library(mnormt); library(emdbook)
 
 ## Function that makes a list of disease parameters with default values
 disease_params <- function(Beta = 0.9
@@ -24,6 +24,7 @@ disease_params <- function(Beta = 0.9
                            )
     return(as.list(environment()))
 
+## Explore how this function works
 disease_params()
 disease_params(Beta = .2)
 
@@ -32,7 +33,8 @@ tseqMonth <- seq(1976, 2015, by = 1/12)
 init <- c(S=1, I1=initPrev, I2=0, I3=0, I4=0, CI = 0, CD = 0) ## modeling proportion of population
 Is <- paste0('I',1:4) ## for easy indexing
 
-## Define the SI ODE model. This model is equivalent to the model in HIV Spreadsheet #3. 
+## Define the SI ODE model
+## This is equivalent to the one we used for MLE fitting (from HIV tutorial)
 SImod <- function(tt, yy, parms) with(c(parms,as.list(yy)), {
     ## State variables are: S, I1, I2, I3, I4
     ## derived quantitties
@@ -359,8 +361,6 @@ mtext('Sequential Sampling', side = 3, outer = T, line = 0)
  
 plot(run4A$chains)
 mtext('Adaptive Sampling', side = 3, outer = T, line = 0)
-
-graphics.off()
 
 gelman.diag(run4$chains[,c('alpha','Beta')])
 gelman.diag(run4A$chains[,c('alpha','Beta')])
