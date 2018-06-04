@@ -29,16 +29,14 @@ sampPrev <- sampPos/size
 ## Now we need to specify our prior probability distribution. This designates our prior (before we
 ## conducted the study) beliefs of what we think the prevalence of this population is. Frequently,
 ## we have insufficient prior information to specify and informative prior. In these cases, we will
-## use a flat prior, meaning that for the study we think every possible value of the prevalence has
-## equal probability.
+## use an uninformative prior, meaning we that we assume a wide range of values is plausible. 
 
 ## Our parameter of interest is prevalence, which is bounded between 0 and 1. The beta probability
 ## distribution is particularly suited for such parameters and is, in fact, the most commonly used
-## probability distribution for parameters that are, themselves, probabilities. It is uninformative
-## (flat) with parameters shape1=1, shape2=1, and can otherwise have many shapes.
+## probability distribution for parameters that are, themselves, probabilities. It is uniform (constand density across probabilities)
+## with parameters shape1=1, shape2=1, and can otherwise have many shapes.
 
-## We calculate both the prior and the likelihood on a log scale because it is easier to take the
-## sum of their log's, than to take their product (particularly in problems with more data).
+## We calculate both the prior and the likelihood on a log scale to avoid numerical problems
 logBetaPrior <- function(prevalence
                          , shape1 = 1  ## Change to make informative (try 8)
                          , shape2 = 1) ## Change to make informative (try 40)
@@ -57,12 +55,14 @@ logLikePrior <- function(prevalence
                          , data = list(size=size, sampPos=sampPos))
     logBetaPrior(prevalence, shape1, shape2) + logLikelihood(prevalence, data)
 
-## Convenience functions that thought the un-logged functions above.
+## Convenience functions 
 Prior <- function(x) exp(logBetaPrior(x))
 Likelihood <- function(x) exp(logLikelihood(x))
 LikePrior <- function(x) exp(logLikePrior(x))
 
 
+## Plots
+## Examine these plots, and write down what you think each of them means
 par(mfrow = c(2,2) ## panels
     , mar = c(3,6,1,1) ## panel margins
     , bty='n' ## no box around plots
@@ -73,10 +73,7 @@ curve(logLikePrior, 0,1, ylab = 'log(likelihood X prior)')
 curve(LikePrior, 0, 1, ylab = 'likelihood X prior')
 mtext('prevalence', 1, 0, outer=T)
 
-## Explain what each of these plots represents in words.
-
-
-## This functions runs a Markov chain Monte Carlo (MCMC) Metropolis-Hastings algorithm to
+## runMCMC runs a Markov chain Monte Carlo (MCMC) Metropolis-Hastings algorithm to
 ## numerically estimate the posterior probability distribution of the prevalence. For problems this
 ## simple, the posterior probability distribution can be solved for analytically. However, for
 ## problems more complex than this one (such as the Introduction to MCMC-SI_HIV tutorial), numerical
@@ -142,165 +139,3 @@ mtext('posterior sample by proposer sd', side=3, line=0, outer=T)
 ## Challenge Question: (A) Plot the Gelman-Rubin diagnostic as a function
 ## of chain length. (B) Do the same plot, but after discarding the first 100 iterations as a "burnin"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-####################################################################################################
-## Answers
-####################################################################################################
-
-## Q1
-par(mfrow = c(2,2), oma = c(0,0,2,0))
-for(sdVal in c(.05, .1, .5, 1)) {
-    posteriorSample <- runMCMC(3000, proposerSD = sdVal) 
-    hist(posteriorSample, xlab='prevalence', col = 'black',
-         main = bquote(sigma==.(sdVal)),
-         las = 1,
-         breaks = seq(0,1,by=.01),
-         xlim = c(0,1))
-}
-mtext('posterior sample by proposer sd', side=3, line=0, outer=T)
-
-## Q2
-numChains <- 4
-numIter <- 3000
-for(ii in 1:numChains) 
-    assign(paste0('posteriorSample',ii), ## assign is like "<-" but can be done with text strings to name things
-           as.mcmc(runMCMC(numIter, proposerSD = .1))) ## use as.mcmc to help with Gelman-Rubin diagnostic function below
-
-dev.off()
-par(defaultPar, bty = 'n')
-plot(0,0, type = 'n', ## intialize
-     xlim = c(1,numIter), ylim = c(0,1),
-     xlab='iteration', ylab = 'prevalence', main = 'posterior sample',
-     las = 1)
-for(ii in 1:numChains) 
-    lines(get(paste0('posteriorSample',ii)), col = rainbow(numChains)[ii]
-          )
-
-## Q3
-chainList <- as.mcmc.list(list(posteriorSample1, posteriorSample2, posteriorSample3, posteriorSample4))
-class(chainList)
-gelman.diag(chainList)
-
-## Challenge Question (A)
-chainLengthVector <- seq(50, 3000, by = 10)
-GRdVector <- c()
-for(chainLength in chainLengthVector) {
-    chainList <- as.mcmc.list(list(as.mcmc(posteriorSample1[1:chainLength,]),
-                                   as.mcmc(posteriorSample2[1:chainLength,]),
-                                   as.mcmc(posteriorSample3[1:chainLength,]),
-                                   as.mcmc(posteriorSample4[1:chainLength,])))
-    GRdVector <- c(GRdVector, as.numeric(gelman.diag(chainList)$psrf[,1]))
-}
-
-dev.off()
-par(defaultPar, bty = 'n')
-plot(chainLengthVector, GRdVector, xlab = 'chain length', ylab = 'Gelman-Rubin diagnostic',
-     type = 'l', las = 1)
-
-## Challenge Question (B)
-burnin <- 100
-chainLengthVector <- seq(150, 3000, by = 10)
-GRdVector <- c()
-for(chainLength in chainLengthVector) {
-    chainList <- as.mcmc.list(list(as.mcmc(posteriorSample1[burnin:chainLength,]),
-                                   as.mcmc(posteriorSample2[burnin:chainLength,]),
-                                   as.mcmc(posteriorSample3[burnin:chainLength,]),
-                                   as.mcmc(posteriorSample4[burnin:chainLength,])))
-    GRdVector <- c(GRdVector, as.numeric(gelman.diag(chainList)$psrf[,1]))
-}
-
-dev.off()
-par(defaultPar, bty = 'n')
-plot(chainLengthVector, GRdVector, xlab = 'chain length', ylab = 'Gelman-Rubin diagnostic',
-     type = 'l', las = 1)

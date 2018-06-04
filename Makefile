@@ -33,10 +33,18 @@ $(ms):
 
 Sources += $(wildcard *.R)
 
+######################################################################
+
+## Sandbox
+
+ICI3D_Lab7_MCMC-Binomial.Rout: ICI3D_Lab7_MCMC-Binomial.R
+
+######################################################################
+
 ### Makestuff
 
 -include $(ms)/git.mk
 -include $(ms)/visual.mk
 
-# -include $(ms)/wrapR.mk
+-include $(ms)/wrapR.mk
 
