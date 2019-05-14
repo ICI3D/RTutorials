@@ -1,15 +1,20 @@
-## Tutorial 2 - More on Vectors, Data Frames, and Functions
+## Tutorial 2: More on Vectors, Data Frames, and Functions
+## Clinic on Meaningful Modeling of Epidemiological Data
+## International Clinics on Infectious Disease Dynamics and Data Program
+## African Institute for Mathematical Sciences, Muizenberg, Cape Town, RSA
 ## David M. Goehring 2004
 ## Juliet R.C. Pulliam 2008,2009
 ## Steve Bellan 2010, 2012
- 
-## Meaningful Modeling of Epidemiologic Data, 2012 AIMS, Muizenberg
- 
+##
+## Last updated by Juliet R.C. Pulliam, May 2019
+## Some Rights Reserved
+## CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
+
 ######################################################################
 ## SECTION A. Accessing Vector Elements
 ######################################################################
  
-## By the end of today you should…
+## By the end of this tutorial you should…
  
 ## * Be able to retrieve useful subsets of your data 
 ## * Understand more about data frames
@@ -80,14 +85,6 @@ FALSE & (TRUE | FALSE)
 ## By combining logical and relational operations, we can make complex
 ## inquiries about values.
  
- 
-## Note that variable names can be words and they can be as long as
-## you want. Also note that the assignment operator can be used in the
-## other direction, ->.  While x, y, and z are easy to type, more
-## memorable names such as weight or total, might be more useful for
-## reminding you what values they hold.
- 
- 
 ## Hands off the keyboard! Pick up a writing implement…
 ## a <- TRUE != (4 > 3)
 ## b <- a | 1 + 1 == 4 - 2
@@ -97,12 +94,10 @@ FALSE & (TRUE | FALSE)
 ## your answers.
  
  
-## I have briefly mentioned that R has special values for infinity,
-## Inf, not-a-number, NaN, and not-applicable, NA. I said these
-## generally behave very sensibly – a mathematical operation on
-## not-a-number is obviously not a number as so is returned as NaN.
-## Things are less simple when using logical and relational
-## operators. Consider 4 != NaN In one respect, the answer perhaps
+## Note that R has special values for infinity (Inf), not-a-number
+## (NaN), and not-applicable, NA. These generally behave sensibly – a mathematical ## operation on not-a-number is obviously not a number as so is
+## returned as NaN. Things are less simple when using logical and relational
+## operators. Consider 4 != NaN. In one respect, the answer perhaps
 ## should be TRUE; that is, 4 definitely isn’t equal to
 ## not-a-number. But, striving for consistency, R returns NA, much as
 ## it would for a mathematical operation. Even worse is the situation
@@ -110,17 +105,20 @@ FALSE & (TRUE | FALSE)
 x <- NaN
 x == NaN
  
-## You might think that this is a reasonable
-## test for whether x has a numerical value, but it won’t work for the
-## same reason mentioned above. In general, keep this trickiness in
-## mind and remember there is a special function is.na() for
-## determining whether x is a valid number: 
+## You might think that this is a reasonable test for whether x has a
+## numerical value, but it won’t work for the same reason mentioned above.
+## In general, keep this trickiness in mind and remember there is a special 
+## function is.finite() for determining whether x is a valid (finite) number: 
 
-is.na(x)
+is.finite(x)
+
+## To find out whether x has the value NaN, you can use:
  
+identical(x, NaN)
+
 ## This is all getting thrown at you in very quick succession,
 ## especially if you do not have much experience programming in other
-## languages.  It is worth noting that information about these
+## languages. It is worth noting that information about these
 ## operations can be pulled up at any time by typing help("&”) or
 ## help(">”) or the using help() function with any of the other
 ## symbols used in these operations.
@@ -132,15 +130,15 @@ is.na(x)
 ## As a shorthand, TRUE and FALSE can be entered as T and F. This
 ## allows for rapid entry of vectors of logical values, for example,
  
-logical.vec <- c(T,T,F,T)
+logical.vec <- c(T, T, F, T)
  
 logical.vec
  
-## Unfortunately, and rather inexplicable, T and F cab be reassigned
+## Unfortunately, and rather inexplicably, T and F cab be reassigned
 ## to any arbitrary values. This will render most code utterly
 ## unpredictable. So, never, never, never do this:
  
-T <- 4 # REALLY BAD,BUT NO ERROR PRODUCED
+T <- 4 # REALLY BAD, BUT NO ERROR IS PRODUCED
  
 ## And, if you ever do something like this (though you shouldn’t!),
 ## make sure you quickly do this:
@@ -166,7 +164,7 @@ y <- (x > -.5) & (x < .5)
 ####################
  
 ## There are many occasions in R when you need a patterned sequence of
-## numbers. As mentioned last in the last tutorial, most counting can
+## numbers. As mentioned in the previous tutorial, most counting can
 ## be accomplished by use of the seq() function. If you haven’t
 ## already done so, it is worth taking a look at the help-file on
 ## seq() because it has a few arguments that can make your life
@@ -177,7 +175,7 @@ y <- (x > -.5) & (x < .5)
 ## For example, seq() can generate a vector of a certain length
 ## between certain endpoints by typing
  
-x <- seq(0,1,length.out=20)
+x <- seq(0, 1, length.out = 20)
  
 ## giving you a vector of length 20 between 0 and 1, confirmable by
 ## typing
@@ -192,8 +190,7 @@ y <- 5:10
  
 ## generating a vector that counts from 5 to 10, inclusive. Note that
 ## : is generally treated first in the order of operations.
- 
- 
+
 ## Don’t underestimate the value of the colon notation.  Even for
 ## typing a vector of length 2, like "(1,2)” or "(2,1),” using the c
 ## function to generate the vector is pretty tedious (e.g., c(1,2)).
@@ -224,15 +221,15 @@ y <- 5:10
  
 x <- 1:5
  
-x[c(T,F,F,F,T)]
+x[c(T, F, F, F, T)]
  
 ## If we combine this logical indexing with the relational and logical
 ## operators you learned above, we have an exceptionally powerful tool
 ## to retrieve data that meet any set of criteria.
  
-y<-rnorm(10000)
+y <- rnorm(10000)
  
-hist(y[!((y>-2)&(y<0))])
+hist(y[!( (y > -2) & (y < 0) )])
  
 ## I will give more insight below when I discuss indexing data
 ## frames. Stay tuned.
@@ -254,14 +251,14 @@ hist(y[!((y>-2)&(y<0))])
 ## Accessing single items with brackets and a single index should be
 ## straightforward
  
-x <- 3*(0:5)
+x <- 3 * (0:5)
  
 x[4]
  
 ## One tedious way of creating a new vector of values from a vector’s
 ## elements would be
  
-c(x[2],x[3],x[4]) #TEDIOUS
+c(x[2], x[3], x[4]) #TEDIOUS
  
 ## So R makes it much easier by allowing a vector of indices to
 ## generate a vector.  Thereby, the command above becomes
@@ -271,18 +268,18 @@ x[2:4]
 ## There is nothing preventing you from accessing any element any
 ## number of times.
  
-x[c(2,2,2,5,5,5)]
+x[c(2, 2, 2, 5, 5, 5)]
  
 ## Additionally, R allows you to use negative indices, indicating
 ## which items you want to exclude, as in,
  
-x[c(-1,-6)]
+x[c(-1, -6)]
  
 ## This is fine and productive as long as you remember never to mix
 ## negative and positive indices – R will not know what you want it to
 ## do:
  
-x[c(-1,4)] #BAD
+x[c(-1, 4)] #BAD
  
  
 #################### 
@@ -304,21 +301,21 @@ my.vector <- 5:8
 ## calling each of its indices once in our preferred order, for
 ## example
  
-my.vector[c(2,3,4,1)]
+my.vector[c(2, 3, 4, 1)]
  
 ## or, for a quick reversal
  
 my.vector[4:1]
  
 ## Now, manually generating the vector of indices is not monumentally
-## useful, which is where the function order() comes in. As
+## useful, which is where the function order() comes in. As a
 ## demonstration, imagine we have a vector of student names and a
 ## corresponding vector of student heights (in meters).
  
-stud.names <- c("Carol", "Walter", "Rachael", "Petunia", "Clark",
+stud.names <- c("Carol", "Walter", "Rachel", "Petunia", "Clark",
                 "Justin")
  
-stud.heights <- rnorm(6,1.7,.12)
+stud.heights <- rnorm(6, 1.7, .12)
  
 ## What we definitely don’t want to do is to perform sort() on each of
 ## these vectors independently. This will eliminate the pairing of the
@@ -333,7 +330,7 @@ order(stud.names)
 ## From what you learned above, you know it is now an easy matter to
 ## sort both of our vectors, as follows,
  
-stud.names[order(stud.names)] #same effect as sort()
+stud.names[order(stud.names)] # same effect as sort()
  
 stud.heights[order(stud.names)]
  
@@ -341,18 +338,16 @@ stud.heights[order(stud.names)]
 ## analogous, and it will make for a pretty plot
  
 barplot(stud.heights[order(stud.heights)],
-        names.arg=stud.names[order(stud.heights)],
-        ylab="Height (m)", main=
-        "Student Heights")
- 
+        names.arg = stud.names[order(stud.heights)],
+        ylab = "Height (m)", main = "Student Heights")
  
 ## I have conveniently skipped over an important concept, because R
 ## handles it fairly intuitively, but I want to mention the
-## terminology.  The variable stud.names and the results of ls(), for
-## example, are called vectors of strings or character arrays.”  R
+## terminology. The variable stud.names and the results of ls(), for
+## example, are called vectors of strings, or character arrays.  R
 ## handles them conveniently, so we don’t need to worry too much about
 ## them, but knowing the terminology will improve your understanding
-## of R’s in-line help documents.
+## of R's in-line help documents.
  
 ######################################################################
 ## SECTION B. Data Frames, Redux
@@ -361,7 +356,7 @@ barplot(stud.heights[order(stud.heights)],
 ## Re-introduction to data frames 
 
 ## Before we cover advanced topics of data frames, I wanted to point out the
-## function data.frame() which puts data together to form data
+## function data.frame(), which puts data together to form data
 ## frames. This is a key alternative to using the prefab data frames
 ## that you used in last week’s assignment.
  
@@ -369,43 +364,45 @@ barplot(stud.heights[order(stud.heights)],
 ## correspond to the stud.names before creating a data frame (Freshmen
 ## as 1, Sophomores as 2, etc.).
  
-stud.years <- c(4,2,2,3,1,3)
+stud.years <- c(4, 2, 2, 3, 1, 3)
  
 ## Now making a data frame is easy (each argument will just add more
 ## columns to the data), the only trick being that we have to assign
-## the constructed data frame to a variable, as follows,
+## the constructed data frame to a variable, as follows:
  
-student.data <- data.frame(stud.heights,stud.years)
+student.data <- data.frame(stud.names, stud.heights, stud.years)
  
 student.data
  
-## Voila! Your own data frame. But, wait, where are our the student names?
-## And can we have better column headings than our redundant variable
-## names?
- 
-## The answers lie in two new functions that we will use with
-## assignment notation, names() and row.names(). Let’s take a look:
+## Voila! Your own data frame. 
+
+## You may want to have better column headings than the redundant variable
+## names. There are various options to accomplish this. One option is
+## to use the names() function with assignment notation. Let’s take a look:
  
 names(student.data)
+
+## What we see is a vector of strings corresponding to the current column
+## names. We can change these by assigning replacement strings to the
+## indexed values or by substituting our own vector of strings.
  
-row.names(student.data)
- 
-## What we see are vectors of strings corresponding to the columns and
-## rows, respectively. We can change these by assigning replacement
-## strings to the indexed values or by substituting our own vector of
-## strings.
- 
-names(student.data)[1] <- "heights"
- 
-names(student.data)[2] <- "class.years"
- 
-row.names(student.data) <- stud.names
- 
-## The result is downright beautiful:
- 
+names(student.data) <- c("names","heights","years")
+
 student.data
- 
- 
+
+## If we think that "years" is ambigous and might be confused with a student's
+## age, we could rename just that column using numerical indexing, e.g.:
+
+names(student.data)[3] <- "class.years"
+
+student.data
+
+## There is also a similar option, row.names() to access and modify the
+## the row names. By default, the row names are a series of integers indicating
+## the row number:
+
+row.names(student.data)
+
 ## The assignments above are the first of many examples in R that seem
 ## to defy logic: it seems as though we’re assigning something to a
 ## function, which shouldn’t make sense because a function isn’t a
@@ -413,20 +410,7 @@ student.data
 ## row.names() as "access functions” – they do not perform an action,
 ## but merely grant access to a property of the argument variable, and
 ## this is why we can make assignments of the sort seen above.
- 
-## Now if you want to touch up your data at all, the edit() command
-## may come in handy:
- 
-edited.student.data <- edit(student.data)
 
-## Attempting to edit data in this way does not work in 
-## Rstudio. You will have to edit the data frame directly.
- 
-## Also, take note that edit() will not automatically update the data
-## frame itself (here student.data). That can only happen through an
-## assignment.
- 
- 
 ## Indexing data frames 
 
 ## As with vectors, brackets and logical or numerical vectors are still
@@ -437,22 +421,22 @@ edited.student.data <- edit(student.data)
 ## entry as the column number; thus, to access the second column of
 ## the fourth row, type
  
-student.data[4,2]
+student.data[4, 2]
  
 ## Or the second column of the last three rows,
  
-student.data[4:6,2]
+student.data[4:6, 2]
  
 ## Not too tricky? There are two further complications.
  
 ## To access an entire row or entire column, leave the index blank, as
 ## in,
  
-student.data[,1] #FIRST COLUMN
+student.data[,1] # FIRST COLUMN
  
-student.data[3,] #THIRD ROW
+student.data[3,] # THIRD ROW
  
-student.data[,] #ENTIRE FRAME, equivalent to "student.data"
+student.data[,] # ENTIRE FRAME, equivalent to "student.data"
  
 ## The only other complication is the ability to enter the names() or
 ## row.names() as indices:
@@ -460,8 +444,9 @@ student.data[,] #ENTIRE FRAME, equivalent to "student.data"
 student.data["Justin",]
  
 ## Putting all of this together, we can quickly generate subsets of
-## our data:
- 
+## our data. For example, we can create a data frame that includes
+## only the students with height greater than the mean height:
+
 tall.students <- student.data[student.data$height >
 mean(student.data$height),]
  
@@ -472,11 +457,10 @@ student.data[order(student.data$class.years),]
 ## Introduction to factors 
 
 ## When performing statistical analyses, we often want R to look at a
-## set of data and compare groups within the
-## data to one another. For example, you have the data frame
-## containing data on students in a course. There are two columns of
-## data, height and class.year. How can you look at the means of
-## height by class.year?
+## set of data and compare groups within the data to one another. For
+## example, you have the data frame containing data on students in a
+## course. There are columns of data representing the students' height
+## and class.year. How can you look at the means of height by class.year?
  
 ## Or, another example, you have sampled a number of rabbits and have
 ## a column for weights before a diet treatment and a column for
@@ -517,11 +501,11 @@ levels(moths$habitat)
  
 ## The levels() function behaves just like the names() and row.names()
 ## functions (i.e., weird), and you can make assignments or
-## reassignments to the levels
+## reassignments to the levels - e.g.,
  
 levels(moths$habitat)[1] <- "NEBank"
  
-# Factors come in exceptionally handy when performing statistical
+## Factors come in exceptionally handy when performing statistical
 ## tests, but the various plot functions can give you an idea of uses
 ## of a factored variable, such as,
  
@@ -533,7 +517,7 @@ boxplot(moths$meters ~ moths$habitat)
  
 ## Making a factor
 
-## Now you know how to employ a factored variable, and
+## Now that you know how to employ a factored variable
 ## the next step is to know how to make a factor out of a
 ## variable. The general syntax is:
  
@@ -561,21 +545,7 @@ levels(student.data$class.years) <- c("Freshman", "Sophomore","Junior", "Senior"
 student.data
  
 boxplot(student.data$heights ~ student.data$class.years)
- 
-## In the tutorials, we have been using data contained within R’s
-## packages; however, when working on your own research you will most
-## likely want to read in a dataset of your own. The read.table()
-## function, and a number of related functions designed for reading in
-## data in a variety of formats, are essential for importing your own
-## data.  I suggest trying this out at some point, and I wanted to
-## mention a convenient GUI tool for retrieving the data from your
-## drive – incorporating file.choose() into the command, as follows.
- 
-roo <-read.table(file.choose(),header=TRUE)
- 
-## This will let you use yoursystem’s familiar file-selection window
-## to locate the data on your drive.
- 
+
 #################### 
 ## Applying functions to data frames
 ####################
@@ -588,29 +558,25 @@ roo <-read.table(file.choose(),header=TRUE)
 nyc.air <- airquality[,c("Wind","Temp")]
  
 nyc.air
- 
-mean(nyc.air) # Note that this may give an error message; this usage is
-                      # being replaced in future versions of R
- 
+
 summary(nyc.air)
  
 ## But others that you might try do not work as you want:
  
-sum(nyc.air)                      # sums wind and temperature together
+sum(nyc.air) # sums wind and temperature together
  
-var(nyc.air)   # gives covariance in a matrix (which we haven’t studied
-               # yet)
+mean(nyc.air) # returns an error message
  
-## The solution to these troubles is to use the function sapply(),
-## which performs the function named in the second argument on the
-## first argument – in a more predictable fashion than seen above.
+## One solution to these troubles is to use the function apply(),
+## which performs the function named in the third argument on the
+## first argument by the index specified by the second argument 
+## (in this case, by column).
  
-sapply(nyc.air, sum)
+apply(nyc.air, 2, sum)
+
+apply(nyc.air, 2, var)
  
-sapply(nyc.air, var)
- 
- 
- 
+
 ###################################################################### 
 ## SECTION C. Composing your own functions
 ###################################################################### 
@@ -621,9 +587,9 @@ sapply(nyc.air, var)
 ## packages. You have come up with methods for adjusting your data
 ## for visualization on your own, but you did this in many separate steps,
 ## each of which refer to the specific items you are manipulating. Since
-## often you want to perform the same series of actions on different objects,
-## R makes it relatively easy to compose your own generic functions and
-## store them in R’s memory.
+## you will often want to perform the same series of actions on different
+## objects, R makes it relatively straight-forward to compose your own generic
+## functions and store them in R’s memory.
  
 ## Before you start writing a function you need to have your mind set
 ## on three things:
@@ -643,7 +609,7 @@ sapply(nyc.air, var)
  
 x <- 1:10
  
-log(x)+1
+log(x) + 1
  
 ## But what we would really like is a named function which will do
 ## this in one step, log.plus.one().
@@ -665,7 +631,7 @@ log(x)+1
 ## and what we want it to give back happen to be the same thing,
 ## therefore we can define it very simply, as follows,
  
-log.plus.one <- function(y) log(y)+1
+log.plus.one <- function(y) log(y) + 1
  
 ## Cool! Let’s test it out:
  
@@ -681,7 +647,7 @@ log.plus.one(x)
 ## function with my variable x as the argument. What happened to y?
  
 y
- 
+
 ## The variable is untouched by the function.
  
 ## In order to keep functions fully generic, when you give the
@@ -704,7 +670,7 @@ y
 ## As a final example,
  
 (function(x,y){z <- x^2 + y^2
-               x+y+z })(0:7, 1)
+               x + y + z })(0:7, 1)
  
 ## Note that the function is written on two lines, but this isn’t an
 ## issue because of the brackets.  Note also that this function is
@@ -722,12 +688,11 @@ y
 ## read, and thoroughly commenting your commands as you go.
 ## The example above is therefore better written as follows:
  
- 
 ## SUM.VALS.PLUS.SUM.SQS() – function that takes two numerical values
 ## as input and returns the sum of the values plus the sum of their
 ## squares:
  
-sum.vals.plus.sum.sqs <- function(x,y)
+sum.vals.plus.sum.sqs <- function(x, y)
   {
     z <- x^2 + y^2        # define z as the sum of the values’ squares
  
@@ -735,11 +700,10 @@ sum.vals.plus.sum.sqs <- function(x,y)
                                    # and return the result as output
   }
  
- 
 ## Perform the above function with x equal to the numbers from 0 to
 ## 7 and y equal to 1:
  
-sum.vals.plus.sum.sqs(0:7,1)
+sum.vals.plus.sum.sqs(0:7, 1)
  
 ###################################################################### 
 ###################################################################### 
@@ -764,9 +728,3 @@ sum.vals.plus.sum.sqs(0:7,1)
 ## 
 ## Write a function, jumble(), that takes a vector as an argument and
 ## returns a vector with the original elements in random order.
-##
-## Question 4:
-## 
-## Write an anonymous inline function, applying it to a data frame with
-## sapply().
-##
