@@ -5,9 +5,9 @@
 ##
 ## Dario Fanucchi, May 2012
 ## Updated by Juliet R.C. Pulliam, December 2014
-## Updated by Juliet R.C. Pulliam, May 2019
+## Last updated by Juliet R.C. Pulliam, May 2019
 ## Some Rights Reserved
-## CC BY-NC 3.0 (http://creativecommons.org/licenses/by-nc/3.0/)
+## CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
 ##
 ##
 ## RStudio is an Integrated Development Environment (IDE) for the R programming 
