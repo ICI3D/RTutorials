@@ -1,13 +1,18 @@
 ## Tutorial 3: Probability Distributions and Control Structures
+## Clinic on Meaningful Modeling of Epidemiological Data
+## International Clinics on Infectious Disease Dynamics and Data Program
+## African Institute for Mathematical Sciences, Muizenberg, Cape Town, RSA
 ## David M. Goehring 2004
-## Juliet R.C. Pulliam 2008,2009
+## Juliet R.C. Pulliam 2008, 2009
 ## Steve Bellan 2010, 2012
-
-## Meaningful Modeling of Epidemiologic Data, 2012 AIMS, Muizenberg
+##
+## Last updated by Juliet R.C. Pulliam, May 2019
+## Some Rights Reserved
+## CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
 
 ###################################################################### 
 
-## By the end of this tutorial you should…
+## By the end of this tutorial you should...
 
 ## * Feel comfortable working with probability distributions 
 ## * Know how to use conditional structures
@@ -35,12 +40,12 @@
 ## sufficiently self-explanatory with their help files to render a
 ## treatment of them here unnecessary. A third exception is
 ## simulation, which you will try your hand at in the Benchmark
-## Questions.
+## Questions, and is an important component of mathematical modelling.
 
 ## Enter probability distributions. R is able to do in a few
-## milliseconds what took hours of hunting in tables not 20 years
+## milliseconds what took hours of hunting in tables not 30 years
 ## ago. If you understand what a probability distribution is, R will
-## provide four different utilities for any such distribution, as
+## provide four different utilities for (nearly) any such distribution, as
 ## follows:
 
 ## * Generating individual density values or a plot of the density function
@@ -56,8 +61,8 @@
 ## The different distributions have different corresponding functions
 ## in R, but aside from the particulars of their arguments, they 
 ## consist of four functions of the same general form.
- 
-## We will use the binomial distribution (which, you will recall, is a
+
+## We will use the binomial distribution (which is a
 ## discrete distribution) as an example for each of our four methods,
 ## and you should be able to extend that experience to any
 ## distribution you like.
@@ -83,13 +88,13 @@ hist(rbinom(10000, 10, 1/3), freq=FALSE, breaks=-1:10)
 ## theoretical values we may need. What is the probability of having 7
 ## successes on 10 trials with a probability of success of 1/3?
 
-dbinom(7,10,1/3)
+dbinom(7, 10, 1/3)
 
 ## Which is the equivalent of about 1.6% of the time. By extension, we
 ## can generate the complete distribution with vector input to
 ## dbinom(), as in
 
-dbinom(0:10,10,1/3)
+dbinom(0:10, 10, 1/3)
 
 ## A useful application of rbinom() and dbinom() is to plot a curve of
 ## the density function over the histogram of observed values. For a
@@ -128,9 +133,9 @@ pbinom(2, 10, 1/3)
 
 ## The last function we need in our probability-distribution toolkit
 ## is qbinom(), the R function that calculates the inverse cumulative
-## density function, F-1 of the binomial distribution The c. d. f. and
+## density function, F^-1 of the binomial distribution The c. d. f. and
 ## the inverse c. d. f. are related by
- 
+
 # p = F(x)
 # x = F^-1(p)
 
@@ -146,12 +151,12 @@ qbinom(.8, 10, 1/3)
 ## naming practices for its probability distribution functions. But
 ## let’s have some mnemonics:
 
-# Function                                  Prefix    Mnemonic 
+# Function                           Prefix    Mnemonic 
 #
-# random numbers from dist.          r      random
-# density of distribution                  d      density
-# cumulative probability                  p      probability (is output)
-# inverse cumulative probability      q      qumulative (with an “inversed “c”)
+# random numbers from dist.          r         random
+# density of distribution            d         density
+# cumulative probability             p         probability (is output)
+# inverse cumulative probability     q         qumulative (with an “inversed “c”)
 
 ## Feel free to remember them in any way you like, of course.
 
@@ -177,7 +182,7 @@ qbinom(.8, 10, 1/3)
 # Negative Binomial pnbinom() qnbinom() dnbinom() rnbinom()
 # Normal pnorm() qnorm() dnorm() rnorm()
 # Poisson ppois() qpois() dpois() rpois()
-# Student t pt() qt() dt() rt()
+# Student's t pt() qt() dt() rt()
 # Uniform punif() qunif() dunif() runif()
 
 ###################################################################### 
@@ -188,8 +193,7 @@ qbinom(.8, 10, 1/3)
 ## (or your scripts) more powerful by using control structures. The
 ## two main varieties of control structures are conditional structures
 ## and loop structures, but more important than what they are called
-## is what they do…
-
+## is what they do...
 
 ## The semicolon, ";", allows you to put two or more commands
 ## together on a single line. The commands will be executed
@@ -208,7 +212,6 @@ c(x, y, z)
 ## indentation, and empty lines) in your code will not affect its
 ## efficiency and that adding whitespace (and comments!) will often
 ## make your code easier to follow.
-
 
 ## Conditional structures
 
@@ -231,7 +234,9 @@ c(x, y, z)
 
 age <- 19
 
-if(age >= 6){ can.ride <- TRUE }
+if(age >= 6){
+	can.ride <- TRUE 
+}
 
 can.ride
 
@@ -239,11 +244,13 @@ can.ride
 ## (just-slightly-less silly) function, we would not:
 
 ride.test <- function(age)
-  {
-    can.ride <- FALSE
-    if(age >= 6){ can.ride <- TRUE }
-    return(can.ride)
-  }
+{
+	can.ride <- FALSE
+	if(age >= 6){
+		can.ride <- TRUE
+	}
+	return(can.ride)
+}
 
 ride.test(5)
 
@@ -257,23 +264,24 @@ ride.test(65)
 ## As an aside, the above function can (and perhaps should) be written
 ## more simply as
 
-ride.test <- function(age){ return(age >= 6) }
+ride.test <- function(age){
+	return(age >= 6)
+}
 
 ## The conditional structure becomes important when you want different
 ## functions or operations to be performed depending on some
 ## condition. This is something that you will often want.
 
 ## As an example, consider a function that measures central
-## tendency. But while you want to avoid the influence of extremely
-## large values by using the median you want to forgot it on very small
-## samples, replacing it with the mean. Let us say if we have fewer
-## than 10 measurements in our sample we want to resort to the mean:
+## tendency. While you may want to avoid the influence of extremely
+## large values by using the median, you may want to forgo it on very small
+## samples, replacing the median with the mean. Let us say if we have fewer
+## than 10 measurements in our sample we will resort to the mean:
 
-central.tend <- function(x)
-  {                                     
-    my.answer <- median(x)
-    if(length(x) < 10){my.answer <- mean(x)}
-    return(my.answer)
+central.tend <- function(x){                                     
+	my.answer <- median(x)
+	if(length(x) < 10){my.answer <- mean(x)}
+	return(my.answer)
 }
 
 central.tend(c(1,1,3))
@@ -295,7 +303,7 @@ central.tend(c(1,1,3))
 
 # if((x > 0) & (x < 1)) # followed by what should happen if x is between 0 and 1, exclusive
 
-# if(x >= 1)                  # followed by what should happen if x >= 1
+# if(x >= 1) # followed by what should happen if x >= 1
 
 ## Note that defining conditions which are not mutually exclusive may
 ## make your code hard to follow and therefore render your results
@@ -308,19 +316,39 @@ central.tend(c(1,1,3))
 ## if and else commands to create more complicated conditional
 ## structures.
 
+## Here are some additional options for writing the central tendancy 
+## function above. Using if and else, as described above:
+
+central.tend2 <- function(x){                                     
+	if(length(x) >= 10){
+		my.answer <- median(x)
+	}else{
+		my.answer <- mean(x)
+	}
+	return(my.answer)
+}
+
+# and using the ifelse() control structure, which is similar but more compact:
+
+central.tend3 <- function(x){                                     
+	my.answer <- ifelse(length(x) >= 10, median(x), mean(x))
+	return(my.answer)
+}
 
 ## There are two potential big errors that may occur in implementing a
 ## conditional structure. One occurs if the conditional expression
 ## evaluates to NA or NaN – try this out yourself:
 
-if(Inf-Inf>0){ x <- 5 }
+if(Inf - Inf > 0){ x <- 5 }
 
-## To make sure that your if statements don’t abort like this, use the
-## is.na() function as necessary.  The second big mistake that you can
-## make is assuming that R will act on the elements of a conditional
-## expression that is a vector. Try this:
+## To make sure that your if statements don’t abort like this, you will
+## use sometime want to use the is.na() function, which returns TRUE if the
+## value being evaluated is NA or NaN.
 
-if(c(T,F,F)){1+1}
+## The second big mistake that you can make is assuming that R will act
+## on the elements of a conditional expression that is a vector. Try this:
+
+if(c(T, F, F)){ 1 + 1 }
 
 ## As the warning that is generated indicates, R will ignore all but
 ## the first element of the vector. On reflection, this makes sense
@@ -339,8 +367,8 @@ if(c(T,F,F)){1+1}
 ## The reason is that, in general, in mathematical programming it is
 ## much more efficient to perform what traditionally has been done
 ## with programming loops using vector calculations. You have already
-## seen the basic methods used to replace loop structures, such as the
-## sapply() function.
+## seen one of the basic methods used to replace loop structures, the
+## apply() function.
 
 ######################################################################
 ######################################################################
@@ -352,6 +380,11 @@ if(c(T,F,F)){1+1}
 ## information available at
 ## http://www.stat.umn.edu/geyer/5102/examp/rlook.html.
 
+## If you are unfamiliar with or rusty on your understanding of the
+## binomial distribtion, you may also want to work through the introductory
+## Binomial Distribution tutorial, available here:
+## https://github.com/ICI3D/RTutorials/blob/master/binomialDistribution.R?raw=true
+
 
 ###################################################################### 
 ## SECTION C. Benchmark Questions
@@ -359,7 +392,7 @@ if(c(T,F,F)){1+1}
 
 #################### 
 ## 1. The standard medication used to treat some disease is known to
-## produce a severe side effect on 20% of the patients treated. A
+## produce a severe side effect in 20% of the patients treated. A
 ## pharmaceutical company develops a new drug to treat the disease and
 ## tests it on 9 patients. There are no side effects observed in these
 ## patients. 
