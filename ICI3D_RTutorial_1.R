@@ -1,10 +1,14 @@
 ## Tutorial 1: Introduction to R and Its Quirks
+## Clinic on Meaningful Modeling of Epidemiological Data
+## International Clinics on Infectious Disease Dynamics and Data Program
+## African Institute for Mathematical Sciences, Muizenberg, Cape Town, RSA
 ## David M. Goehring 2004
-## Juliet R.C. Pulliam 2008,2009
+## Juliet R.C. Pulliam 2008, 2009, 2019
 ## Steve Bellan 2010
-
-## Meaningful Modeling of Epidemiological Data, 2010
-## AIMS, Muizenberg
+##
+## Last updated by Juliet R.C. Pulliam, May 2019
+## Some Rights Reserved
+## CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
 
 ###################################################################### 
 ## SECTION A. How to Use These Tutorials
@@ -33,11 +37,10 @@
 #################### 
 ## Wander off!
 #################### 
-## DON'T feel compelled to stay on track. You should aim to finish the
-## tutorials within the specified lab period, but it's in your
+## DON'T feel compelled to stay on track. It's in your
 ## interest to say to yourself, "Hey, this is weird. I wonder what
 ## happens if I tweak this a bit:" That's how you'll really get the
-## hang of things. So never be afraid to try anything and if your
+## hang of things. So never be afraid to try anything, and if your
 ## program doesn't behave as you expect it to, ask for an
 ## explanation. If you do not finish the tutorials during the lab
 ## period, you may work on the during the afternoon or evening work
@@ -69,7 +72,6 @@
 ## be able to test whether you learned the concepts covered. You can
 ## ask the instructors to confirm that your answers are correct.
 
-
 ## So, without further ado, let us proceed to R!
 
 ###################################################################### 
@@ -85,12 +87,16 @@
 ##  Know how to use the help features of R 
 ##  Be introduced to data vectors 
 ##  Know how to access R's intrinsic datasets 
-##  Know how to produce basic graphics in R 
+##  Know how to produce basic graphics in R [note: here we use what is known as
+##  'base' R for plotting; at later tutorial will introduce plotitng with the
+##  the 'ggplot2' package, which is preferred by many because it is simpler to 
+##  produce publication-quality graphs]
 
 ## R as a calculator 
 
 ## Make sure R is up and running. R knows how to do just about any
 ## mathematical operation you can think of. So let's try out a few:
+
 3 + 4 
 5 * 5
 
@@ -101,14 +107,17 @@
 
 2 + 2 * 3 
 
-## is not performed left to right. Predictably, parentheses are the
-## way to tell R to prioritize certain operations over others, as in
+## is not performed left to right. Parentheses can be used to tell R to
+## prioritize certain operations over others, as in
 
 (2 + 2) * 3 
 
 ## If you don't remember your order-of-operations lessons from long
 ## ago, no worries. R won't care if you go crazy with the parentheses,
 ## and you'll ensure that R is behaving the way you want it to.
+## Notice that, as you move the cursor through the parentheses, RStudio will
+## highlight the one that matches to the direct left of the cursor, which 
+## can help you keep track of things.
 
 (2 + (2 * (3))) 
 
@@ -117,7 +126,7 @@
 ## Comments in R
 #################### 
 
-## Sometimes you will want to annotate your R code so it is easier for
+## Sometimes you will want to annotate your R code to make it easier for
 ## others (e.g., your instructors or collaborators) to understand. The
 ## number symbol (or pound symbol, or hash mark, or octothorpe), #, is
 ## used for this purpose.  You'll notice that these tutorials make
@@ -130,7 +139,7 @@
 ## will use this in the tutorials to indicate when you should expect
 ## an error or problem with a line of code, as in
 
-(5*+ 2) / 7 #BAD 
+(5*+ 2) / 7 # BAD 
 
 ## This way you will be able to tell when I am asking you to do
 ## something stupid.
@@ -139,7 +148,7 @@
 
 ## So far, everything you have done has been transient; it has been
 ## visible on your screen but you have no way of bringing those
-## results back when you want to re-use them. Rarely will you want
+## results back when you want to re-use them. You will rarely want
 ## to use R in this fashion. You will want to perform a lot of
 ## steps on your data and store all the results of all the
 ## steps. To do this, you need to assign values to variables in the
@@ -176,12 +185,14 @@ z
 ## weight or total, might be more useful for reminding you what values
 ## they hold.
 
-
 ## You may have noticed that assignment occurs last in the order of
 ## operations, which means R won't get confused if you assign a
 ## variable to itself, as in
 
 z * z -> z 
+
+## You will usually not want to do this because it can make your code more
+## difficult to follow, but it does come in handy on occaision.
 
 ## Hands off the keyboard! Pick up a writing implement:
 ## x <- 8
@@ -201,12 +212,19 @@ z * z -> z
 ## functions, making them confusing choices as variables. The worst of
 ## these are c, q, t, C, D, F, I, and T. Avoid them.
 
+## Note that it is also difficult to search for single-character names.
+## For this reason, the starndard practice adopted by many of the ICI3D
+## faculty is to repeat the character - e.g., indices will often be 
+## referred to as ii (instead of i) in the ICI3D tutorials and example code.
+
 ## You may encounter a synonymous version of the assignment operator
 ## <- in some code, =. Though it is one character shorter, it can be
-## confusing as to in which direction the assignment is being made and
+## confusing regarding the direction in which assignment is being made and
 ## is often confused with the logical-test-for-equality operator, ==,
 ## which we will come to later. While I recommend not using the =
-## assignment operator, you should be aware of it.
+## assignment operator, you should be aware of it. The same character, =,
+## is used to assign values to function argruments, as we will see in the
+## next section.
 
 
 #################### 
@@ -214,11 +232,11 @@ z * z -> z
 #################### 
 ## While basic operations, such as addition, are invaluable features
 ## of R, the real core of R comes in the form of functions. Functions,
-## in general, take arguments and convert them into output. That
-## output can be a detailed statistical test, a chart or graph, or a
-## simple summation -- the important thing to realize is that
-## fundamentally all functions in R obey similar rules. A function in
-## R is anything that can be specified by a name with a set of
+## in general, take specified types of input ('arguments') and convert
+## them into output. That output can be a detailed statistical test, a
+## chart or graph, or a simple summation -- the important thing to realize
+## is that fundamentally all functions in R obey similar rules. A function
+## in R is anything that can be specified by a name with a set of
 ## parentheses after it -- containing the function's arguments.
 ## Arguments are the input a function needs to perform its task and
 ## produce the desired output.
@@ -233,7 +251,8 @@ z * z -> z
 
 ## Take the log() function. It has one required argument, the number for
 ## which you want the logarithm, obviously. But it also has one
-## optional argument, base. This argument defaults to e if omitted.
+## optional argument, base. This argument defaults to Euler's number, e
+## (the base of the natural logarithm), if omitted.
 
 ## So, you can determine the natural log of something quite easily, as
 ## in,
@@ -247,19 +266,16 @@ log(10, 10)
 log(10, base=10) 
 
 ## "So, why would I ever want to do the second option?" you ask. Here,
-## it would not much matter. It would be slightly easier to understand
+## it does not matter much. It would be slightly easier to understand
 ## what is going on to a reader of your code in the second case, but
-## maybe not enough useful to justify the extra typing.
+## maybe not useful enough to justify the extra typing.
 
-## But as we move to more complex functions, especially the graphic
-## functions like plot, the number of potential arguments is huge. Do
-## you want a sub-caption for the y-axis? Most likely not, but when
-## you do need one it is very valuable argument to have waiting in the
-## wings. In those functions, the first couple of arguments will be
-## specified without a name and then the rest will look like the
-## base=10 argument above. For example, almost every plot you produce
-## will need a label on the x-axis, say, so you will find yourself
-## typing xlab= a lot.
+## But as we move to more complex functions, the number of potential
+## arguments can be very large, so including the name of the arguments
+## in the function call can help you keep track of things. This is particularly
+## important when you only want to change the default value of some of the 
+## optional arguments.
+
 
 ####################
 ## Repeating lines of code
@@ -271,9 +287,11 @@ log(10, base=10)
 ## you want to run and click the "Run" button at the top of the window. On
 ## a Mac, you can press CMD-Enter, instead of "Run." To repeat multiple lines
 ## of code from the script, highlight the lines and press "Run" or CMD-Enter.
+## On a Windows machine, you can click Cntrl+Enter instead. (For additional 
+## keyboard shortcuts in Rstudio, see Tutorial 0: Introduciton to R Studio.)
 
 ## Save yourself the time and energy of re-typing by re-using what you have
-## already entered.  This can be especially helpful if you made a
+## already entered. This can be especially helpful if you made a
 ## small typographical error in a long command.
 
 #################### 
@@ -293,7 +311,7 @@ ls()
 ## specified.
 
 ## If you are working in Rstudio, you can also see the variables and
-## functions defined in your workspace by clicking on the "Workspace"
+## functions defined in your workspace by clicking on the "Environment"
 ## tab, which will show not only the variable and function names but also
 ## the size of defined variables and the arguments for each function.
 
@@ -316,13 +334,14 @@ rm(list = ls())
 ## Here you are telling R, "I'm not going to give you individual
 ## variable names, instead I am giving you a list of variable
 ## names. To generate that list, perform the function that creates the
-## list of all variables stored in memory, ls()."
+## list of all variables stored in memory, ls(). The perform the remove
+## function on that list of variables."
 
 #################### 
 ## Getting help
 #################### 
 
-## When you do not know what a function does or what arguments is
+## When you do not know what a function does or what arguments it
 ## takes, R's in-line help system is exceptionally handy. The easiest
 ## way to access help on a specific function, such as log, is
 
@@ -339,7 +358,6 @@ help(log)
 
 help("+") 
 
-
 ## Help files in R can seem intimidating. The trick is to know what
 ## you don't need to know. Often you will end up using only a few of
 ## the arguments. Most arguments will have standard, acceptable
@@ -354,7 +372,6 @@ help("+")
 ## Lastly, the "see also" section may be useful if you are looking for
 ## a function but only know the name of a similar function.
 
-
 ## Conversely, you might know what a function does, but not know R's
 ## name for it. There is no incredibly satisfactory solution to this,
 ## but a good first step is to search within the in-line help
@@ -366,17 +383,21 @@ help.search("average")
 
 ??average
 
-## The next step is to search the R website, http://www.r-project.org,
+## You may also want to search the R website, http://www.r-project.org,
 ## for any help it can provide. The easiest way to do this from within
 ## R is to type
 
 RSiteSearch("average") 
 
+## Google can also be very useful for finding answers to your R questions,
+## most of which somone else will have asked previously. Answers are often
+## found on Stack Overflow, https://stackoverflow.com, a Q&A site for
+## programming.
+
 ## With these tools in hand, you should be ready to troubleshoot most
 ## of your R foibles yourself!
 
-
-## This tutorial will not have every function and method you need.
+## The R tutorials will not have every function and method you need.
 ## You should rely firstly on the help facilities of R -- which are
 ## very good. Of course, the instructors are also happy to help with
 ## difficulties as they occur, particularly as you develop a need for
@@ -411,7 +432,7 @@ RSiteSearch("average")
 
 my.vector <- c(1,2,3)
 
-my.other.vector <- c(x,y) 
+my.other.vector <- c(x,y) # Why doesn't this line work if you run it as is?
 
 my.last.vector <- c(my.vector, 365, my.other.vector) 
 
@@ -423,17 +444,18 @@ my.last.vector <- c(my.vector, 365, my.other.vector)
 ## some.ages <- c(some.ages,3,some.ages+1)
 ## What does some.ages equal?
 
-## Now decomment the above code by removing the "##" to execute the
+
+## Now uncomment the above code by removing the "##" to execute the
 ## commands and compare your answers.
 
 #################### 
 ## Generating random vectors
 #################### 
 ## It is a common programming task to want to generate a list of
-## random numbers. R has a number of different functions for this, but
+## random numbers. R has a variety of different functions for this, but
 ## I will show you rnorm(), which generates random numbers from the
 ## standard normal distribution (more details about working with
-## probability distributions are provided in Tutorial III).
+## probability distributions are provided in Tutorial 3).
 
 ## Today we will use just one basic argument for the rnorm() function,
 ## the number of random numbers we want in our vector. Say we want 110
@@ -450,7 +472,7 @@ my.randoms <- rnorm(110)
 ## addition to) a single number. Now that you know how to generate
 ## vectors to specification, these can be very handy. Some examples:
 
-median(my.last.vector) 
+median(my.vector) 
 
 mean(my.randoms) 
 
@@ -470,7 +492,7 @@ c(1,2,3)^3
 ## Producing a mediocre figure in R is trivial. With most data
 ## structures you will get something just by typing
 
-plot(my.last.vector) 
+plot(my.vector) 
 
 ## that is, the function plot, with the argument being whatever
 ## variable name you wish you visualize; however, this simplicity is
@@ -512,7 +534,7 @@ hist(my.randoms)
 #################### 
 ## Importing data into R from your computer is fairly straightforward,
 ## but for now, we will use only the datasets contained in R default
-## packages.  Generating a list of these available datasets is as
+## packages. Generating a list of these available datasets is as
 ## simple as entering
 
 data() 
@@ -526,17 +548,18 @@ data(package = .packages(all.available = TRUE))
 ## which gives you a complete list, importantly noting in its output
 ## which package each dataset comes from.
 
-## Obtaining and understanding datasets Once you have found a dataset
-## you wish to use (and we will use Chatterjee-Price Attitude Data,
-## attitude, as an example), you load it into memory by entering
+## Obtaining and understanding datasets
+
+## Once you have found a dataset you wish to use (and we will use
+## Chatterjee-Price Attitude Data, attitude, as an example), you
+## load it into memory by entering
 
 data(attitude) 
 
 ## For many of those datasets found by the second, more thorough,
 ## method above this will produce an error, because it is only looking
 ## in the default package. Get around this by adding an argument
-## specifying the package of the dataset, here using catsM, a variant
-## of which was seen in-class
+## specifying the package of the dataset, here using catsM
 
 data(catsM, package="boot") 
 
@@ -549,7 +572,7 @@ data(catsM, package="boot")
 ## won't be able to introduce most of this here. We will be sticking
 ## to absolute basics; for a more in-depth treatment of data frames
 ## and other data structures in R, see Travis Porco's website:
-## http://www.mathepi.com/comp/index.html.
+## http://www.mathepi.com/comp/.
 
 ## First, you will likely want to take a look at the data itself, just
 ## to see what it has in store. As you have learned, that can be done
@@ -557,8 +580,8 @@ data(catsM, package="boot")
 
 attitude 
 
-## The resulting chart (most often) will have named rows and columns
-## which correspond to the datum for those conditions and property. In
+## The resulting chart will (most often) have named rows and columns
+## which correspond to the data for those conditions and property. In
 ## this example, individuals are numbered 1 to 30 and each one has
 ## corresponding numerical answers to different questions regarding
 ## their attitude.
@@ -590,7 +613,7 @@ help(catsM, package="boot")
 ## associated with the dataset (or by its failure to perform
 ## predictably to data-frame commands below).  Feel free to use the
 ## help system to find ways to visualize these other collections of
-## data! NOTE: In a few days we'll be doing a whole tutorial on
+## data! During the MMED clinic, we'll be doing a whole tutorial on
 ## visualizing infectious disease data.
 
 ## Figures are produced the same way as above, with a couple of new
@@ -608,8 +631,8 @@ boxplot(attitude)
 ## For data frames, the columns are often compared in various ways, so
 ## a special notation, the dollar sign, $, is reserved for accessing
 ## the individual columns. The syntax is simply
-## data.frame$column.name. To see what this means to R we can type the
-## notation for the first column in our attitude data frame, the
+## data.frame.name$column.name. To see what this means to R we can type
+## the notation for the first column in our attitude data frame, the
 ## rating column
 
 attitude$rating 
@@ -626,14 +649,14 @@ plot(sort(attitude$critical))
 ## which much can be said.
 
 ## The simplest example is to add a second vector to our plot
-## function, which will place the values of two columns on each of the
-## axes.
+## function, which will produce a scatterplot, with the values of
+## two columns on each of the axes.
 
 plot(attitude$critical, attitude$privileges) 
 
 ## Once you have found useful figures to output, you must ensure they
 ## are appropriately labeled. The arguments to most graphical
-## functions include (among many more) xlab, ylab, and main. Here is
+## functions in base R include xlab, ylab, and main. Here is
 ## an example of a finalized plot.
 
 plot(catsM$Bwt,catsM$Hwt,
@@ -656,7 +679,8 @@ plot(catsM$Bwt,catsM$Hwt,
 ## read & debug though it depends on individual preference.  EMACS
 ## users will find that EMACS often formats this for you automatically
 ## if you press enter while still inside a function, or unclosed
-## parantheses expression.
+## parantheses expression. In RStudio, you can auto-indent a section of
+## code by highlighting it and pressing CMD+i (or Contrl+i, in Windows).
 
 ## One final new procedure: 
 ## The command library, used in the manner 
@@ -719,29 +743,29 @@ library("date")
 ## 7	        0
 ## 8	        0
 ## 9	        0
-## 10	0
-## 11	0
-## 12	0
-## 13	2
-## 14	0
-## 15	0
-## 16	3
-## 17	0
-## 18	0
-## 19	0
-## 20	0
-## 21	1
-## 22       0
-## 23	0
-## 24	0
-## 25	0
-## 26	2
-## 27	0
-## 28	0
-## 29	0
-## 30	0
-## 31	0
-## 32       0
+## 10	       0
+## 11	       0
+## 12	       0
+## 13	       2
+## 14	       0
+## 15	       0
+## 16	       3
+## 17	       0
+## 18	       0
+## 19	       0
+## 20	       0
+## 21	       1
+## 22	       0
+## 23	       0
+## 24	       0
+## 25	       0
+## 26	       2
+## 27	       0
+## 28	       0
+## 29	       0
+## 30	       0
+## 31	       0
+## 32	       0
 ## 
 ## (Hint: The vector week can be created easily using the R function
 ## seq() or the : operator.)
