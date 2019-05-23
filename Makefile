@@ -10,8 +10,8 @@ current: target
 
 # stuff
 
-Sources += Makefile .ignore 
-Sources += .gitignore
+Sources += Makefile 
+Ignore += .gitignore
 
 msrepo = https://github.com/dushoff
 ms = makestuff
@@ -37,10 +37,12 @@ Sources += $(wildcard *.R)
 
 ## Sandbox
 
+
+
+## Labs
+ICI3D_RTutorial_5_DataCleaning.Rout: ICI3D_RTutorial_5_DataCleaning.R
 ICI3D_Lab7_MCMC-Binomial.Rout: ICI3D_Lab7_MCMC-Binomial.R
 ICI3D_Lab8_MCMC-SI_HIV.Rout: ICI3D_Lab8_MCMC-SI_HIV.R
-
-ICI3D_RTutorial_5_DataCleaning.Rout: ICI3D_RTutorial_5_DataCleaning.R
 
 ######################################################################
 
