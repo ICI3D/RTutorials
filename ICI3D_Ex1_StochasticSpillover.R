@@ -25,12 +25,12 @@ count.spillovers= 0
 ## (S,I,R) = (susceptible, infectious, removed)
 
 ## Transitions:
-## Event                           Change        										Rate
-## Spillover (S)									 (S,I,R)->(S-1,I+1,R)							lambda*S/N
-## Infection (S)                   (S,I,R)->(S-1,I+1,R)             beta*I*S/N
-## Recovery/Removal (I)            (S,I,R)->(S,I-1,R+1)             gamma*I
+## Event                      Change                      Rate
+## Spillover (S)              (S,I,R)->(S-1,I+1,R)        lambda*S/N
+## Infection (S)              (S,I,R)->(S-1,I+1,R)        beta*I*S/N
+## Recovery/Removal (I)       (S,I,R)->(S,I-1,R+1)        gamma*I
 
-
+## Simulate a single event 
 event <- function(time,S,I,R,params){
   with(as.list(params),{
     
@@ -43,11 +43,11 @@ event <- function(time,S,I,R,params){
     
     if(totRate==0){eventTime <- final.time}else{
       
-      # calculate time until next event
+      # calculate time until event
       eventTime <- time+rexp(1,totRate)
       
       # choose type of event
-      eventType <- sample(c("Spillover","Infect","Recover"),1,replace=F,prob=rates/totRate)
+      eventType <- sample(c("Spillover","Infect","Recover"),1,replace=FALSE,prob=rates/totRate)
       
       # update compartments based on the event type
       switch(eventType,
@@ -71,6 +71,7 @@ event <- function(time,S,I,R,params){
   })
 }
 
+## Simulate the system by choosing events until final.time is reached
 simulateSIR <- function(t,y,params){
   with(as.list(y),{
     ts <- data.frame(time=0,S=round(S),I=round(I),R=round(R),
