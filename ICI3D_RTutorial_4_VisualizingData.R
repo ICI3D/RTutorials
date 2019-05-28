@@ -265,7 +265,7 @@ par('ps'=17,  ## set font size to 18
 las = 2) ## set all line widths to twice as big
 
 ## First lets do a simple scatterplot.
-plot(as.numeric(as.character(month.char)),
+plot(as.numeric(month.char),
      measles.Lon$cases,
      xaxt = "n",                  # Tells R not to plot an x-axis so
                                   # we can do it manually
