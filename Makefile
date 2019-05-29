@@ -37,6 +37,8 @@ Sources += $(wildcard *.R)
 
 ## Sandbox
 
+Sources += $(wildcard *.R)
+
 ICI3D_Ex1_StochasticSpillover.Rout: ICI3D_Ex1_StochasticSpillover.R
 
 ICI3D_Lab7_MCMC-Binomial.Rout: ICI3D_Lab7_MCMC-Binomial.R
