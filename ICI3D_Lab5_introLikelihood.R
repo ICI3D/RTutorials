@@ -145,7 +145,7 @@ ci.likelihood
 
 ## Are the results similar?
 
-## Task 3: Considering the following questions:
+## Task 3: Consider the following questions:
 
 ## For this example, do you think it was worth the trouble constructing Likelihood based confidence intervals?
 ## Under what circumstances might you use classical tests?
