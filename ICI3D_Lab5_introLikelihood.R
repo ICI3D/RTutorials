@@ -1,7 +1,5 @@
 ## Introduction to Likelihood
-## Meaningful Modeling of Epidemiolgic Data, 2012
-## (C) Steve Bellan, 2009-2018
-## (C) Cari van Schalkwyk, 2019
+## (C) Steve Bellan, Cari van Schalkwyk and the ICI3D team 2009–2019
 
 ## The code is made available under a Creative Commons Attribution 4.0 International License. You
 ## are free to reuse this code provided that you give appropriate credit, provide a link to the
@@ -14,51 +12,50 @@ par(mar=c(6,4,4,2))
 
 ## Say we are randomly sampling from a population of people in a town
 ## of size 1,000,000 and we sample 100 people from that population.
-size <- 100
+sampleSize <- 100
 ## Say that the true HIV prevalence in that population of size 1,000,000
 ## is 30%, i.e. 300,000 are HIV positive.
 true.prev <- .3
 
 ## Sample from this distribution once 
-## samp.pos <- rbinom(1,100,.3)
+## samplePos <- rbinom(1,100,.3)
 
 ## You can use the above code to sample from this distribution, but
 ## we'll set it at 28 just so everyone is working on the same example
 ## for now.
-samp.pos <- 28                          
-samp.prev <- samp.pos/size
-samp.pos
-samp.prev
+samplePos <- 28                          
+samplePrev <- samplePos/sampleSize
+samplePrev
 
 ## Create a color vector for every possible number of HIV+ people we
 ## could have found when sampling 100 people (0:100 means 101
 ## possibilities). Then make the value we chose have a different
 ## color.
-color.vec <- rep("black",size+1)
-color.vec[samp.pos+1] <-	"purple"
+color.vec <- rep("black",sampleSize+1)
+color.vec[samplePos+1] <-	"purple"
 
 ### Create a histogram of the binomial distribution function with the
 ### true prevalence, highlighting the value we sampled.
-barplot.obj <- barplot(dbinom(0:size,size=size, prob=true.prev),
-                       xlab="number HIV+", names.arg=c(0:size),
+barplot.obj <- barplot(dbinom(0:sampleSize,size=sampleSize, prob=true.prev),
+                       xlab="number HIV+", names.arg=c(0:sampleSize),
                        ylab="probability", col=color.vec, border = NA, space =0)
 
 ## A politician is claiming that HIV prevalence is 20%
-## Given that we found samp.pos
-samp.pos
+## Given that we found samplePos
+samplePos
 ## positives, would we accept or reject the hypothesis that the true prevalence is .2?
 potential.prev <- .2
 
 ## Calculate the probability of getting every single possible value
 ## from the binomial distribtion with this hypothesized prevalence.
-prob.dist <- dbinom(0:size, size=size, prob=potential.prev)
+prob.dist <- dbinom(0:sampleSize, size=sampleSize, prob=potential.prev)
 ymax <- .2
-color.vec <- rep("grey",size)
+color.vec <- rep("grey",sampleSize)
 
 ## Plot the binomial distribution for N=100, and p=.2
 barplot(prob.dist,
         xlab = "number HIV+",
-        names.arg = c(0:size),
+        names.arg = c(0:sampleSize),
         ylab = "probability",
         col = color.vec ,
         border = NA,
@@ -67,33 +64,32 @@ barplot(prob.dist,
         space = 0)
 
 ##What is the probability of observing 28/100, under this hypothesised prevalence?
-dbinom(samp.pos, s.size, potential.prev)
+dbinom(samplePos, sampleSize, potential.prev)
 
-arrows(x0 = samp.pos , y0=ymax, y1=dbinom(samp.pos, s.size, potential.prev))
+arrows(x0 = samplePos , y0=ymax, y1=dbinom(samplePos, sampleSize, potential.prev))
 
-## What does the following test tell us?
-binom.test(samp.pos, s.size, potential.prev, alternative = "two.sided")
+## Now do a classic test:
 
-## Task 1: Edit the above code for the theoretical null hypotheses
-## that the prevalences are 0.15, 0.25, 0.3, 0.35, 0.4, or 0.5
+binom.test(samplePos, sampleSize, potential.prev, alternative = "two.sided")
 
-## Task 2: Repeat the above but change samp.pos to be 38 (i.e. pretend
-## 38/100 tested HIV+)
+## Task 1: Explain what we learn from the binom.test
 
+## Task 2: Repeat the above for two or three different examples 
+## with different hypothesized prevalence and/or samplePos
+## Explain what you see.
 
-###################################################################################
+###########################################################################
 ## Now let's use the Maximum Likelihood approach to construct confidence intervals.
-################################################################################### 
+########################################################################### 
 
-## Create a vector of potential prevalences spanning 0-1 with 1000 values
+## Create a vector of potential prevalences spanning 0-1 with 10000 values
 ## These are all potential "null hypotheses".
 potential.prev.vector <- seq(0,1, length=10000)
-
 
 ## The likelihood of a prevalence is the probability of observing the data given the
 ## hypothesized prevalence:
 ## L(prevalence | data) = p(data | prevalence)
-likelihoods <- dbinom(samp.pos, size, potential.prev.vector)
+likelihoods <- dbinom(samplePos, sampleSize, potential.prev.vector)
 
 plot(potential.prev.vector, likelihoods, col = "purple", type = "l", lwd = 2,
      xlab = "potential HIV prevalences", ylab = "likelihood",
@@ -109,11 +105,10 @@ plot(potential.prev.vector, -log(likelihoods), type = "l", col = "purple", col.m
      bty = "n", lwd = 3, xlab = "potential prevalences (our models)",
      ylab = "-log(likelihood)",  main = "we usually minimize the -log(likelihood)")
 
-## We can use the Chi Squared Likelihood Ratio Test to calculate confidence intervals. 
-## If the logL of a hypothesised prevalence is within the chi-squared
+## We can use the Likelihood Ratio Test to calculate confidence intervals. 
+## If the logL of a hypothesised prevalence is not within the chi-squared
 ## alpha=.05 cutoff of the minimum logL, then we do not reject it.
 chisq.crit <- qchisq(.95, df = 1)
-chisq.crit
 min.l <- min(-log(likelihoods))
 abline(h = min.l + chisq.crit/2, lwd = 3, lty = 2)
 
@@ -144,10 +139,15 @@ text(ci.u, min.l + 4, ci.u,cex = 1,pos = 3)
 
 ## Compare confidence intervals calculated using binom.test() and using the Likelihood
 ## Ratio Test.
-binom.test(samp.pos, s.size, samp.pos/s.size, alternative = "two.sided")
+binom.test(samplePos, sampleSize, samplePos/sampleSize, alternative = "two.sided")
 
 ci.likelihood
 
-## Task 4: For this example, do you think it was worth the trouble constructing Likelihood 
-## based confidence intervals? Can you think of examples where it will be the better/only
-## method to use? 
+## Are the results similar?
+
+## Task 3: Considering the following questions:
+
+## For this example, do you think it was worth the trouble constructing Likelihood based confidence intervals?
+## Under what circumstances might you use classical tests?
+## Under what circumstances would likelihood-based tests be better?
+
