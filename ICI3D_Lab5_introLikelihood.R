@@ -73,6 +73,7 @@ arrows(x0 = samplePos , y0=ymax, y1=dbinom(samplePos, sampleSize, potential.prev
 binom.test(samplePos, sampleSize, potential.prev, alternative = "two.sided")
 
 ## Task 1: Explain what we learn from the binom.test
+## Focus on the confidence intervals; don't worry about the P value (or about the "guess" (potential.prev)
 
 ## Task 2: Repeat the above for two or three different examples 
 ## with different hypothesized prevalence and/or samplePos
@@ -147,7 +148,7 @@ ci.likelihood
 
 ## Task 3: Consider the following questions:
 
-## For this example, do you think it was worth the trouble constructing Likelihood based confidence intervals?
-## Under what circumstances might you use classical tests?
-## Under what circumstances would likelihood-based tests be better?
+## For this example, do you think it was worth the trouble constructing Likelihood based confidence intervals (CIs)?
+## Under what circumstances might you use classical tests for CIs?
+## Under what circumstances would likelihood-based tests be better for CIs?
 
