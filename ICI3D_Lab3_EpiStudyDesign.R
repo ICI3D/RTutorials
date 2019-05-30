@@ -200,6 +200,8 @@ table(Choice,Timing)
 ## check its box or, alternatively, type: library(epiDisplay). If it isn't installed,
 ## do install.packages('epiDisplay') and then library(epiDisplay)
 
+library(epiDisplay)
+
 ##
 ## If you don't see it listed under the 'Packages' tab, it may not be installed on 
 ## your computer.  You can attempt to do so by clicking the 'Install Packages' button
@@ -208,7 +210,8 @@ table(Choice,Timing)
 ## Once epiDisplay is loaded, you have access to many commands relevant to 
 ## epidemiological analysis.  The command cci() provides the OR, CI, and results
 ## from a number of hypothesis tests associated 2x2 tables. 
-?cci
+## You can get help using:
+## ?cci
 
 ## Here it makes sense to consider 'Timing' as the exposure (After = exposed, 
 ## Before = unexposed). 'Choice' could play the role of "disease" (Human = case
