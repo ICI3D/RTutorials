@@ -69,7 +69,9 @@ ICI3D_spillover_introductions.Rout: ICI3D_spillover_introductions.R
 ## Pix to go with the boxcar explanation (not used)
 boxcars.Rout: boxcars.R
 
-Ignore += MuTxT.RData
+renameThisFile.Rout: renameThisFile.R
+
+Ignore += MuTxT.Rdata
 
 ######################################################################
 
