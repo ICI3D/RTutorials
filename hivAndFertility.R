@@ -32,27 +32,27 @@
 	## Should we ask people and exclude those who report 0 sexual partners?
 	## NEEDS MORE DISCUSSION
 
-sampleSize <- 5e3
-prev <- 0.3
-fertProb <- 0.2
-orPos <- 0.8
+set.seed(601)
 
-## Calculate fertility of pos women based on OR
-fertOdds <- fertProb/(1-fertProb)
-posFertOdds <- fertOdds*orPos
-posFertProb <- posFertOdds/(1+posFertOdds)
-print(posFertProb)
+makePop <- function(sampleSize, prev, fertProb, orPos)
+{
 
-hivStatus <- sample(
-	c("Pos", "Neg"), size=sampleSize
-	, replace=TRUE, prob=c(prev, 1-prev)
-)
-fertility <- rbinom(sampleSize
-	, prob=ifelse(hivStatus=="Neg", fertProb, posFertProb)
-	, size=1
-)
+	## Calculate fertility of pos women based on OR
+	fertOdds <- fertProb/(1-fertProb)
+	posFertOdds <- fertOdds*orPos
+	posFertProb <- posFertOdds/(1+posFertOdds)
 
-## data.frame(hivStatus, fertility)
+	hivStatus <- sample(
+		c("Pos", "Neg"), size=sampleSize
+		, replace=TRUE, prob=c(prev, 1-prev)
+	)
+	fertility <- rbinom(sampleSize
+		, prob=ifelse(hivStatus=="Neg", fertProb, posFertProb)
+		, size=1
+	)
+
+	return(data.frame(hivStatus, fertility))
+}
 
 ## Now we have some data, and we pretend for a while we don't know where we got it
 ## Do a logistic regression using glm in R
@@ -60,8 +60,34 @@ fertility <- rbinom(sampleSize
 ## glm family binomial does a logistic regression (thinks on log odds scale) by default
 ## More realistic version would have covariates
 # m <- glm(fertility ~ hivStatus + age + educ + cricketSupporter)
-m <- glm(fertility ~ hivStatus, family="binomial")
-print(m)
-summary(m)
 
+analyzePop <- function(pop){
+	m <- glm(fertility ~ hivStatus, family="binomial", data=pop)
+	co <- summary(m)$coef
+	return(co[["hivStatusPos", ncol(co)]])
+}
 
+repSim <- function(numSims, sampleSize = 5e3
+	, prev = 0.3 , fertProb = 0.2 , orPos = 0.8
+)
+{
+	replicate(numSims, {
+		pop <- makePop(sampleSize, prev, fertProb, orPos)
+		return(analyzePop(pop))
+	})
+}
+
+## Does this test actually work?
+
+## Step 1: Do we get nominal coverage when we assume the null is true?
+	## 1-α (typically 95%) of the time, if nothing is happening we shouldn't think we saw anything
+	## 95% the CI should contain 0
+
+pvec <- repSim(numSims=1e4, orPos=1)
+mean(pvec < 0.05)
+hist(pvec)
+
+## Step 2: Do we get nominal coverage when we assume our hypothesis is true?
+	## 95% the CI should contain the value we used for simulation
+
+## Step 3: How often will we see something clear assuming the hypothesis is true?
