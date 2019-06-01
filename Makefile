@@ -69,7 +69,7 @@ ICI3D_spillover_introductions.Rout: ICI3D_spillover_introductions.R
 ## Pix to go with the boxcar explanation (not used)
 boxcars.Rout: boxcars.R
 
-renameThisFile.Rout: renameThisFile.R
+hivAndFertility.Rout: hivAndFertility.R
 
 Ignore += MuTxT.Rdata
 
