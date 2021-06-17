@@ -10,8 +10,8 @@ current: target
 
 # stuff
 
-Sources += Makefile .ignore 
-Sources += .gitignore
+Sources += Makefile 
+Ignore += .gitignore
 
 msrepo = https://github.com/dushoff
 ms = makestuff
@@ -37,6 +37,8 @@ Sources += $(wildcard *.R)
 
 ## Sandbox
 
+Sources += $(wildcard *.R)
+
 ICI3D_Ex1_StochasticSpillover.Rout: ICI3D_Ex1_StochasticSpillover.R
 
 ICI3D_Lab7_MCMC-Binomial.Rout: ICI3D_Lab7_MCMC-Binomial.R
@@ -45,6 +47,8 @@ ICI3D_Lab8_MCMC-SI_HIV.Rout: ICI3D_Lab8_MCMC-SI_HIV.R
 ICI3D_RTutorial_5_DataCleaning.Rout: ICI3D_RTutorial_5_DataCleaning.R
 
 ICI3D_Lab2_Heterogeneity.Rout: ICI3D_Lab2_Heterogeneity.R
+
+hetero_play.Rout: HetSIR_functions.Rdata  hetero_play.R 
 
 ## Not used yet
 ICI3D_Example_binomialDistribution.Rout: ICI3D_Example_binomialDistribution.R
@@ -61,6 +65,13 @@ ICI3D_RTutorial_2.Rout: ICI3D_RTutorial_2.R
 ICI3D_RTutorial_3.Rout: ICI3D_RTutorial_3.R
 ICI3D_RTutorial_4_VisualizingData.Rout: ICI3D_RTutorial_4_VisualizingData.R
 ICI3D_spillover_introductions.Rout: ICI3D_spillover_introductions.R
+
+## Pix to go with the boxcar explanation (not used)
+boxcars.Rout: boxcars.R
+
+hivAndFertility.Rout: hivAndFertility.R
+
+Ignore += MuTxT.Rdata
 
 ######################################################################
 
