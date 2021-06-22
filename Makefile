@@ -34,6 +34,8 @@ batch/%.R: %.R %.answers.R batch.pl
 ## ICI3D_RTutorial_1.batch.Rout: ICI3D_RTutorial_1.answers.R
 ## ICI3D_RTutorial_1.batch.rtmp ICI3D_RTutorial_1.batch.Rlog
 
+## ICI3D_RTutorial_2.batch.Rout: ICI3D_RTutorial_2.R ICI3D_RTutorial_2.answers.R
+
 ######################################################################
 
 ### Makestuff

@@ -139,7 +139,7 @@
 ## will use this in the tutorials to indicate when you should expect
 ## an error or problem with a line of code, as in
 
-(5*+ 2) / 7 # BAD 
+(5*+ 2) / 7 # BADCODE
 
 ## This way you will be able to tell when I am asking you to do
 ## something stupid.
@@ -345,18 +345,18 @@ rm(list = ls())
 ## takes, R's in-line help system is exceptionally handy. The easiest
 ## way to access help on a specific function, such as log, is
 
-?log ## Console
+?log ## CONSOLE
 
 ## But equivalently, you can type
 
-help(log) ## Console
+help(log) ## CONSOLE
 
 ## When the item you need help on is an operator, rather than a
 ## standard function (like the addition operator, +) only the second
 ## of these will work, and you must include the operator in quotes, as
 ## in
 
-help("+")  ## Console
+help("+")  ## CONSOLE
 
 ## Help files in R can seem intimidating. The trick is to know what
 ## you don't need to know. Often you will end up using only a few of
@@ -380,17 +380,17 @@ help("+")  ## Console
 ## We will mark with ## Console commands that are really script-like and that would ordinarily be typed into the console window directly.
 ## For the tutorials, you can type them or just run them
 ## When writing scripts, comment out such console commands to be more portable
-help.search("average") ## Console
+help.search("average") ## CONSOLE
 
 ## Or, equivalently,
 
-??average ## Console
+??average ## CONSOLE
 
 ## You may also want to search the R website, http://www.r-project.org,
 ## for any help it can provide. The easiest way to do this from within
 ## R is to type
 
-RSiteSearch("average")  ## Console
+RSiteSearch("average")  ## CONSOLE
 
 ## Google can also be very useful for finding answers to your R questions,
 ## most of which somone else will have asked previously. Answers are often
@@ -598,12 +598,12 @@ head(attitude)
 ## look at the accompanying information on the dataset, accessed by
 ## typing
 
-help(attitude) # Console
+help(attitude) # CONSOLE
 
 ## or, when necessary, by analogy to the package issues introduced
 ## above,
 
-help(catsM, package="boot")  # Console
+help(catsM, package="boot")  # CONSOLE
 
 ## This text will include key information about the procedures and
 ## assumptions involved in data collection, in addition to a basic
@@ -701,7 +701,7 @@ library("stats4")
 ## install the package before loading it. On most computers connected to the
 ## internet, this should be a simple matter of typing
 
-install.packages("date")  ## Console
+install.packages("date")  ## CONSOLE
 ## This is not part of a normal script, because you only ever need to do it once per account
 
 ## (obviously substituting the desired package between the quotes). R

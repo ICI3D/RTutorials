@@ -12,8 +12,11 @@ open (S, "<$sf");
 my @s = split /\n{1,}/, <S>;
 
 foreach my $ln (@s){
-	next if $ln =~ /#.*Console/;
-	next if $ln =~ /#.*BAD/;
-	$ln = shift @ans if $ln =~ /#.*FIX/;
-	say $ln;
+	next if $ln =~ /#.*CONSOLE/;
+	next if $ln =~ /#.*BADCODE/;
+	if ($ln =~ /#.*FIXME/){
+		say "## $ln";
+		say shift @ans;
+	}
+	else {say $ln;}
 }

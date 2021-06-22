@@ -279,8 +279,7 @@ x[c(-1, -6)]
 ## negative and positive indices – R will not know what you want it to
 ## do:
  
-x[c(-1, 4)] #BAD
- 
+x[c(-1, 4)] # BADCODE
  
 #################### 
 ## Sorting
