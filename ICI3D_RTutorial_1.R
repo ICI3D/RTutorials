@@ -345,18 +345,18 @@ rm(list = ls())
 ## takes, R's in-line help system is exceptionally handy. The easiest
 ## way to access help on a specific function, such as log, is
 
-?log
+?log ## Console
 
 ## But equivalently, you can type
 
-help(log)
+help(log) ## Console
 
 ## When the item you need help on is an operator, rather than a
 ## standard function (like the addition operator, +) only the second
 ## of these will work, and you must include the operator in quotes, as
 ## in
 
-help("+") 
+help("+")  ## Console
 
 ## Help files in R can seem intimidating. The trick is to know what
 ## you don't need to know. Often you will end up using only a few of
@@ -377,17 +377,20 @@ help("+")
 ## but a good first step is to search within the in-line help
 ## documentation for the concept:
 
-help.search("average") 
+## We will mark with ## Console commands that are really script-like and that would ordinarily be typed into the console window directly.
+## For the tutorials, you can type them or just run them
+## When writing scripts, comment out such console commands to be more portable
+help.search("average") ## Console
 
 ## Or, equivalently,
 
-??average
+??average ## Console
 
 ## You may also want to search the R website, http://www.r-project.org,
 ## for any help it can provide. The easiest way to do this from within
 ## R is to type
 
-RSiteSearch("average") 
+RSiteSearch("average")  ## Console
 
 ## Google can also be very useful for finding answers to your R questions,
 ## most of which somone else will have asked previously. Answers are often
@@ -432,12 +435,12 @@ RSiteSearch("average")
 
 my.vector <- c(1,2,3)
 
-my.other.vector <- c(x,y) # Why doesn't this line work if you run it as is?
+# Why doesn't this line work if you run it as is?:
+my.other.vector <- c(x,y) ## FIXME
 
 my.last.vector <- c(my.vector, 365, my.other.vector) 
 
 ## It is pretty straightforward, once you get the hang of it.
-
 
 ## Hands off the keyboard! Pick up a writing implement:
 ## some.ages <- c(1,4,2)
@@ -595,12 +598,12 @@ head(attitude)
 ## look at the accompanying information on the dataset, accessed by
 ## typing
 
-help(attitude)
+help(attitude) # Console
 
 ## or, when necessary, by analogy to the package issues introduced
 ## above,
 
-help(catsM, package="boot") 
+help(catsM, package="boot")  # Console
 
 ## This text will include key information about the procedures and
 ## assumptions involved in data collection, in addition to a basic
@@ -695,10 +698,11 @@ library("stats4")
 ## with a single application of the library command in each R session.
 
 ## If a library function call fails on your machine, you need to
-## install the library package. On most computers connected to the
+## install the package before loading it. On most computers connected to the
 ## internet, this should be a simple matter of typing
 
-install.packages("date") 
+install.packages("date")  ## Console
+## This is not part of a normal script, because you only ever need to do it once per account
 
 ## (obviously substituting the desired package between the quotes). R
 ## will ask you to select a mirror site for download and in a few
