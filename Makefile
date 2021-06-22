@@ -17,6 +17,7 @@ Sources += $(wildcard *.R)
 
 ## Processing machinery
 
+Ignore += batch
 batch:
 	$(mkdir)
 Sources += batch.pl

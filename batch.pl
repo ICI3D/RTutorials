@@ -13,6 +13,7 @@ my @s = split /\n{1,}/, <S>;
 
 foreach my $ln (@s){
 	next if $ln =~ /#.*Console/;
+	next if $ln =~ /#.*BAD/;
 	$ln = shift @ans if $ln =~ /#.*FIX/;
 	say $ln;
 }
