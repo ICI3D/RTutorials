@@ -417,7 +417,6 @@ ggplot(hookworm, aes(epg))+stat_bin( breaks=my.breaks)+
   theme_bw()+xlim(0, 10000)+ # set the x axis limit
   labs(x="eggs per gram", title="Egg Per Gram Distribution")
 
-
 ## Notice how many of the EPG counts were near 0! We couldn't see this
 ## when the bins were much larger. If we make the bins even smaller
 ## what happens?
@@ -429,7 +428,6 @@ ggplot(hookworm, aes(epg))+stat_bin( breaks=my.breaks)+
 ## panels side by side and compare how the data is presented.
 ######################################################################
 
-
 ######################################################################
 ## PROBLEM 4
 ######################################################################
@@ -440,16 +438,21 @@ ggplot(hookworm, aes(epg))+stat_bin( breaks=my.breaks)+
 ## impressions.
 ##HINT: Look at facet_grid function to help you with this
 ######################################################################
+
 ?facet_grid ## CONSOLE
+
+## BONUS: Try to put the number of eggs on a log scale (google ggplot log1p or ask us for help).
+
+# What are the advantages and disadvantages of a log scale?
+# Which axis or axes are appropriate for log scaling of these histograms?
 
 ######################################################################
 ## PROBLEM 5
 ######################################################################
+
 ## The function ggsave() can be used to create pdf files or *.jpg files
 #of your graphics.
-## To save all these graphics in one graph, use the grid.arrange function:
 
-
-
+## Investigate ggsave and create some pdf files
 
 ######################################################################
