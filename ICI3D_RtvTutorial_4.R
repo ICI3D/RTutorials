@@ -16,6 +16,7 @@
 ######################################################################
 
 ######################################################################
+
 ## 1A - First, you need to import the data you want to plot!  To do
 ## this you need to make sure you are in the same working directory as
 ## your data.
@@ -31,7 +32,7 @@ setwd("Your path to the data") ## CONSOLE
 ## 2A - Loading and exploring the data.  
 
 bots.dat <- read.csv('HIV_Botswana.csv')
-head(bots.dat, 5)
+head(bots.dat, 5) ## CONSOLE
 
 ## For this exercise, we will be using the ggplot package
 library(ggplot2)
@@ -44,12 +45,12 @@ library(ggplot2)
 bots.dat$prevHIVneg<- 1-bots.dat$prevHIV ## create a new column to calculate the proportion HIV -
 ## we transpose the data to long format using a function called melt which is in the reshape2 package
 library (reshape2)
-bots.dat1<-melt(bots.dat, id=1)
+bots.long<-melt(bots.dat, id=1)
 
 ## Use View(), print(), head(), or summary() to compare the original with the reshaped data before going forward!
 
 ## We now use ggplot to make a visualise the proportion of HIV positive and negaive people in 1994
-ggplot(bots.dat1[bots.dat1$year == 1994,], aes(x="", y=value, fill=variable))+
+ggplot(bots.long[bots.long$year == 1994,], aes(x="", y=value, fill=variable))+
   geom_bar(stat="identity", width=1) +
   coord_polar("y", start=0)+
   theme_void()+ # remove background, grid, numeric labels
@@ -64,7 +65,7 @@ ggplot(bots.dat1[bots.dat1$year == 1994,], aes(x="", y=value, fill=variable))+
 ## categories, bar plots can do the same with another variable
 ## added.
 
-?geom_col #to understand more about this function
+?geom_col #to understand more about this function ## CONSOLE
 
 ggplot(bots.dat, aes(y=prevHIV, x=year))+
   geom_col(fill="red")
@@ -82,24 +83,17 @@ ggplot(bots.dat, aes(y=prevHIV, x=year))+
 ## This is much better, but it doesn't really show the HIV- population
 ## like the pie chart did.  If we want this we can make what's called
 ## a "stacked bar plot".  To do this we can use the transposed dataset,
-## bots.dat1 we earlier created which specifies the proportion that is HIV+ and
+## bots.long we earlier created which specifies the proportion that is HIV+ and
 ## HIV-. 
 
+head(bots.long) ## CONSOLE
 
-
-head(bots.dat1)
-bots.dat1$variable<- 
-  bots.dat1$value<- bots.dat1$value*100 ## change the proportion to percentage
-
-ggplot(bots.dat1, aes(x=year, y=value, fill=variable))+geom_col()+
-  theme_bw()+ ## change this to theme_void(), theme_classic() to see the differences
-  scale_fill_manual(values=c("blue", "red"), labels=c("HIV-", "HIV+"))+
-  labs(x="Year", y="% of population", title="HIV Prevalence in Botswana, 1990-2007", fill="")
-
+bots.long$value<- bots.long$value*100 ## change the proportion to percentage
 
 ## Alternatively we can just plot prevalence as a series of points.
 
-ggplot(bots.dat, aes(x=year, y=prevHIV*100))+geom_point()+theme_bw()+
+ggplot(bots.dat, aes(x=year, y=prevHIV*100))+geom_point()+
+	theme_bw()+ ## TRY: change this to theme_void(), theme_classic() …
   labs(x="Year", y="% of population", title="IV Prevalence in Botswana, 1990-2007")
 
 ######################################################################
@@ -111,8 +105,7 @@ ggplot(bots.dat, aes(x=year, y=prevHIV*100))+geom_point()+theme_bw()+
 ## online from the International Infectious Disease Data Archive
 ## (IIDDA) at http://iidda.mcmaster.ca.
 
-
-measles.Lon <- read.csv("measlesCleanLon.csv")
+measles.Lon <- read.csv("MeaslesCleanLon.csv")
 
 ######################################################################
 ## 2A - Now let's explore the data we've imported.
@@ -158,7 +151,7 @@ ggplot(measles.Lon, aes(x=date, y=cases))+
 ## the pattern more difficult to follow.  Let's try some other
 ## options.
 ggplot(measles.Lon, aes(x=date, y=cases))+
-  geom_xx()+ ##TRY geom_line(), geom_point(), geom_line()+geom_point()
+  geom_xx()+ ##FIXME TRY geom_line(), geom_point(), geom_line()+geom_point()
   theme_bw()+
   labs(x="Time", y="# cases (weekly)", title="London Measles Incidence, 1944-1994")
 ## Much better!
@@ -235,7 +228,7 @@ ggplot(data=measles.Lon, aes(x=date, y=cases))+
 ## incidence data sets. Choose your graphical parameters so you can
 ## see both the data sets as clearly as possible.
 
-measles.LP <- read.csv("measlesCleanLP.csv")
+measles.LP <- read.csv("MeaslesCleanLP.csv")
 measles.LP$date <- as.Date(measles.LP$date)
 
 ## We can try to first combine the two datasets, for Liverpool and London
@@ -294,6 +287,7 @@ ggplot(measles.Lon, aes(x=month, y=cases))+geom_point(shape=16)+ # TRY 1, 4, 5,8
 ## can't really see the mean.  Let's use tapply() to get mean weekly
 ## incidence by month.
 
+## 
 ?tapply                                 # WHAT DOES tapply() do?
 
 mean.by.months <- tapply(measles.Lon$cases, measles.Lon$month, mean)
@@ -321,7 +315,7 @@ plot1
 ## boxplot. Boxplots are good for showing the distribution of samples
 ## by the level of another variable. First, read about the function.
 
-?geom_boxplot
+?geom_boxplot ## CONSOLE
 
 plot2<-ggplot(measles.Lon, aes(x=month, y=cases))+geom_point(shape=16)+
   geom_boxplot()+
@@ -367,14 +361,14 @@ grid.arrange(plot1, plot2, plot3)
 ## whether or not they wear shoes.
 
 
-hookworm <- read.csv("hookworms.csv")
+hookworm <- read.csv("Hookworms.csv")
 
-head(hookworm)
-nrow(hookworm)
+head(hookworm) ## CONSOLE
+nrow(hookworm) ## CONSOLE
 
 ## Check out some of the parameters of the histogram.
 
-?geom_histogram
+?geom_histogram ## CONSOLE
 ggplot(hookworm, aes(epg))+geom_histogram()
 
 
@@ -385,7 +379,7 @@ ggplot(hookworm, aes(epg))+geom_histogram()
 ## bins. To divide the data into "pretty" bins we can use the pretty
 ## function.
 
-?pretty
+?pretty ## CONSOLE
 
 my.breaks <- pretty(range(hookworm$epg),100)
 

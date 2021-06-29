@@ -1,10 +1,14 @@
 use strict;
 use 5.10.0;
 
+## Read answers file and split into paragraphs
+## Put first paragraph at top of the batch script
 undef $/;
 my $ansf = pop @ARGV;
 open (ANS, "<$ansf");
 my @ans = split /\n{2,}/, <ANS>;
+
+say shift @ans;
 
 undef $/;
 my $sf = pop @ARGV;

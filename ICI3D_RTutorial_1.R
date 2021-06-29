@@ -540,13 +540,13 @@ hist(my.randoms)
 ## packages. Generating a list of these available datasets is as
 ## simple as entering
 
-data() 
+data()  ## CONSOLE
 
 ## but here R stiffs you a little, by not looking in every available
 ## package. It warns you of this at the bottom of its response and
 ## suggests that you should try
 
-data(package = .packages(all.available = TRUE)) 
+data(package = .packages(all.available = TRUE))  ## CONSOLE
 
 ## which gives you a complete list, importantly noting in its output
 ## which package each dataset comes from.
