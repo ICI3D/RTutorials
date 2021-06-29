@@ -20,17 +20,12 @@
 ## this you need to make sure you are in the same working directory as
 ## your data.
 
-getwd() # shows you what directory you are currently in
+getwd() # shows you what directory you are currently in # CONSOLE
 
 ## Next, you should change the working directory to where the data is kept.
-## Define a variable "path" that gives the file path to the directory 
-## where the data are stored.
-
-path <- "~/Dropbox/Mentorship/MMED/visualizingData" # Replace the question marks with a character string telling R
-# where to look for the data
 
 ## and you can replace it with where you have saved the data set.
-setwd(path)
+setwd("Your path to the data") ## CONSOLE
 
 ######################################################################
 ## 2A - Loading and exploring the data.  
@@ -38,8 +33,7 @@ setwd(path)
 bots.dat <- read.csv('HIV_Botswana.csv')
 head(bots.dat, 5)
 
-## For this exercise, we will be using ggplot package so it is best we export it into our R
-## environment
+## For this exercise, we will be using the ggplot package
 library(ggplot2)
 
 ## We can first plot a pie chart to understand the proportion of HIV positive and negative
@@ -51,6 +45,8 @@ bots.dat$prevHIVneg<- 1-bots.dat$prevHIV ## create a new column to calculate the
 ## we transpose the data to long format using a function called melt which is in the reshape2 package
 library (reshape2)
 bots.dat1<-melt(bots.dat, id=1)
+
+## Use View(), print(), head(), or summary() to compare the original with the reshaped data before going forward!
 
 ## We now use ggplot to make a visualise the proportion of HIV positive and negaive people in 1994
 ggplot(bots.dat1[bots.dat1$year == 1994,], aes(x="", y=value, fill=variable))+
