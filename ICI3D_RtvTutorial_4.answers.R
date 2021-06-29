@@ -5,4 +5,6 @@ setwd("data/visualizingData/")
 ## MeaslesCleanLon.csv
 ## MeaslesCleanLP.csv
 
+path <- "nopathinbatch"
+
 geom_line()+geom_point()

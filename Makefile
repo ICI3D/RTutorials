@@ -51,6 +51,7 @@ Sources += batch.md
 
 ## ICI3D_RTutorial_4_VisualizingData.Rout: ICI3D_RTutorial_4_VisualizingData.R ICI3D_RTutorial_4_VisualizingData.answers.R
 
+## batch/ICI3D_RtvTutorial_4.R: ICI3D_RtvTutorial_4.R ICI3D_RtvTutorial_4.answers.R
 ## ICI3D_RtvTutorial_4.batch.Rout: ICI3D_RtvTutorial_4.R ICI3D_RtvTutorial_4.answers.R
 ICI3D_RtvTutorial_4.batch.Rout: batch/ICI3D_RtvTutorial_4.R
 	$(pipeR)
