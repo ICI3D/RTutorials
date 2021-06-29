@@ -22,6 +22,7 @@ Ignore += local.mk
 datadir = ../datasets ## Override below
 -include local.mk
 
+Ignore += data
 data: dir=$(datadir)
 data:
 	$(linkdirname)
