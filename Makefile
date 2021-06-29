@@ -1,7 +1,7 @@
 ## project.Makefile
 ## This is ICI3D/RTutorials
 
-current: target
+current: ICI3D_RtvTutorial_4.batch.Rout 
 -include target.mk
 
 -include makestuff/perl.def
@@ -20,7 +20,6 @@ Ignore += local.mk
 ## Your data location
 
 datadir = ../datasets ## Override below
-
 -include local.mk
 
 data: dir=$(datadir)
