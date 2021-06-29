@@ -30,17 +30,22 @@ batch/%.R: %.R %.answers.R batch.pl
 %.batch.Rout: batch/%.R
 	$(pipeR)
 
+Sources += batch.md
+
 ## ICI3D_RTutorial_1.batch.Rout: ICI3D_RTutorial_1.R batch.pl
 ## ICI3D_RTutorial_1.batch.Rout: ICI3D_RTutorial_1.answers.R
-## ICI3D_RTutorial_1.batch.rtmp ICI3D_RTutorial_1.batch.Rlog
 
 ## ICI3D_RTutorial_2.batch.Rout: ICI3D_RTutorial_2.R ICI3D_RTutorial_2.answers.R
+
+## ICI3D_RTutorial_4_VisualizingData.Rout: ICI3D_RTutorial_4_VisualizingData.R ICI3D_RTutorial_4_VisualizingData.answers.R
+
+ICI3D_RtvTutorial_4.batch.Rout: ICI3D_RtvTutorial_4.R ICI3D_RtvTutorial_4.answers.R
 
 ######################################################################
 
 ### Makestuff
 
-## Gutted 2021 Jun 21 (Mon)
+## Makefile gutted 2021 Jun 21 (Mon)
 Sources += Makefile content.mk
 
 Ignore += makestuff
