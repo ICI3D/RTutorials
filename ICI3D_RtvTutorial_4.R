@@ -1,15 +1,11 @@
-## Visualizing infectious disease data in R
+## Visualizing infectious disease data in R tidyverse
 ## Clinic on the Meaningful Modeling of Epidemiological Data
 ## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
 ## African Institute for Mathematical Sciences, Muizenberg, RSA
-## (C) Steve Bellan, 2010
-## Updated by Juliet Pulliam, 2018
 
-## NOTE: The comments will guide you through the tutorial but you
-## should make sure you understand what the code is doing.  Many
-## plotting parameters are assigned to ?.  This will give you an
-## error, you should try out different values for these parameters as
-## suggested in the comments or find them yourselves in a helpfil.
+## (C) ICI3D
+## Created by Mutono Nyamai and Jonathan Dushoff June 2021
+## Based on the earlier Visualizing infectious disease data in R
 
 ######################################################################
 ## Section 1: Plotting prevalence
@@ -21,6 +17,8 @@
 ## your data.
 
 getwd() # shows you what directory you are currently in ## CONSOLE
+## NOTE: We use CONSOLE to mark commands that should not normally be part of a saved script, either because they are interactive exploration or because they will be different for different setups (like the next one)
+## You should probably get in the habit of typing these things in your console window instead of your script window (not necessarily while doing tutorials ☺).
 
 ## Next, you should change the working directory to where the data is kept.
 ## Define a variable "path" that gives the file path to the directory
@@ -28,6 +26,7 @@ getwd() # shows you what directory you are currently in ## CONSOLE
 
 #path <- ?? # FIXME Replace the question marks with a character string telling R
 # where to look for the data
+## NOTE: We use FIXME to tag things that won't work unless you fix them
 
 ## and you can replace it with where you have saved the data set.
 setwd(path) ## CONSOLE
