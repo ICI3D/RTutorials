@@ -18,7 +18,7 @@ ICI3D_RTutorial_5_DataCleaning.Rout: ICI3D_RTutorial_5_DataCleaning.R
 
 ICI3D_Lab2_Heterogeneity.Rout: ICI3D_Lab2_Heterogeneity.R
 
-hetero_play.Rout: HetSIR_functions.Rdata  hetero_play.R 
+######################################################################
 
 ## Not used yet
 ICI3D_Example_binomialDistribution.Rout: ICI3D_Example_binomialDistribution.R

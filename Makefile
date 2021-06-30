@@ -1,7 +1,6 @@
 ## project.Makefile
 ## This is ICI3D/RTutorials
 
-current: ICI3D_RtvTutorial_4.batch.Rout 
 -include target.mk
 
 -include makestuff/perl.def
@@ -58,6 +57,13 @@ ICI3D_RtvTutorial_4.batch.Rout: batch/ICI3D_RtvTutorial_4.R
 	- mv data/visualizingData/Rplots.pdf .
 
 ######################################################################
+
+## New sandbox (see also content.mk)
+
+## Follow-up
+
+hetero_play.Rout: HetSIR_functions.Rdata hetero_play.R 
+	$(pipeR)
 
 ### Makestuff
 

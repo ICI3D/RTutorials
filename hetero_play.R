@@ -1,3 +1,6 @@
+library(shellpipes)
+loadEnvironments()
+
 par(mfrow=c(1,3)) 
 
 beta.low <- 0.8
