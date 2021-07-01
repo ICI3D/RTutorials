@@ -65,6 +65,8 @@ ICI3D_RtvTutorial_4.batch.Rout: batch/ICI3D_RtvTutorial_4.R
 hetero_play.Rout: HetSIR_functions.Rdata hetero_play.R 
 	$(pipeR)
 
+HetSIR.Rout: HetSIR_functions.Rdata HetSIR.R
+
 ### Makestuff
 
 ## Makefile gutted 2021 Jun 21 (Mon)
