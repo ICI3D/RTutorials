@@ -12,6 +12,9 @@ vim_session:
 
 Sources += $(wildcard *.R)
 
+participatoryDesign2021.Rout: participatoryDesign2021.R
+	$(pipeR)
+
 ######################################################################
 
 Ignore += local.mk
