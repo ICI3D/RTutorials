@@ -114,6 +114,8 @@ dat <- rename(dat
               , testResultIgM = test
 )
 
+summary(dat)
+
 ## Here is a cleaned up version of the data key, with the new
 ## column names and information about the data types we will end up
 ## with after cleaning the data:
@@ -173,7 +175,7 @@ print(
 ## again after we cast ageYears as an integer:
 
 ## CONSOLE
-View(
+print(
   dat
   %>% distinct(.,as.integer(ageYears))
 )
