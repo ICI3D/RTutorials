@@ -89,7 +89,7 @@ dat		        # Look at the beginning of the dataset
 ## it will help to know the different ways in which R can store and
 ## interpret data. To see a list of the options for data types:
 
-?typeof
+?typeof ## CONSOLE
 
 #########
 ## Hands off the keyboard! Pick up a writing implement...
@@ -232,7 +232,7 @@ print(
 )
 
 ## All of the values are numeric, but at least one row has a value of 25,
-## which is hard to interpret. In particualr, we need
+## which is hard to interpret. In particular, we need
 ## to be careful that we understand how the two age columns relate
 ## to each other, or we could run into trouble at the data analysis phase.
 
