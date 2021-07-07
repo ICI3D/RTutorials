@@ -259,7 +259,7 @@ multiv.proposer <- function(covar, blockLS = list(rownames(covar))) {
     return(list(type = 'block',
                 fxn = function(current) {
                     proposal <- current + rmnorm(1, mean = 0, varcov = covar)
-                    propsosal <- as.vector(proposal)
+                    proposal <- as.vector(proposal)
                     names(proposal) <- names(current)
                     proposal
                 }))
@@ -317,9 +317,9 @@ doChains <- function(x, mcmcParams) {
 ## How does the compute time increase with number of chains?
 run1 <- doChains(1, mcmcParams) ## do one chain with a seed at 1
 run2 <- doChains(1:2, mcmcParams) ## do two chains with seeds at 1:2
-run3 <- doChains(1:3, mcmcParams) ## do two chains with seeds at 1:3
-run4 <- doChains(1:4, mcmcParams) ## do two chains with seeds at 1:4
-run5 <- doChains(1:5, mcmcParams) ## do two chains with seeds at 1:5
+run3 <- doChains(1:3, mcmcParams) ## do three chains with seeds at 1:3
+run4 <- doChains(1:4, mcmcParams) ## do four chains with seeds at 1:4
+run5 <- doChains(1:5, mcmcParams) ## do five chains with seeds at 1:5
 
 ## Can you explain this by how many cores your computer has?
 detectCores() ## often gives double the # of what you actually have.
@@ -347,8 +347,8 @@ mcmcParams_Adaptive <- within(mcmcParams, {
                       proposer <- multiv.proposer(covar=matrix(c(.1,0,0,.1),2,2))
                   })
 
-## run4 <- doChains(1:4, mcmcParams) ## do two chains with seeds at 1:2
-## run4A <- doChains(1:4, mcmcParams_Adaptive) ## do two chains with seeds at 1:2
+## run4 <- doChains(1:4, mcmcParams) ## do four chains with seeds at 1:4
+## run4A <- doChains(1:4, mcmcParams_Adaptive) ## do four chains with seeds at 1:4
 ## save(run4, run4A, file = 'MCMC_SI_runs.Rdata')
 load(file = 'MCMC_SI_runs.Rdata')
 
