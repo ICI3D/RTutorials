@@ -31,6 +31,7 @@ data:
 
 ## Processing machinery
 
+batchdir = .
 Ignore += batch
 batch:
 	$(mkdir)
@@ -43,6 +44,7 @@ batch/%.R: %.R %.answers.R batch.pl
 ## batch/ICI3D_RTutorial_1.R: batch.pl
 %.batch.Rout: batch/%.R
 	$(pipeR)
+	- $(MV) $(batchdir)/Rplots.pdf .  
 
 Sources += batch.md
 
@@ -55,13 +57,13 @@ Sources += batch.md
 
 ## batch/ICI3D_RtvTutorial_4.R: ICI3D_RtvTutorial_4.R ICI3D_RtvTutorial_4.answers.R
 ## ICI3D_RtvTutorial_4.batch.Rout: ICI3D_RtvTutorial_4.R ICI3D_RtvTutorial_4.answers.R
+## Deprecated, use batchdir
 ICI3D_RtvTutorial_4.batch.Rout: batch/ICI3D_RtvTutorial_4.R
 	$(pipeR)
 	- mv data/visualizingData/Rplots.pdf .
 
-######################################################################
-
-
+ICI3D_RTutorial_5_DataCleaning.batch.Rout: batchdir=data/dataCleaning/
+## ICI3D_RTutorial_5_DataCleaning.batch.Rout: ICI3D_RTutorial_5_DataCleaning.R ICI3D_RTutorial_5_DataCleaning.answers.R
 
 ######################################################################
 

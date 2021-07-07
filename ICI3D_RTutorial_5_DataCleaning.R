@@ -45,7 +45,7 @@
 ## We will be using the 'tidyverse' family of R functions to read in
 ## and clean the data. Let's get started.
 
-require(tidyverse) # Load the tidyverse package
+library(tidyverse) # Load the tidyverse package
 dat  <-  read_csv("tutorial5.csv") # read in the "data"
 
 ## The read_csv() function reads data in as a tibble, a data
@@ -158,7 +158,8 @@ distinct(dat,ageYears)
 ## console window. We need to look at all of the values to indentify
 ## what's going on:
 
-View(
+## CONSOLE (you can try View() instead of print())
+print(
   dat
   %>% distinct(.,ageYears)
 )
@@ -171,6 +172,7 @@ View(
 ## a number. To see what this will do, let's look at the unique values
 ## again after we cast ageYears as an integer:
 
+## CONSOLE
 View(
   dat
   %>% distinct(.,as.integer(ageYears))
@@ -190,7 +192,8 @@ dat <- (
 ## Now let's look more closely at the data in this column to verify
 ## that the values make sense:
 
-View(
+## CONSOLE
+print(
   dat
   %>% distinct(.,ageYears)
   %>% arrange(.,ageYears)
@@ -221,10 +224,11 @@ class(dat$ageMonths)		# determine the object class of a variable
 ## ageYears column was. Fill in the missing information in the command
 ## below to take a closer look:
 
-View(
+## CONSOLE
+print(
   dat
-  %>% distinct(.,???) # View distinct values for month
-  %>% arrange(.,???) # Arrange values in ascending order
+  %>% distinct(.,???) # View distinct values for month ## FIXME
+  %>% arrange(.,???) # Arrange values in ascending order ## FIXME
 )
 
 ## All of the values are numeric, but at least one row has a value of 25,
@@ -261,7 +265,7 @@ print(
 
 print(
   dat
-  %>% filter(.,???) # subset the rows for ages of at least 1 year
+  %>% filter(.,???) # subset the rows for ages of at least 1 year ## FIXME
   %>% group_by(.,ageMonths) # group by ageMonths
   %>% summarize(.,count = n()) # count occurrences of each ageMonths value
 )
@@ -309,7 +313,8 @@ dat <- (
 ## We can do this using the mutate() function that we saw above. Again, we'll
 ## first look at the output for a test case and the update the actual data frame:
 
-View(
+## CONSOLE
+print(
   dat
   %>% select(.,ageYears,ageMonths) # reduce the number of columns for test case
   %>% mutate(., ageYearsContinuous = ageYears + ageMonths/12)
@@ -338,7 +343,7 @@ ggplot(dat, aes(x=ageYearsContinuous)) + geom_histogram()
 ######################################################################
 ##
 ## So far we've been correcting errors in a somewhat adhoc manner. In
-## the lecture, Jonathan showed us how to do this is a more robust way
+## the lecture, we saw how to do this is a more robust way
 ## using a correction table. Follow the examples from the lecture to
 ## correct the province names for Kasai Oriental and Kasai Occidental
 ## in the using the correction table kasaiCorrectionTable.csv
@@ -346,4 +351,5 @@ ggplot(dat, aes(x=ageYearsContinuous)) + geom_histogram()
 ######################################################################
 
 corTab <- read_csv('kasaiCorrectionTable.csv')
+dat <- ... ## FIXME
 
