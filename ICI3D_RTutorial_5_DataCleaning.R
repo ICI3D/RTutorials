@@ -31,7 +31,7 @@
 ## Directory/To Source File Location
 
 ## If you have files in a different place than the script, you can use
-##Session/Set Working Directory (or a keyboard shortcut) to navigate there.
+## Session/Set Working Directory (or a keyboard shortcut) to navigate there.
 
 ## We generally don't recommend using setwd() in scripts, because it causes
 ## difficulties in sharing and collaboration.
@@ -114,7 +114,7 @@ dat <- rename(dat
               , testResultIgM = test
 )
 
-summary(dat)
+summary(dat %>% mutate_if(is.character, as.factor))
 
 ## Here is a cleaned up version of the data key, with the new
 ## column names and information about the data types we will end up
@@ -164,6 +164,7 @@ distinct(dat,ageYears)
 print(
   dat
   %>% distinct(.,ageYears)
+  ## %>% full_join(newdat, .) ##
 )
 
 ## Scrolling down, we can see the problem: some of the entries have a
@@ -353,5 +354,15 @@ ggplot(dat, aes(x=ageYearsContinuous)) + geom_histogram()
 ######################################################################
 
 corTab <- read_csv('kasaiCorrectionTable.csv')
-dat <- ... ## FIXME
 
+dat <- (dat
+	%>% left_join(corTab)
+	%>% mutate(
+		province = ifelse(!is.na(patchProvince), patchProvince, province)
+	)
+	%>% select(-patchProvince)
+)
+
+summary(dat %>% mutate_if(is.character, as.factor))
+
+print(dat, n=Inf)
