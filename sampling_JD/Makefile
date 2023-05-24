@@ -1,6 +1,8 @@
 # RTutorials
 ### Hooks for the editor to set the default target
 
+## TODO: update rules annotate scripts
+
 current: target
 -include target.mk
 
@@ -8,19 +10,7 @@ current: target
 
 ## Defs
 
-# stuff
-Sources += Makefile .ignore 
-Sources += .gitignore
-msrepo = https://github.com/dushoff
-ms = makestuff
--include $(ms)/os.mk
-
-# -include $(ms)/perl.def
-
-Ignore += $(ms)
-Makefile: $(ms) $(ms)/Makefile
-$(ms):
-	git clone $(msrepo)/$(ms)
+Sources += Makefile .gitignore
 
 ######################################################################
 
@@ -50,8 +40,20 @@ cotrimTest.Rout: cotrimTest.R
 
 ### Makestuff
 
--include $(ms)/git.mk
--include $(ms)/visual.mk
+Sources += Makefile
 
--include $(ms)/wrapR.mk
+Ignore += makestuff
+msrepo = https://github.com/dushoff
 
+Makefile: makestuff/00.stamp
+makestuff/%.stamp:
+	- $(RM) makestuff/*.stamp
+	(cd makestuff && $(MAKE) pull) || git clone -depth 1 $(msrepo)/makestuff
+	touch $@
+
+-include makestuff/os.mk
+
+## -include makestuff/pipeR.mk
+
+-include makestuff/git.mk
+-include makestuff/visual.mk
