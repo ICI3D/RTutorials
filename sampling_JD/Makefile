@@ -1,4 +1,4 @@
-# RTutorials
+# RTutorials / JD sampling
 ### Hooks for the editor to set the default target
 
 ## TODO: update rules annotate scripts
