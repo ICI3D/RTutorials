@@ -3,10 +3,10 @@
 ## International Clinics on Infectious Disease Dynamics and Data Program
 ## African Institute for Mathematical Sciences, Muizenberg, Cape Town, RSA
 ## David M. Goehring 2004
-## Juliet R.C. Pulliam 2008, 2009, 2019
+## Juliet R.C. Pulliam 2008, 2009, 2019, 2023
 ## Steve Bellan 2010
 ##
-## Last updated by Juliet R.C. Pulliam, May 2019
+## Last updated by Juliet R.C. Pulliam, May 2023
 ## Some Rights Reserved
 ## CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
 
@@ -88,7 +88,7 @@
 ##  Be introduced to data vectors 
 ##  Know how to access R's intrinsic datasets 
 ##  Know how to produce basic graphics in R [note: here we use what is known as
-##  'base' R for plotting; at later tutorial will introduce plotitng with the
+##  'base' R for plotting; a later tutorial will introduce plotitng with the
 ##  the 'ggplot2' package, which is preferred by many because it is simpler to 
 ##  produce publication-quality graphs]
 
@@ -192,7 +192,7 @@ z
 z * z -> z 
 
 ## You will usually not want to do this because it can make your code more
-## difficult to follow, but it does come in handy on occaision.
+## difficult to follow, but it does come in handy on occasion.
 
 ## Hands off the keyboard! Pick up a writing implement:
 ## x <- 8
@@ -205,15 +205,15 @@ z * z -> z
 
 
 ## R is case-sensitive, so the variables x and X are
-## unrelated. Variable names can contain only letters, numbers, and
-## the period.
+## unrelated. Variable names can contain only letters, numbers, underscores, and
+## periods.
 
 ## Furthermore, R uses a number of likely variable-name candidates as
 ## functions, making them confusing choices as variables. The worst of
 ## these are c, q, t, C, D, F, I, and T. Avoid them.
 
 ## Note that it is also difficult to search for single-character names.
-## For this reason, the starndard practice adopted by many of the ICI3D
+## For this reason, the standard practice adopted by many of the ICI3D
 ## faculty is to repeat the character - e.g., indices will often be 
 ## referred to as ii (instead of i) in the ICI3D tutorials and example code.
 
@@ -223,7 +223,7 @@ z * z -> z
 ## is often confused with the logical-test-for-equality operator, ==,
 ## which we will come to later. While I recommend not using the =
 ## assignment operator, you should be aware of it. The same character, =,
-## is used to assign values to function argruments, as we will see in the
+## is used to assign values to function arguments, as we will see in the
 ## next section.
 
 
@@ -250,9 +250,9 @@ z * z -> z
 ## bit of acclimation.
 
 ## Take the log() function. It has one required argument, the number for
-## which you want the logarithm, obviously. But it also has one
-## optional argument, base. This argument defaults to Euler's number, e
-## (the base of the natural logarithm), if omitted.
+## which you want the logarithm. But it also has one optional argument, base.
+## This argument defaults to Euler's number, e (the base of the natural
+## logarithm), if omitted.
 
 ## So, you can determine the natural log of something quite easily, as
 ## in,
@@ -263,7 +263,7 @@ log(10)
 
 log(10, 10) 
 
-log(10, base=10) 
+log(10, base = 10) 
 
 ## "So, why would I ever want to do the second option?" you ask. Here,
 ## it does not matter much. It would be slightly easier to understand
@@ -285,10 +285,10 @@ log(10, base=10)
 ## previous commands as you repeatedly press the up-arrow. If you are 
 ## working from a script in R Studio, you can place the cursor on the line
 ## you want to run and click the "Run" button at the top of the window. On
-## a Mac, you can press CMD-Enter, instead of "Run." To repeat multiple lines
-## of code from the script, highlight the lines and press "Run" or CMD-Enter.
-## On a Windows machine, you can click Cntrl+Enter instead. (For additional 
-## keyboard shortcuts in Rstudio, see Tutorial 0: Introduciton to R Studio.)
+## a Mac, you can press CMD+Enter, instead of "Run." To repeat multiple lines
+## of code from the script, highlight the lines and press "Run" or CMD+Enter.
+## On a Windows machine, you can click Ctrl+Enter instead. (For additional 
+## keyboard shortcuts in Rstudio, see Tutorial 0: Introduction to R Studio.)
 
 ## Save yourself the time and energy of re-typing by re-using what you have
 ## already entered. This can be especially helpful if you made a
@@ -334,7 +334,7 @@ rm(list = ls())
 ## Here you are telling R, "I'm not going to give you individual
 ## variable names, instead I am giving you a list of variable
 ## names. To generate that list, perform the function that creates the
-## list of all variables stored in memory, ls(). The perform the remove
+## list of all variables stored in memory, ls(). Then perform the remove
 ## function on that list of variables."
 
 #################### 
@@ -351,6 +351,9 @@ rm(list = ls())
 
 help(log) ## CONSOLE
 
+## Or, you can click on the function in your editor and use the F1 shortcut
+## to view the help page (fn+F1 on a Mac).
+
 ## When the item you need help on is an operator, rather than a
 ## standard function (like the addition operator, +) only the second
 ## of these will work, and you must include the operator in quotes, as
@@ -361,7 +364,7 @@ help("+")  ## CONSOLE
 ## Help files in R can seem intimidating. The trick is to know what
 ## you don't need to know. Often you will end up using only a few of
 ## the arguments. Most arguments will have standard, acceptable
-## defaults noted by something like name=FALSE. You do not need to
+## defaults noted by something like "name = FALSE". You do not need to
 ## understand every argument in a function to get it to do what you
 ## want.
 
@@ -377,7 +380,8 @@ help("+")  ## CONSOLE
 ## but a good first step is to search within the in-line help
 ## documentation for the concept:
 
-## We will mark with ## Console commands that are really script-like and that would ordinarily be typed into the console window directly.
+## We will mark with ## Console commands that are not really script-like and
+## that would ordinarily be typed into the console window directly.
 ## For the tutorials, you can type them or just run them
 ## When writing scripts, comment out such console commands to be more portable
 help.search("average") ## CONSOLE
@@ -393,7 +397,7 @@ help.search("average") ## CONSOLE
 RSiteSearch("average")  ## CONSOLE
 
 ## Google can also be very useful for finding answers to your R questions,
-## most of which somone else will have asked previously. Answers are often
+## most of which someone else will have asked previously. Answers are often
 ## found on Stack Overflow, https://stackoverflow.com, a Q&A site for
 ## programming.
 
@@ -433,18 +437,18 @@ RSiteSearch("average")  ## CONSOLE
 ## R. The function takes any number of arguments, which have values of
 ## numbers or vectors.  Some examples:
 
-my.vector <- c(1,2,3)
+my.vector <- c(1, 2, 3)
 
 # Why doesn't this line work if you run it as is?:
-my.other.vector <- c(x,y) ## FIXME
+my.other.vector <- c(x, y) ## FIXME
 
 my.last.vector <- c(my.vector, 365, my.other.vector) 
 
 ## It is pretty straightforward, once you get the hang of it.
 
 ## Hands off the keyboard! Pick up a writing implement:
-## some.ages <- c(1,4,2)
-## some.ages <- c(some.ages,3,some.ages+1)
+## some.ages <- c(1, 4, 2)
+## some.ages <- c(some.ages, 3, some.ages + 1)
 ## What does some.ages equal?
 
 
@@ -481,7 +485,7 @@ mean(my.randoms)
 
 sin(rnorm(10)) 
 
-c(1,2,3)^3 
+c(1, 2, 3)^3 
 
 ## Depending on the nature of the function, the result here is a
 ## single value or a transformed vector with the same length as the
@@ -536,8 +540,8 @@ hist(my.randoms)
 ## Where to find data
 #################### 
 ## Importing data into R from your computer is fairly straightforward,
-## but for now, we will use only the datasets contained in R default
-## packages. Generating a list of these available datasets is as
+## but for now, we will use only the data sets contained in R default
+## packages. Generating a list of these available data sets is as
 ## simple as entering
 
 data()  ## CONSOLE
@@ -549,9 +553,9 @@ data()  ## CONSOLE
 data(package = .packages(all.available = TRUE))  ## CONSOLE
 
 ## which gives you a complete list, importantly noting in its output
-## which package each dataset comes from.
+## which package each data set comes from.
 
-## Obtaining and understanding datasets
+## Obtaining and understanding data sets
 
 ## Once you have found a dataset you wish to use (and we will use
 ## Chatterjee-Price Attitude Data, attitude, as an example), you
@@ -559,10 +563,10 @@ data(package = .packages(all.available = TRUE))  ## CONSOLE
 
 data(attitude) 
 
-## For many of those datasets found by the second, more thorough,
+## For many of those data sets found by the second, more thorough,
 ## method above this will produce an error, because it is only looking
 ## in the default package. Get around this by adding an argument
-## specifying the package of the dataset, here using catsM
+## specifying the package of the data set, here using catsM
 
 data(catsM, package="boot") 
 
@@ -573,9 +577,8 @@ data(catsM, package="boot")
 ## structures you may have experience in mathematical programming such
 ## as matrices or arrays. While they have incredible sophistication, I
 ## won't be able to introduce most of this here. We will be sticking
-## to absolute basics; for a more in-depth treatment of data frames
-## and other data structures in R, see Travis Porco's website:
-## http://www.mathepi.com/comp/.
+## to absolute basics for now but will come back to data frames in more
+## detail later in the week.
 
 ## First, you will likely want to take a look at the data itself, just
 ## to see what it has in store. As you have learned, that can be done
@@ -589,13 +592,13 @@ attitude
 ## corresponding numerical answers to different questions regarding
 ## their attitude.
 
-## You can also just view the top of the dataset (which allows you
+## You can also just view the top of the data set (which allows you
 ## to also view the column names) by typing
 
 head(attitude)
 
-## Another critical step when working with any built-in dataset is to
-## look at the accompanying information on the dataset, accessed by
+## Another critical step when working with any built-in data set is to
+## look at the accompanying information on the data set, accessed by
 ## typing
 
 help(attitude) # CONSOLE
@@ -610,10 +613,10 @@ help(catsM, package="boot")  # CONSOLE
 ## understanding of the data's components. The file's examples also
 ## provide starting points for visualization or analysis of the data.
 
-## In addition to data frames, some R datasets include more
+## In addition to data frames, some R data sets include more
 ## specialized collections of data, such as time series or distance
-## charts. You will know if you have such a dataset from the help-file
-## associated with the dataset (or by its failure to perform
+## charts. You will know if you have such a data set from the help-file
+## associated with the data set (or by its failure to perform
 ## predictably to data-frame commands below).  Feel free to use the
 ## help system to find ways to visualize these other collections of
 ## data! During the MMED clinic, we'll be doing a whole tutorial on
@@ -641,8 +644,8 @@ boxplot(attitude)
 attitude$rating 
 
 ## The result is simply a vector of the values, ordered identically to
-## the original column.  This means you can invoke any function with
-## which you have familiarity on vectors, as in,
+## the original column.  This means you can invoke any function on
+## vectors with which you have familiarity, as in,
 
 hist(attitude$complaints) 
 
@@ -652,7 +655,7 @@ plot(sort(attitude$critical))
 ## which much can be said.
 
 ## The simplest example is to add a second vector to our plot
-## function, which will produce a scatterplot, with the values of
+## function, which will produce a scatter plot, with the values of
 ## two columns on each of the axes.
 
 plot(attitude$critical, attitude$privileges) 
@@ -662,10 +665,11 @@ plot(attitude$critical, attitude$privileges)
 ## functions in base R include xlab, ylab, and main. Here is
 ## an example of a finalized plot.
 
-plot(catsM$Bwt,catsM$Hwt,
-     xlab="Male Cat Body Weight (kg)",
-     ylab="Male Cat Heart Weight (g)",
-     main="Body Weight vs. Heart Weight for Male Cats over 2 Pounds")
+plot(catsM$Bwt, catsM$Hwt
+		 , xlab="Male Cat Body Weight (kg)"
+		 , ylab="Male Cat Heart Weight (g)"
+		 , main="Body Weight vs. Heart Weight for Male Cats over 2 Pounds"
+)
 
 ## Always label your axes (and provide units, when relevant). R will
 ## sometimes generate labels by default, but you will need to ask
@@ -683,7 +687,7 @@ plot(catsM$Bwt,catsM$Hwt,
 ## users will find that EMACS often formats this for you automatically
 ## if you press enter while still inside a function, or unclosed
 ## parantheses expression. In RStudio, you can auto-indent a section of
-## code by highlighting it and pressing CMD+i (or Contrl+i, in Windows).
+## code by highlighting it and pressing Cntrl+i (or CMD+i, on a Mac).
 
 ## One final new procedure: 
 ## The command library, used in the manner 
@@ -694,7 +698,7 @@ library("stats4")
 ## installation comes with a variety of functions installed but
 ## unavailable by default -- the library function makes the functions
 ## and data from those packages available. Working along with
-## preinstalled packages and accessing their datasets will be easy
+## pre-installed packages and accessing their data sets will be easy
 ## with a single application of the library command in each R session.
 
 ## If a library function call fails on your machine, you need to
@@ -702,10 +706,13 @@ library("stats4")
 ## internet, this should be a simple matter of typing
 
 install.packages("date")  ## CONSOLE
-## This is not part of a normal script, because you only ever need to do it once per account
+## (substitute the desired package between the quotes)
 
-## (obviously substituting the desired package between the quotes). R
-## will ask you to select a mirror site for download and in a few
+## This is not part of a normal script, because once the package is installed
+## it will not need to be installed again on the same machine (or account),
+## unless you reinstall R or need an updated version of the package.
+
+## R will ask you to select a mirror site for download and in a few
 ## moments the package is ready to be made available with the library
 ## function,
 
@@ -717,8 +724,8 @@ library("date")
 ## most likely have to contact the system administrator and have them
 ## install the desired packages for you.
 
-## This concludes Tutorial I. The benchmark questions on the following
-## page should help you assess how well you have learned the
+## This concludes Tutorial I. The benchmark questions below
+## should help you assess how well you have learned the
 ## material. You should feel free to ask for help from your
 ## instructors and from your peers when you find yourself stuck or
 ## baffled.
@@ -782,7 +789,7 @@ library("date")
 ## a title, set the y-axis to go from 0 to 6, and remove the spaces
 ## between bars.
 
-## Examine the epidemic curve and determine whether you think the data
+## Bonus: Examine the epidemic curve and determine whether you think the data
 ## represent a common source, point source, or propagated epidemic (or
 ## some combination of these). Explain your reasoning.
 #################### 
