@@ -5,7 +5,7 @@
 ##
 ## Dario Fanucchi, May 2012
 ## Updated by Juliet R.C. Pulliam, December 2014
-## Last updated by Juliet R.C. Pulliam, May 2019
+## Last updated by Juliet R.C. Pulliam, May 2023
 ## Some Rights Reserved
 ## CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
 ##
@@ -22,14 +22,10 @@
 ## maximize your productivity when working through R tutorials. Once you've
 ## worked through the tutorial, you should be able to:
 ##
-##  - understand the various windows in RStudio 
-##  - change the working directory and open files in RStudio
+##  - understand the main windows in RStudio (Editor, Console, Environment,
+##  History, Help, Plots, Packages)
 ##  - run code from the console window or the source window
-##  - understand what the workspace is and how to change the value(s) of
-##  existing variable(s)
 ##  - browse the installed packages and load libraries
-##  - view plots and the plot history
-##  - use the manipulate package to make interactive plots
 ##  - make use of the Help system
 ##  - use shortcut keys
 ##
