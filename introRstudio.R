@@ -82,13 +82,9 @@ plot(c(1,2,3,4,5), c(1,2,3,4,5), "l")
 
 x <- 10
 
-# Make sure the Environment window is visible by typing "Control+3".
+# Make sure the Environment window is visible by typing "Control+8".
 # Notice that the Environment window now contains a variable x, with a value of
-# 10. You can edit x in the workspace window by clicking on x and typing a new
-# value. Try changing the value of x to 15. Then run the following line (with
-# control+Enter) to print it in the console.
-
-x
+# 10. 
 
 # To remove x from the workspace use the "remove" function:
 
@@ -102,11 +98,11 @@ x  # will produce an error: object 'x' not found!
 # R can be used to perform arithmetic in a similar fashion to a calculator.
 # For instance, you can type this:
 
-(1242-241.1) * 32.21
+(1242 - 241.1) * 32.21
 
-# When you press control+Enter, the cursor automatically moves to the next line
+# When you press Control+Enter, the cursor automatically moves to the next line
 # in the console. This way, you can run scripts one line at a time by repeatedly
-# pressing control+enter.
+# pressing Control+Enter.
 
 # The following code does some basic arithmetic.  Run it line by line:
 
@@ -123,7 +119,7 @@ d1 + d2 - 4         # tell them to add the digits and subtract 4: they are left 
 # Try changing the initial value of x to some other number between 1 and 10 and
 # see if it works.
 # Notice how it is possible to add comments next to code to explain what it
-# does. This is generally good practice in any programming language.
+# does.
 
 # Notice how as you ran the code lines above, the variables d1, d, x and y were
 # added to the workspace with their values
@@ -133,7 +129,7 @@ d1 + d2 - 4         # tell them to add the digits and subtract 4: they are left 
 # Since we're done with these variables, we'll keep our workspace clean by
 # removing them:
 
-rm(x,y,d1,d2)
+rm(x, y, d1, d2) # The rm() function is equivalent to the remove() function used above
 
 
 ################################################################################
@@ -141,12 +137,11 @@ rm(x,y,d1,d2)
 ################################################################################
 
 # Before we begin this next section, you may want to clear your console so that
-# things are less cluttered. Simply type "Control+L" and the console will be
-# cleared. The cursor will also switch to the console. If you wish to view your
-# previous commands, you can still place the cursor in the console and press the
-# up arrow to see them.
+# things are less cluttered. Simply type "Control+L", and the console will be
+# cleared. If you wish to view your previous commands, you can still place the
+# cursor in the console and press the up arrow to see them.
 
-# You can press Control+up arrow (with your cursor in the console) to see your
+# You can press Control+Up-arrow (with your cursor in the console) to see your
 # command history in a pop-up window. If you don't want to reach for a mouse,
 # you can switch back to the editor from the console with "Control+1"
 
@@ -161,13 +156,13 @@ rm(x,y,d1,d2)
 # enthusiastic reader). In order to run it all in one shot, highlight the whole 
 # section and press "Control+Enter".
 
-x <- rep(TRUE,100)              # make a vector of 100 elements all equal to TRUE
+x <- rep(TRUE, 100)              # make a vector of 100 elements all equal to TRUE
 prim <- NULL                    # Empty list of currently known primes
 x[1] <- FALSE                   # 1 is not a prime number
 for(i in 2:100){                # go through the list from 2 to 100
-  if(x[i]==TRUE) {                  # if i is known to be prime...
+  if(x[i] == TRUE) {                  # if i is known to be prime...
     prim <- append(prim, i)             # ... add it to the list of known primes
-    if(i<=50)                           # ... if i has multiples in [1,100] ...
+    if(i <= 50)                           # ... if i has multiples in [1,100] ...
       for(j in i*(2:(100/i))  ) x[j]=FALSE    # ... and set all multiples of i to be NOT prime
   }
 }
@@ -225,6 +220,9 @@ len
 strs
 med
 
+# Note that if there is only one option available, hitting TAB will automatically
+# complete the command (as with "strs" above).
+
 # Autocompletion works both in the source editor and in the console.
 
 # Notice how the autocompletion also gives you a bit more information about the
@@ -236,14 +234,14 @@ med
 
 median
 
-# Notice that the help window (my bottom right corner) loads the help for
-# "Median Value". This feature is very useful indeed, and it can increase your 
-# productivity in R substantially to be able to obtain help very quickly on 
-# functions you wish to use in this fashion.
+# Notice that the help window (by default in the bottom right corner) loads
+# the help for "Median Value". This feature is very useful indeed, and it can
+# increase your productivity in R substantially to be able to obtain help very
+# quickly on functions you wish to use in this fashion.
 
 ##### Console History and History tab
 
-# As previously mentioned it is possible to obtain previous statements typed
+# As previously mentioned, it is possible to obtain previous statements typed
 # into the console by pressing the up arrow when inside the console.
 # If you would like a bit more control over your previous statements, you can
 # open the History window.
@@ -262,8 +260,8 @@ y <- 1
 
 # and now run the following block of code
 
-x <- x * (x %% 2 + 1) + 1
 y <- y * (x + 1)
+x <- x * (x %% 2 + 1) + 1
 
 # Place the cursor in the source below this comment, then look in the history
 # window for the above two lines, highlight them and click Shift+Enter. Observe
@@ -303,25 +301,30 @@ det(M)
 # "Control+Enter". They are provided here with their shortcuts for completeness.
 #     1. Run the ENTIRE script:                              "Control+Shift+O"
 #     2. Run the script FROM THE BEGINNING UP TO THIS LINE:  "Control+Shift+B"
-#     3. Run the script FROM THIS LINE TO THE END:           "Control+Shift+EÓ"
+#     3. Run the script FROM THIS LINE TO THE END:           "Control+Shift+E"
 # These can all be useful in different contexts. You can try them out by moving
-# to various places in this script and typing these key combinations.
+# to various places in this script and typing these key combinations. (Note,
+# however, that there is an error produced on line 96, so you will not be able
+# to run the entire script in this case.)
+#
 # For additional keyboard shortcuts, see Tools > Keyboard Shortcuts Help.
 
 ################################################################################
 # Appendix. List of useful RStudio Shortcut keys
 ################################################################################
 
-# [ For a COMPLETE list of keyboard shortuts type "Alt+H+K" ]
+# [ For a COMPLETE list of keyboard shortcuts type "Alt+Shift+K" (on Linux
+# or Windows) or "Option+Shift+K" (on a Mac). Note that some of the shortcuts
+# below work differently on Macs.]
 
 # Ctrl+1          (Move cursor to Editor)
 # Ctrl+2          (Move cursor to Console)
 # Ctrl+3          (Show Environment window)
 # Ctrl+Enter      (Editor: run a line, or a highlighted section of code)
 # Ctrl+L          (clear the console)
-# Ctrl+Up arrow   (Console: see list of previous commands; Editor: Go to top of
-# file)
-# Ctrl+Down arrow (Editor: Go to bottom of file)
+# Ctrl+Up-arrow   (Console: see list of previous commands; Editor: go to top of
+# file; use Cmd+Up-arrow on a Mac)
+# Ctrl+Down-arrow (Editor: Go to bottom of file; use Cmd+Down-arrow on a Mac)
 # Ctrl+Shift+R    (Editor: Run the entire script)
 # Ctrl+Shift+B    (Editor: Run the script from beginning to this point)
 # Ctrl+Shift+E    (Editor: Run the script from this point to end)
