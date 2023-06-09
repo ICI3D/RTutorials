@@ -64,6 +64,7 @@ ICI3D_RtvTutorial_4.batch.Rout: batch/ICI3D_RtvTutorial_4.R
 	$(pipeR)
 	- mv data/visualizingData/Rplots.pdf .
 
+## Not working, something about where is the data!
 ICI3D_RTutorial_5_DataCleaning.batch.Rout: batchdir=data/dataCleaning/
 ## ICI3D_RTutorial_5_DataCleaning.batch.Rout: ICI3D_RTutorial_5_DataCleaning.R ICI3D_RTutorial_5_DataCleaning.answers.R
 
@@ -77,6 +78,8 @@ hetero_play.Rout: HetSIR_functions.Rdata hetero_play.R
 	$(pipeR)
 
 HetSIR.Rout: HetSIR_functions.Rdata HetSIR.R
+
+######################################################################
 
 ### Makestuff
 
