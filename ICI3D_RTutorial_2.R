@@ -3,10 +3,10 @@
 ## International Clinics on Infectious Disease Dynamics and Data Program
 ## African Institute for Mathematical Sciences, Muizenberg, Cape Town, RSA
 ## David M. Goehring 2004
-## Juliet R.C. Pulliam 2008,2009
+## Juliet R.C. Pulliam 2008, 2009
 ## Steve Bellan 2010, 2012
 ##
-## Last updated by Juliet R.C. Pulliam, May 2019
+## Last updated by Juliet R.C. Pulliam, May 2023
 ## Some Rights Reserved
 ## CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
 
@@ -95,7 +95,8 @@ FALSE & (TRUE | FALSE)
  
  
 ## Note that R has special values for infinity (Inf), not-a-number
-## (NaN), and not-applicable, NA. These generally behave sensibly – a mathematical ## operation on not-a-number is obviously not a number as so is
+## (NaN), and not-applicable, NA. These generally behave sensibly – a mathematical 
+## operation on not-a-number is obviously not a number as so is
 ## returned as NaN. Things are less simple when using logical and relational
 ## operators. Consider 4 != NaN. In one respect, the answer perhaps
 ## should be TRUE; that is, 4 definitely isn’t equal to
@@ -108,13 +109,14 @@ x == NaN
 ## You might think that this is a reasonable test for whether x has a
 ## numerical value, but it won’t work for the same reason mentioned above.
 ## In general, keep this trickiness in mind and remember there is a special 
-## function is.finite() for determining whether x is a valid (finite) number: 
+## function is.nan() for determining whether x is defined as not-a-number: 
+
+is.nan(x)
+
+## There is also a special function is.finite() for determining whether
+## x is a valid (finite) number: 
 
 is.finite(x)
-
-## To find out whether x has the value NaN, you can use:
- 
-identical(x, NaN)
 
 ## This is all getting thrown at you in very quick succession,
 ## especially if you do not have much experience programming in other
@@ -128,7 +130,7 @@ identical(x, NaN)
 ####################
  
 ## As a shorthand, TRUE and FALSE can be entered as T and F. This
-## allows for rapid entry of vectors of logical values, for example,
+## allows for rapid entry of vectors of logical values, for example:
  
 logical.vec <- c(T, T, F, T)
  
@@ -144,7 +146,10 @@ T <- 4 # REALLY BAD, BUT NO ERROR IS PRODUCED
 ## make sure you quickly do this:
  
 rm(T) ## which will set T (or F) back to its default logical value.
- 
+
+## To ensure your code is robust, we recommend always spelling out
+## TRUE and FALSE for logical values.
+
 ## Relational or logical operations also act on vectors to produce
 ## vectors of logical values, as in,
  
@@ -177,18 +182,17 @@ y <- (x > -.5) & (x < .5)
  
 x <- seq(0, 1, length.out = 20)
  
-## giving you a vector of length 20 between 0 and 1, confirmable by
-## typing
- 
+## giving you a vector of length 20 between 0 and 1; to confirm this, type
+
 length(x)
  
 ## A very common need in R is to generate vectors with an interval of
-## 1 between each element.  R has a shorthand for this using the colon
-## notation, as follows,
+## 1 between each element. R has a shorthand for this using the colon
+## notation, as follows:
  
 y <- 5:10
  
-## generating a vector that counts from 5 to 10, inclusive. Note that
+## This generates a vector that counts from 5 to 10, inclusive. Note that
 ## : is generally treated first in the order of operations.
 
 ## Don’t underestimate the value of the colon notation.  Even for
@@ -203,9 +207,9 @@ y <- 5:10
 ####################
  
 ## R has an incredibly useful way of accessing items from a
-## dataset. Each item in a dataset has its own index, or numbered
+## data set. Each item in a data set has its own index, or numbered
 ## location, in the object’s structure. Square brackets are used to
-## extract an item or items from a dataset, but it is crucial to
+## extract an item or items from a data set, but it is crucial to
 ## understand that there are two completely distinct ways in which
 ## brackets are used to access items. I will consider the two methods
 ## for accessing a vector of length n in turn below.
@@ -240,7 +244,8 @@ hist(y[!( (y > -2) & (y < 0) )])
  
 1:6 + 1:2
  
-## The same repetition holds for logical vectors.
+## The same repetition holds for logical vectors. For this reason, you should
+## be very cautious using operations on vectors that differ in length.
  
 ## The second option: Numerical
 
@@ -311,8 +316,8 @@ my.vector[4:1]
 ## demonstration, imagine we have a vector of student names and a
 ## corresponding vector of student heights (in meters).
  
-stud.names <- c("Carol", "Walter", "Rachel", "Petunia", "Clark",
-                "Justin")
+stud.names <- c("Dario", "Hloniphile", "Steve", "Innocent", "Abigail",
+                "Cynthia")
  
 stud.heights <- rnorm(6, 1.7, .12)
  
@@ -343,7 +348,7 @@ barplot(stud.heights[order(stud.heights)],
 ## I have conveniently skipped over an important concept, because R
 ## handles it fairly intuitively, but I want to mention the
 ## terminology. The variable stud.names and the results of ls(), for
-## example, are called vectors of strings, or character arrays.  R
+## example, are called vectors of strings, or character arrays. R
 ## handles them conveniently, so we don’t need to worry too much about
 ## them, but knowing the terminology will improve your understanding
 ## of R's in-line help documents.
@@ -426,40 +431,42 @@ student.data[4, 2]
  
 student.data[4:6, 2]
  
-## Not too tricky? There are two further complications.
+## There are two further complications.
  
 ## To access an entire row or entire column, leave the index blank, as
 ## in,
  
-student.data[,1] # FIRST COLUMN
+student.data[, 1] # FIRST COLUMN
  
-student.data[3,] # THIRD ROW
+student.data[3, ] # THIRD ROW
  
-student.data[,] # ENTIRE FRAME, equivalent to "student.data"
+student.data[ , ] # ENTIRE FRAME, equivalent to "student.data"
  
 ## The only other complication is the ability to enter the names() or
 ## row.names() as indices:
  
-student.data["Justin",]
+student.data["4", ]
+student.data[ , "class.years"]
  
 ## Putting all of this together, we can quickly generate subsets of
 ## our data. For example, we can create a data frame that includes
 ## only the students with height greater than the mean height:
 
-tall.students <- student.data[student.data$height >
-mean(student.data$height),]
- 
+tall.students <- student.data[student.data$height > mean(student.data$height), ]
+
+tall.students
+
 ## Or sort our data by various aspects:
  
-student.data[order(student.data$class.years),]
+student.data[order(student.data$class.years), ]
  
 ## Introduction to factors 
 
 ## When performing statistical analyses, we often want R to look at a
 ## set of data and compare groups within the data to one another. For
 ## example, you have the data frame containing data on students in a
-## course. There are columns of data representing the students' height
-## and class.year. How can you look at the means of height by class.year?
+## course. There are columns of data representing the students' heights
+## and class.years. How can you look at the means of height by class.year?
  
 ## Or, another example, you have sampled a number of rabbits and have
 ## a column for weights before a diet treatment and a column for
@@ -469,8 +476,8 @@ student.data[order(student.data$class.years),]
  
 ## The answer to these questions is to use factors.
  
-## Many of the datasets that come with R already have their data
-## interpreted as factors. Let’s take a look at a dataset with
+## Many of the data sets that come with R already have their data
+## interpreted as factors. Let’s take a look at a data set with
 ## factors:
  
 data(moths, package="DAAG")
@@ -480,7 +487,10 @@ help(moths, package="DAAG")
 moths
  
 ## (Note that you may have to install the DAAG package in order to
-## load these data.) The help file tells us that our last column,
+## load these data. Do you remember how to do this? If not, ask a neighbor
+## for help!)
+
+## The help file for the moths data set tells us that our last column,
 ## habitat, is a factor. What does this mean?
  
 ## See what happens when we pull up this column by itself:
@@ -512,7 +522,7 @@ boxplot(moths$meters ~ moths$habitat)
  
 ## The tilde, ~, used in a number of contexts in R, can generally be
 ## read as "by,” which gives a general explanation of its use here –
-## visualizing meters by habitat.
+## visualizing transect length ("meters") by habitat type ("habitat").
  
 ## Making a factor
 
@@ -554,7 +564,7 @@ boxplot(student.data$heights ~ student.data$class.years)
  
 ## A few work nicely:
  
-nyc.air <- airquality[,c("Wind","Temp")]
+nyc.air <- airquality[,c("Wind", "Temp")]
  
 nyc.air
 
@@ -573,8 +583,9 @@ mean(nyc.air) # returns an error message
  
 apply(nyc.air, 2, sum)
 
-apply(nyc.air, 2, var)
+apply(nyc.air, 2, mean)
  
+apply(nyc.air, 2, var)
 
 ###################################################################### 
 ## SECTION C. Composing your own functions
@@ -583,12 +594,9 @@ apply(nyc.air, 2, var)
 ## A more advanced (and very important) topic
 
 ## So far in R we have used the functions that come with R and its various
-## packages. You have come up with methods for adjusting your data
-## for visualization on your own, but you did this in many separate steps,
-## each of which refer to the specific items you are manipulating. Since
-## you will often want to perform the same series of actions on different
-## objects, R makes it relatively straight-forward to compose your own generic
-## functions and store them in R’s memory.
+## packages; however, since you will often want to perform the same series
+## of actions on different objects, R makes it relatively straight-forward
+## to compose your own generic functions and store them in R’s memory.
  
 ## Before you start writing a function you need to have your mind set
 ## on three things:
@@ -616,7 +624,7 @@ log(x) + 1
 ## What we will do is make an assignment to log.plus.one, but rather
 ## than assigning a value (or vector, etc.), we assign a function
 ## which we define on the spot. We use the command function, which
-## looks like a function but is not a function. What is function? It’s
+## looks like a function but is not a function. Instead, it’s
 ## a control element of the R language – it isn’t executed like a
 ## function, but rather it informs R to treat the code around it in a
 ## special way.
@@ -663,12 +671,12 @@ y
 ## executed on a single line or because you want to make the
 ## function’s methods clearer, you will often generate functions
 ## longer than one line. For this purpose, R introduces another type
-## of bracket, curly brackets, { }. These are control brackets, and
+## of bracket, curly brackets, { }. These are control brackets and
 ## indicate the contents should be treated as a unit.
  
 ## As a final example,
  
-(function(x,y){z <- x^2 + y^2
+(function(x, y){z <- x^2 + y^2
                x + y + z })(0:7, 1)
  
 ## Note that the function is written on two lines, but this isn’t an
@@ -684,7 +692,7 @@ y
 ## demonstrates that you have understood the concepts, it is better
 ## practice to write out your code so that it is easy to follow. This
 ## includes using plenty of whitespace, to make your code easy to
-## read, and thoroughly commenting your commands as you go.
+## read and thoroughly commenting your commands as you go.
 ## The example above is therefore better written as follows:
  
 ## SUM.VALS.PLUS.SUM.SQS() – function that takes two numerical values
@@ -694,7 +702,6 @@ y
 sum.vals.plus.sum.sqs <- function(x, y)
   {
     z <- x^2 + y^2        # define z as the sum of the values’ squares
- 
     return(x + y + z)     # add the values to the sum of their squares
                                    # and return the result as output
   }
@@ -718,7 +725,7 @@ sum.vals.plus.sum.sqs(0:7, 1)
 ##
 ## Question 2:
 ## 
-## You need a subset of the mtcars dataset that has only every other
+## You need a subset of the mtcars data set that has only every other
 ## row of data included.
 ##  a. Do this with numerical indexing.
 ##  b. Do this with logical indexing.
@@ -726,4 +733,7 @@ sum.vals.plus.sum.sqs(0:7, 1)
 ## Question 3:
 ## 
 ## Write a function, jumble(), that takes a vector as an argument and
-## returns a vector with the original elements in random order.
+## returns a vector with the original elements in random order. (Note: R
+## does have a built-in function that can do this, but the point of this
+## question is rather for you to build a new function using the tools that
+## have been introduced in the tutorials so far.)
