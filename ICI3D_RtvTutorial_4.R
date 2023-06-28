@@ -3,9 +3,11 @@
 ## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
 ## African Institute for Mathematical Sciences, Muizenberg, RSA
 
-## (C) ICI3D
+## Some Rights Reserved
+## CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
 ## Created by Mutono Nyamai and Jonathan Dushoff June 2021
-## Based on the earlier Visualizing infectious disease data in R
+## Based on the earlier Visualizing infectious disease data in R by Steve Bellan
+## Updated by Evans Omondi in 2023
 
 ######################################################################
 ## Section 1: Plotting prevalence
@@ -61,12 +63,22 @@ botswana.long<-botswana.data%>%
 ## It is a way of specifying graphs using a "grammar" rather than specifying everything that you want on the graph
 ## We use ggplot to visualise the proportion of HIV positive 
 ## and negative people in 1994
-ggplot(botswana.long[botswana.long$year == 1994,], aes(x="", y=prevalence, fill=type))+
+ggplot(botswana.long[botswana.long$year == 1994,], aes(x="", y=prevalence, fill=type)) +
   geom_bar(stat="identity", width=1) +
-  coord_polar("y", start=0)+
-  theme_void()+ # remove background, grid, numeric labels
-  scale_fill_manual(values=c("blue", "red"),labels=c("HIV-", "HIV+"))+
+  coord_polar("y", start=0) +
+  theme_void() + # remove background, grid, numeric labels
+  scale_fill_manual(values=c("blue", "red"),labels=c("HIV-", "HIV+")) +
   labs(fill="Group") # rename the legend title
+
+## Now let's add some labels to show the prevalence percentages:
+
+ggplot(botswana.long[botswana.long$year == 1994,], aes(x="", y=prevalence, fill=type))+
+	geom_bar(stat = "identity", width = 1) + 
+	coord_polar("y", start = 0) +
+	theme_void()+ # remove background, grid, numeric labels
+	geom_text(aes(label = paste0(prevalence*100, "%")), position = position_stack(vjust = 0.5), color = 'white')+
+	scale_fill_manual(values=c("blue", "red"),labels=c("HIV-", "HIV+"))+
+	labs(fill="Group") # rename the legend title
 
 ## TRY Change the above code to plot the prevalence of HIV in 2001.
 
