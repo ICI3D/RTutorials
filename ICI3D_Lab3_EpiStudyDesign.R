@@ -9,7 +9,6 @@
 ## For each of the following descriptions, determine what type of 
 ## study design was used.  The answers are at the end of this tutorial
 
-
 ## Study #1
 ## A study examined risk factors associated with falling at an 
 ## assisted care living facility.  Researchers enrolled 75 patients that 

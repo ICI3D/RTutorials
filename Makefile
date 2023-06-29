@@ -31,7 +31,11 @@ data: dir=$(datadir)
 data:
 	$(linkdirname)
 
+######################################################################
+
 ## Processing machinery
+## Make an answers file that allows batch.pl to convert the published file into something that runs
+## There's some confusion as of now (and for a long time up to now) about using batch/ vs. using batchdir; I should clear that up before I resume using this
 
 batchdir = .
 Ignore += batch
@@ -50,9 +54,8 @@ batch/%.R: %.R %.answers.R batch.pl
 
 Sources += batch.md
 
-## ICI3D_RTutorial_1.batch.Rout: ICI3D_RTutorial_1.R batch.pl
+## ICI3D_Lab3_EpiStudyDesign.batch.Rout: ICI3D_Lab3_EpiStudyDesign.answers.R
 ## ICI3D_RTutorial_1.batch.Rout: ICI3D_RTutorial_1.answers.R
-
 ## ICI3D_RTutorial_2.batch.Rout: ICI3D_RTutorial_2.R ICI3D_RTutorial_2.answers.R
 
 ## ICI3D_RTutorial_4_VisualizingData.Rout: ICI3D_RTutorial_4_VisualizingData.R ICI3D_RTutorial_4_VisualizingData.answers.R
