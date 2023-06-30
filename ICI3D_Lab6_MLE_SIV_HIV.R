@@ -12,14 +12,14 @@
 ## * Calculate a binomial likelihood from these prevalence data and a fully specified epidemic model.
 ## * Use R's "optim" function to do multivariate optimization over transformed parameter space.
 ## * Understand the difference betweeen SANN and Nelder-Mead algorithms
-## * Create 95% CI's and contours from the hessian matrix
-## * Create 95% CI's and contours from profile likelihoods
+## * Create 95% CIs and contours from the hessian matrix
+## * Create 95% CIs and contours based on the likelihood ratio
 
 require(boot); require(deSolve); require(ellipse);
 
 ## Function that makes a list of disease parameters with default values
-disease_params <- function(Beta = 0.9
-	, alpha = 8 ## rate of beta decline with prevalence
+disease_params <- function(Beta = 0.9 ## transmission coefficient when prevalence is 0 
+	, alpha = 8 ## for transmission coefficient: decline with prevalence
   	, progRt = (1/10)*4 ## rate of of progression through each of the I classes, for 10 years total
 	, birthRt = .03 ## birth rate, 3% of people give birth per year
   	, deathRt = 1/60 ## 60 year natural life expectancy
@@ -32,14 +32,15 @@ disease_params(Beta = .2)
 
 initPrev <- exp(-7) ## infected at start
 tseqMonth <- seq(1976, 2015, by = 1/12)
-init <- c(S=1, I1=initPrev, I2=0, I3=0, I4=0, CI = 0, CD = 0) ## modeling proportion of population
+init <- c(S=1-initPrev, I1=initPrev, I2=0, I3=0, I4=0, CI = 0, CD = 0) ## modeling proportion of population
 Is <- paste0('I',1:4) ## for easy indexing
 
-## Define the SI ODE model. This model is equivalent to the third model in the HIV in Harare tutorial. 
+## Define the SI ODE model. This model is equivalent to the third model in the HIV in Harare tutorial
+## 	(though some parameters may have different names)
 SImod <- function(tt, yy, parms) with(c(parms,as.list(yy)), {
     ## State variables are: S, I1, I2, I3, I4
     ## derived quantitties
-    I <- I1+I2+I3+I4           ## total infecteds
+    I <- I1+I2+I3+I4           ## total infected
     N <- I + S                 ## total population
     transmissionCoef <- Beta * exp(-alpha * I/N) ## Infectious contact rate
     ## state variable derivatives (ODE system)
@@ -64,7 +65,7 @@ simEpidemic <- function(init, tseq = tseqMonth, modFunction=SImod, parms = disea
 }
 
 ## Function to 'sample' the population:
-## From a simulated epidemic, measure prevalence at several time points by performing
+## From a simulated epidemic, measure prevalence at several time points by drawing
 ## cross-sectional samples of individuals at each time, testing them, and then calculating sample
 ## prevalence and associated binomial confidence intervals
 
@@ -91,12 +92,12 @@ with(simDat, plot(time, P, xlab = '', ylab = 'prevalence', type = 'l', ylim = c(
 set.seed(1) # Initiate the random number generator (so everyone's simulation looks the same)
 myDat <- sampleEpidemic(simDat) # Simulate data from the sampling process (function defined above)
 points(myDat$time, myDat$sampPrev, col = 'red', pch = 16, cex = 2) # Plot sample prevalence at each time point
-arrows(myDat$time, myDat$uci, myDat$time, myDat$lci, col = 'red', len = .025, angle = 90, code = 3) # Plot 95% CI's around the sample prevalences
+arrows(myDat$time, myDat$uci, myDat$time, myDat$lci, col = 'red', len = .025, angle = 90, code = 3) # Plot 95% CIs around the sample prevalences
 
 ## To start, we need to write a likelihood function that gives the probability that a given parameter set
 ## (Beta, alpha values) would generate the observed data. Remember that we are assuming that there is some
 ## true underlying epidemic curve that is deterministic and the data we observe are only noisy
-## because of sampling/observation error (not because the underying curve is also
+## because of sampling/observation error (not because the underlying curve is also
 ## noisy--i.e. process error--which would be particularly likely for epidemics in small populations).
 
 ## We assume binomial sampling errors. So we can write the -log-likelihood as the probability of
@@ -118,7 +119,7 @@ nllikelihood(disease_params(Beta = 3, alpha = 1))  ## vs some random guessed par
 ## file the easier this will be!!! In particular make sure you understand that
 ## the first argument of optim must be the initial values of the parameters to
 ## be fitted (i.e. Beta & alpha) and that any other parameters to be fixed are
-## given as additional arguments (in the helpfile under "...")
+## given as additional arguments (in the help file under "...")
 ## ?optim
 
 ## Since we need to be able to easily separate fitted and fixed parameters,
@@ -161,7 +162,7 @@ init.pars <- c(log_alpha = log(30), log_Beta = log(.1))
 ###  update
 trace <- 3
 
-## SANN: This is stochastic, be CAREFUL sometimes it gets stuck at local minima
+## SANN: This is stochastic, be CAREFUL -- sometimes it gets stuck at local minima
 ## for unreasonble parameters. If you see this happen, run it again!
 optim.vals <- optim(par = init.pars
                     , objFXN
@@ -172,9 +173,7 @@ optim.vals <- optim(par = init.pars
 exp(optim.vals$par)
 trueParms[c('alpha','Beta')]
 
-## Normally we use SANN first and then follow with Nelder-Mead since SANN is stochastic and will
-## make sure to help you be sure that you aren't at local minima. We feed the last parameters of
-## SANN in as the first values of Nelder-Mead
+## We feed the last parameters of SANN in as the first values of Nelder-Mead
 optim.vals <- optim(par = optim.vals$par
                     , objFXN
                     , fixed.params = disease_params()
@@ -207,8 +206,8 @@ legend("topleft", c('truth', 'observed', 'fitted'), lty = c(1, NA, 1), pch = c(N
 ## Contour plots with the hessian
 ######################################################################
 ## The Hessian matrix gives you the curvature of the likelihood function at the maximum likelihood
-## estimate (MLE) of the fitted paramters. In other words, it tells you the second derivative around
-## MLE, which can be used to estimate the covariance variance matrix of the MLE. This estimate of
+## estimate (MLE) of the fitted parameters. In other words, it tells you the second derivative around
+## MLE, which can be used to estimate the covariance variance matrix of the estimator. This estimate of
 ## the covariance varance matrix is known as the Fisher information matrix and can be obtained by
 ## inverting the Hessian.
 fisherInfMatrix <- solve(optim.vals$hessian) ## invert the Hessian, to estimate the covar-var matrix of parameter estimates
@@ -224,7 +223,7 @@ plot(1,1, type = 'n', log = 'xy',
 with(trueParms, points(alpha, Beta, pch = 16, cex = 2, col = 'red'))
 ## Add MLE to the plot
 points(exp(MLEfits['log_alpha']), exp(MLEfits['log_Beta']), pch = 16, cex = 2, col = 'black')
-##  at 95% contour ellipse from Hessian
+## Add 95% contour ellipse from Hessian
 lines(exp(ellipse(fisherInfMatrix, centre = MLEfits, level = .95)))
 legend("topleft", c('truth', 'MLE', '95% Confidence Interval'), lty = c(NA, NA, 1), pch = c(16,16, NA),
        col = c('red', 'black', 'black'), bg='white', bty = 'n')
@@ -249,25 +248,25 @@ objXalpha_Beta <- function(alpha, Beta, fixed.params = disease_params(), browse=
 objFXN(c(log_alpha = log(1/5), log_Beta = log(25)))
 objXalpha_Beta(1/5, 25)
 
-## If we try to give this function multiple values of R0 or gamma,
+## If we try to give this function multiple values of alpha and Beta,
 ## however, it gets confused and only analyzes the first one.
 objXalpha_Beta(c(1/5:8), 25:30)
 
 ## So we "Vectorize" this function so it can take in vectors of the parameters
 ## and return the output. objXalpha_BetaVEC then calls on objXalpha_Beta() to
-## take xx,yy as pairwise values and objXalpha_Beta() for all pairs
+## take xx,yy as pairwise values and returns objXalpha_Beta() for all pairs
 objXalpha_BetaVEC <- Vectorize(objXalpha_Beta, list("alpha", "Beta"))
 
-## Task 4: Explain how the following three lines are related.
+## Task: Explain how the following three lines are related.
 objXalpha_Beta(25, 1/5)
 objXalpha_Beta(26, 1/6)
 objXalpha_Beta(8, .9)
 objXalpha_BetaVEC(c(25:26), c(1/5,1/6))
 
 ## Now we use the R function outer() to evaluate objXalpha_BetaVEC() over a grid
-## of {R0, gamma} combinations. This can take a long time because we have to do
-## res^2 evaluations of nll.fn(), and recall that each time we do this we are
-## running lsoda() inside nll.fn()
+## of {alpha, Beta} combinations. This can take a long time because we have to do
+## res^2 evaluations of nllikelihood(), and recall that each time we do this we are
+## running lsoda() inside simEpidemic()
 
 ## Grid resolution resXres, increasing it makes contours smoother but takes a lot longer
 res <- 15
@@ -284,7 +283,7 @@ Beta.seq
 mat <- outer(alpha.seq, Beta.seq, objXalpha_BetaVEC) # this can take a long time
 
 ## Make a contour plot that shows the confidence intervals in red.  Likelihood
-## Ratio Test confidence intervals uses chi squared distribution cutoff with
+## Ratio Test confidence intervals use the chi squared distribution cutoff with
 ## degrees of freedom 2 (2 parameters)
 ml.val <- optim.vals$value
 conf.cutoff <- ml.val + qchisq(.95,2)/2
@@ -297,7 +296,7 @@ plot(1,1, type = 'n', log = 'xy',
      xlab = expression(alpha), ylab = expression(beta),
         main = "-log(likelihood) contours", bty = "n")
 .filled.contour(alpha.seq, Beta.seq, mat, levels = seq(min(mat), max(mat), l=20), col = topo.colors(20))
-## Add contour for 95% CI from profile likelihood
+## Add contour for 95% CI from likelihood ratio
 contour(alpha.seq, Beta.seq, mat, levels = c(conf.cutoff),
         col = "black", lwd = 2, labels = "", labcex = .2, add = T)
 ## Add contour for 95% CI from Hessian
