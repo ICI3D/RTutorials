@@ -225,7 +225,7 @@ with(trueParms, points(alpha, Beta, pch = 16, cex = 2, col = 'red'))
 points(exp(MLEfits['log_alpha']), exp(MLEfits['log_Beta']), pch = 16, cex = 2, col = 'black')
 ## Add 95% contour ellipse from Hessian
 lines(exp(ellipse(fisherInfMatrix, centre = MLEfits, level = .95)))
-legend("topleft", c('truth', 'MLE', '95% Confidence Interval'), lty = c(NA, NA, 1), pch = c(16,16, NA),
+legend("topleft", c('truth', 'MLE', '95% Confidence Region'), lty = c(NA, NA, 1), pch = c(16,16, NA),
        col = c('red', 'black', 'black'), bg='white', bty = 'n')
 
 ######################################################################
@@ -282,8 +282,8 @@ Beta.seq
 ## The function outer() now evaluates objXalpha_BetaVEC on this grid. ?outer
 mat <- outer(alpha.seq, Beta.seq, objXalpha_BetaVEC) # this can take a long time
 
-## Make a contour plot that shows the confidence intervals in red.  Likelihood
-## Ratio Test confidence intervals use the chi squared distribution cutoff with
+## Make a contour plot that shows the confidence regions in red.  Likelihood
+## Ratio Test confidence regions use the chi squared distribution cutoff with
 ## degrees of freedom 2 (2 parameters)
 ml.val <- optim.vals$value
 conf.cutoff <- ml.val + qchisq(.95,2)/2
