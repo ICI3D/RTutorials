@@ -170,7 +170,7 @@ optim.vals <- optim(par = init.pars
                     , obsDat = myDat
                     , control = list(trace = trace, maxit = 150)
                     , method = "SANN")
-exp(optim.vals$par)
+exp(unname(optim.vals$par))
 trueParms[c('alpha','Beta')]
 
 ## We feed the last parameters of SANN in as the first values of Nelder-Mead
@@ -184,7 +184,7 @@ optim.vals <- optim(par = optim.vals$par
 optim.vals
 MLEfits <- optim.vals$par
 trueParms[c('alpha','Beta')]
-exp(MLEfits)
+exp(unname(MLEfits))
 
 log_alpha.fit <- MLEfits["log_alpha"]
 log_Beta.fit <- MLEfits["log_Beta"]
@@ -309,3 +309,4 @@ legend("topleft",
        c('truth', 'MLE', '95% contour (profile likelihood)', '95% contour (Fisher information matrix)')
        , lty = c(NA, NA, 1, 2), pch = c(16,16, NA, NA),
        col = c('red', rep('black',3)), bg='white', bty = 'n')
+
