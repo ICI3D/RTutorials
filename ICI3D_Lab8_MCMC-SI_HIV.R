@@ -34,7 +34,7 @@ init <- c(S = 1, I1 = initPrev, I2 = 0, I3 = 0, I4 = 0, CI = 0, CD = 0) ## model
 Is <- paste0('I', 1:4) ## for easy indexing
 
 ## Define the SI ODE model
-## This is equivalent to the one we used for MLE fitting (from HIV tutorial and Tutorial 5)
+## This is equivalent to the one we used for MLE fitting (from HIV tutorial and Lab 6)
 SImod <- function(tt, yy, parms) with(c(parms,as.list(yy)), {
     ## State variables are: S, I1, I2, I3, I4
     ## derived quantitties
