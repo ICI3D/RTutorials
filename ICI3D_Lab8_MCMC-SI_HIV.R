@@ -1,16 +1,16 @@
 ## Introduction to MCMC 2: Fitting an SI model to an HIV epidemic with adaptive block MCMC
+## Clinic on the Meaningful Modeling of Epidemiological Data
+## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
+## African Institute for Mathematical Sciences, Muizenberg, RSA
 ## Steve Bellan 2015
-
-## Meaningful Modeling of Epidemiologic Data, 2015 AIMS, Muizenberg
-
 ###################################################################### 
 
 ## By the end of this tutorial you should…
 
 ## * Understand how to simulate cross-sectional prevalence data around a simulated epidemic.
 ## * Calculate a binomial likelihood from these prevalence data and a fully specified epidemic model.
-## * Be able to explain sequential, block, and adative Metropolis Hastings sampling algorithms.
-## * Know how to assess multivariate MCMC chains for convergence both with trace plots and the Gelman-Rubin diagnostic.
+## * Be able to explain sequential, block, and adaptive Metropolis Hastings sampling algorithms.
+## * Know how to assess multivariate MCMC chains for convergence, both with trace plots and the Gelman-Rubin diagnostic.
 ## * Create 95% credible intervals (CrI's) and contours from the posterior
 
 library(boot); library(deSolve); library(ellipse); library(coda); library(parallel); library(mnormt); library(emdbook)
@@ -30,16 +30,16 @@ disease_params(Beta = .2)
 
 initPrev <- exp(-7) ## infected at start
 tseqMonth <- seq(1976, 2015, by = 1/12)
-init <- c(S=1, I1=initPrev, I2=0, I3=0, I4=0, CI = 0, CD = 0) ## modeling proportion of population
-Is <- paste0('I',1:4) ## for easy indexing
+init <- c(S = 1, I1 = initPrev, I2 = 0, I3 = 0, I4 = 0, CI = 0, CD = 0) ## modeling proportion of population
+Is <- paste0('I', 1:4) ## for easy indexing
 
 ## Define the SI ODE model
-## This is equivalent to the one we used for MLE fitting (from HIV tutorial)
+## This is equivalent to the one we used for MLE fitting (from HIV tutorial and Tutorial 5)
 SImod <- function(tt, yy, parms) with(c(parms,as.list(yy)), {
     ## State variables are: S, I1, I2, I3, I4
     ## derived quantitties
-    I <- I1+I2+I3+I4           ## total infecteds
-    N <- I + S                 ## total population
+    I <- I1 + I2 + I3 + I4           ## total infecteds
+    N <- I + S                       ## total population
     transmissionCoef <- Beta * exp(-alpha * I/N) ## Infectious contact rate
     ## state variable derivatives (ODE system)
     deriv <- rep(NA,7)
@@ -172,7 +172,7 @@ mcmcSampler <- function(init.params, ## initial parameter guess
                         seed = 1, ## RNG seed
                         ref.params=disease_params(), ## fixed parameters
                         obsDat = myDat, ## data
-                        proposer = sequential.proposer(sdProps=sdProps), ## proposal distribution
+                        proposer = sequential.proposer(sdProps = sdProps), ## proposal distribution
                         niter = 100, ## MCMC iterations
                         nburn = 0, ## iterations to automatically burn
                         adaptiveMCMC = F, ## adapt proposal distribution?
@@ -197,9 +197,9 @@ mcmcSampler <- function(init.params, ## initial parameter guess
     while(vv <= niter) {
         if ((verbose > 1) || (verbose && (vv%%tell == 0))) print(paste("on iteration",vv,"of", niter + 1))
         ## Adaptive MCMC: adapt covariance every 50 iterations (don't
-        ## do it more often because it adds to coputational burden.
+        ## do it more often because it adds to computational burden.
         if(adaptiveMCMC & proposer$type=='block' & vv > startAdapt & vv %% 50 == 0) {
-            adptBurn <- min((startAdapt-50), adptBurn)
+            adptBurn <- min((startAdapt - 50), adptBurn)
             ## Below equation gives ideal covariance-variance matrix based on posterior
             adaptedCovar <- 2.38^2 / nfitted * cov.wt(log(out[adptBurn:(vv-1),1:nfitted]))$cov
             ## Take a weighted average of the original & the empirical cov-var matrices to ensure
@@ -216,7 +216,7 @@ mcmcSampler <- function(init.params, ## initial parameter guess
         if (is.na(lmh)) { ## if NA, print informative info but don't accept it
             print(list(lmh=lmh, proposal=exp(proposal), vv=vv, seed=seed))
         } else { ## if it's not NA then do acception/rejection algorithm
-            if (verbose > 1) print( c(lmh=lmh, propVal=propVal) )
+            if (verbose > 1) print( c(lmh = lmh, propVal = propVal) )
             ## if MHR >= 1 or a uniform random # in [0,1] is <= MHR, accept otherwise reject
             if ( (lmh >= 0) | (runif(1,0,1) <= exp(lmh)) ) {
                 current.params <- proposal
@@ -265,12 +265,11 @@ multiv.proposer <- function(covar, blockLS = list(rownames(covar))) {
                 }))
 }
 
-samp_Seq <- mcmcSampler(init.params = c(alpha=8, Beta=.9)
+samp_Seq <- mcmcSampler(init.params = c(alpha = 8, Beta = .9)
                       , seed = 1
-                      , proposer = sequential.proposer(sdProps=c(.15,.15))
+                      , proposer = sequential.proposer(sdProps=c(.15, .15))
                       , randInit = T
                       , niter = 100)
-
 
 class(samp_Seq$samp)
 ## The coda package already knows how to plot MCMC objects by default
@@ -292,9 +291,9 @@ lapply(out2, summary)
 ## Let's parallel chain sampling in the same way. First, rather than
 ## specify the parameters every time, let's make a list and edit it as
 ## we tweak the algorithm.
-mcmcParams <- list(init.params = c(alpha=8, Beta=.9)
+mcmcParams <- list(init.params = c(alpha = 8, Beta = .9)
                       , seed = 1
-                      , proposer = sequential.proposer(sdProps=c(.15,.15))
+                      , proposer = sequential.proposer(sdProps=c(.15, .15))
                       , randInit = T
                       , niter = 10)
 
