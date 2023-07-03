@@ -1,8 +1,9 @@
 ## Introduction to MCMC 1: Estimating a posterior binomial probability
-## Steve Bellan 2015
-
-## Meaningful Modeling of Epidemiologic Data, 2012 AIMS, Muizenberg
-
+## Clinic on the Meaningful Modeling of Epidemiological Data
+## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
+## African Institute for Mathematical Sciences, Muizenberg, RSA
+## Steve Bellan 2012, 2015
+##
 ###################################################################### 
 
 ## By the end of this tutorial you should…
@@ -23,36 +24,36 @@ defaultPar <- par() ## Save the default graphic parameter settings for use later
 
 size <- 100
 truePrev <- .3
-sampPos <- rbinom(1,size,truePrev) ## Sample from this distribution once.
+sampPos <- rbinom(1, size, truePrev) ## Sample from this distribution once.
 sampPrev <- sampPos/size
 
 ## Now we need to specify our prior probability distribution. This designates our prior (before we
 ## conducted the study) beliefs of what we think the prevalence of this population is. Frequently,
-## we have insufficient prior information to specify and informative prior. In these cases, we will
+## we have insufficient prior information to specify an informative prior. In these cases, we will
 ## use an uninformative prior, meaning we that we assume a wide range of values is plausible. 
 
 ## Our parameter of interest is prevalence, which is bounded between 0 and 1. The beta probability
 ## distribution is particularly suited for such parameters and is, in fact, the most commonly used
 ## probability distribution for parameters that are, themselves, probabilities. It is uniform (constand density across probabilities)
-## with parameters shape1=1, shape2=1, and can otherwise have many shapes.
+## with parameters shape1 = 1, shape2 = 1, and can otherwise have many shapes.
 
 ## We calculate both the prior and the likelihood on a log scale to avoid numerical problems
 logBetaPrior <- function(prevalence
-                         , shape1 = 1  ## Change to make informative (try 8)
-                         , shape2 = 1) ## Change to make informative (try 40)
-    dbeta(prevalence, shape1=shape1, shape2=shape2, log = T)
+												 , shape1 = 1  ## Change to make informative (try 8)
+												 , shape2 = 1) ## Change to make informative (try 40)
+	dbeta(prevalence, shape1 = shape1, shape2 = shape2, log = T)
 
 ## The likelihood is simply the probability of observing that many individuals test positive given
 ## the number tested and a specified prevalence.
 logLikelihood <- function(prevalence,
-                          data = list(size=size, sampPos=sampPos))
+                          data = list(size = size, sampPos = sampPos))
     dbinom(data$sampPos, size = data$size, prob = prevalence, log = T)
 
 ## A convenience function that sums the log-likelihood and the log-prior.
 logLikePrior <- function(prevalence
-                         , shape1=1
-                         , shape2=1
-                         , data = list(size=size, sampPos=sampPos))
+                         , shape1 = 1
+                         , shape2 = 1
+                         , data = list(size = size, sampPos = sampPos))
     logBetaPrior(prevalence, shape1, shape2) + logLikelihood(prevalence, data)
 
 ## Convenience functions 
@@ -86,7 +87,7 @@ runMCMC <- function(iterations
                     , proposerSD = .5 ## standard deviation of the gaussian proposal distribution
                     , verbose = 0){ ## for debugging
     if(verbose > 0) browser()
-    chain <- array(dim = c(iterations+1, 1)) ## initialize empty iterations X 1 array
+    chain <- array(dim = c(iterations + 1, 1)) ## initialize empty iterations X 1 array
     chain[1,] <- startvalue ## set first value
     for(ii in 1:iterations){ 
         proposal <- rnorm(1, chain[ii,], proposerSD) ## propose next value
@@ -100,7 +101,7 @@ runMCMC <- function(iterations
             chain[ii+1,] <- chain[ii,]
         }
     }
-    return(inv.logit(chain)) ## 
+    return(inv.logit(chain)) ## Transform the chain of logit-prevalence values back into prevalences
 }
 
 posteriorSample <- runMCMC(1000, proposerSD = .1) ## sample 1000 times from posterior
@@ -117,7 +118,7 @@ for(sdVal in c(.05, .1, .5, 2)) {
          ylim = c(0,1),
          type = 'l', las = 1)
 }
-mtext('posterior sample by proposer sd', side=3, line=0, outer=T)
+mtext('posterior sample by proposer sd', side = 3, line = 0, outer = T)
 
 ####################################################################################################
 ## Questions
@@ -133,9 +134,10 @@ mtext('posterior sample by proposer sd', side=3, line=0, outer=T)
 
 ## Question 3: Use the Gelman-Rubin diagnostic (gelman.diag) to assess
 ## whether those four chains have reached convergence. You will need
-## to conver the chains from 2 into "mcmc" objects (as.mcmc()), and
+## to convert the chains from 2 into "mcmc" objects (as.mcmc()), and
 ## then put them into an mcmc.list (as.mcmc.list())
 
 ## Challenge Question: (A) Plot the Gelman-Rubin diagnostic as a function
-## of chain length. (B) Do the same plot, but after discarding the first 100 iterations as a "burnin"
+## of chain length. (B) Make the same plot, but after discarding the first 100
+## iterations as a "burnin"
 
