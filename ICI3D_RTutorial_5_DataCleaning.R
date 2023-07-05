@@ -36,7 +36,7 @@
 ## We generally don't recommend using setwd() in scripts, because it causes
 ## difficulties in sharing and collaboration.
 
-## For this tutorial, we will be using an example dataset thtat
+## For this tutorial, we will be using an example dataset that
 ## resembles (but is not) real data from a measles epidemic in
 ## Democratic Republic of Congo. The "data" are made available only
 ## to ICI3D participants and are for use only during the MMED and
@@ -76,7 +76,7 @@ dat		        # Look at the beginning of the dataset
 
 ## The read_csv() function has read in most of our data as characters.
 ## Note that this is a different behavior from what would have happened
-## using the read.csv() function demonstrated in Jonathan's lecture, and
+## using the read.csv() function demonstrated in Thumbi's lecture, and
 ## this fixes the problem he demonstrated where factors are sometimes
 ## treated as numbers when they shouldn't be. It also gives us some
 ## useful information about problems we're likely to discover with
@@ -92,7 +92,7 @@ dat		        # Look at the beginning of the dataset
 ?typeof
 
 #########
-## Hands off the keyboard! Pick up a writing implement...
+## Hands off the keyboard! Pick up a writing pad and...
 #########
 ##
 ## Decide what data type each variable in the data set should be.
@@ -104,14 +104,14 @@ dat		        # Look at the beginning of the dataset
 ## so they're easier to interpret.
 
 dat <- rename(dat
-              , province = Province
-              , healthZone = ZS
-              , ageYears = Age_annes
-              , ageMonths = Age_Mois
-              , sex = Sexe
-              , dateVaccinated = Date_dern_vacci
-              , dateOnset = DDS
-              , testResultIgM = test
+							, province = Province
+							, healthZone = ZS
+							, ageYears = Age_annes
+							, ageMonths = Age_Mois
+							, sex = Sexe
+							, dateVaccinated = Date_dern_vacci
+							, dateOnset = DDS
+							, testResultIgM = test
 )
 
 ## Here is a cleaned up version of the data key, with the new
@@ -160,8 +160,8 @@ distinct(dat,ageYears)
 
 ## CONSOLE (you can try View() instead of print())
 print(
-  dat
-  %>% distinct(.,ageYears)
+	dat
+	%>% distinct(ageYears)
 )
 
 ## Scrolling down, we can see the problem: some of the entries have a
@@ -174,8 +174,8 @@ print(
 
 ## CONSOLE
 View(
-  dat
-  %>% distinct(.,as.integer(ageYears))
+	dat
+	%>% distinct(as.integer(ageYears))
 )
 
 ## We see that 'ND' is no longer in the list of values and has been
@@ -185,8 +185,8 @@ View(
 ## update the dataset to reflect this correction:
 
 dat <- (
-  dat
-  %>% mutate(., ageYears = as.integer(ageYears)) # replace
+	dat
+	%>% mutate(ageYears = as.integer(ageYears)) # replace
 )
 
 ## Now let's look more closely at the data in this column to verify
@@ -194,9 +194,9 @@ dat <- (
 
 ## CONSOLE
 print(
-  dat
-  %>% distinct(.,ageYears)
-  %>% arrange(.,ageYears)
+	dat
+	%>% distinct(ageYears)
+	%>% arrange(ageYears)
 )
 
 ## This time, instead of just looking at all the values, we've arranged
@@ -226,9 +226,9 @@ class(dat$ageMonths)		# determine the object class of a variable
 
 ## CONSOLE
 print(
-  dat
-  %>% distinct(.,???) # View distinct values for month ## FIXME
-  %>% arrange(.,???) # Arrange values in ascending order ## FIXME
+	dat
+	%>% distinct(???) # View distinct values for month ## FIXME
+	%>% arrange(???) # Arrange values in ascending order ## FIXME
 )
 
 ## All of the values are numeric, but at least one row has a value of 25,
@@ -241,8 +241,8 @@ print(
 ## same time:
 
 print(
-  dat
-  %>% filter(.,is.na(ageMonths)|is.na(ageYears)) # subset the rows that have NA for either age variable
+	dat
+	%>% filter(is.na(ageMonths)|is.na(ageYears)) # subset the rows that have NA for either age variable
 )
 
 ## There is one individual with missing values, and they are missing both year
@@ -253,10 +253,10 @@ print(
 ## data that has an ageYears value of 0:
 
 print(
-  dat
-  %>% filter(.,ageYears==0) # subset the rows that have 0 for ageYears
-  %>% group_by(.,ageMonths) # group by ageMonths
-  %>% summarize(.,count = n()) # count occurrences of each ageYears value
+	dat
+	%>% filter(ageYears==0) # subset the rows that have 0 for ageYears
+	%>% group_by(ageMonths) # group by ageMonths
+	%>% summarize(count = n()) # count occurrences of each ageYears value
 )
 
 ## All ageMonths values for children with ageYears of 0 are between 0
@@ -264,18 +264,18 @@ print(
 ## ageYears values for the rest of the data:
 
 print(
-  dat
-  %>% filter(.,???) # subset the rows for ages of at least 1 year ## FIXME
-  %>% group_by(.,ageMonths) # group by ageMonths
-  %>% summarize(.,count = n()) # count occurrences of each ageMonths value
+	dat
+	%>% filter(???) # subset the rows for ages of at least 1 year ## FIXME
+	%>% group_by(ageMonths) # group by ageMonths
+	%>% summarize(count = n()) # count occurrences of each ageMonths value
 )
 
 ## There is only one row in the dataset where ageMonths is greater than 11,
 ## so let's take a closer look at that particular row:
 
 print(
-  dat
-  %>% filter(.,ageMonths==25)
+	dat
+	%>% filter(ageMonths==25)
 )
 
 ## How confusing! Both the ageYears and ageMonths values are 25.
@@ -289,18 +289,18 @@ print(
 ## Let's first set up a test case on a simplified version of the dataset:
 
 print(
-  dat
-  %>% select(.,ageYears,ageMonths) # reduce the number of columns for test case
-  %>% filter(.,ageYears==25) # subset to look only at the data for 25 year olds
-  %>% mutate(., ageMonthsNEW = ifelse(ageYears == 25 & ageMonths == 25, 0, ageMonths)) # correct the typo
+	dat
+	%>% select(ageYears,ageMonths) # reduce the number of columns for test case
+	%>% filter(ageYears==25) # subset to look only at the data for 25 year olds
+	%>% mutate( ageMonthsNEW = ifelse(ageYears == 25 & ageMonths == 25, 0, ageMonths)) # correct the typo
 )
 
 ## It looks like the mutate command is appropriately correcting the typo, so we
 ## can now be comfortable replacing the values in the actual data frame:
 
 dat <- (
-  dat
-  %>% mutate(., ageMonths = ifelse(ageYears == 25 & ageMonths == 25, 0, ageMonths))
+	dat
+	%>% mutate(ageMonths = ifelse(ageYears == 25 & ageMonths == 25, 0, ageMonths))
 )
 
 ## Note that it is very difficult to pick up errors in the age variables if they
@@ -315,9 +315,9 @@ dat <- (
 
 ## CONSOLE
 print(
-  dat
-  %>% select(.,ageYears,ageMonths) # reduce the number of columns for test case
-  %>% mutate(., ageYearsContinuous = ageYears + ageMonths/12)
+	dat
+	%>% select(ageYears,ageMonths) # reduce the number of columns for test case
+	%>% mutate( ageYearsContinuous = ageYears + ageMonths/12)
 )
 
 ## Scan the values of the columns to make sure the conversion has been done right.
@@ -329,9 +329,9 @@ print(
 ## remove the original age variables, which are difficult to interpret.
 
 dat <- (
-  dat
-  %>% mutate(., ageYearsContinuous = ageYears + ageMonths/12) # create new variable
-  %>% select(.,-ageYears,-ageMonths) # remove original age variables
+	dat
+	%>% mutate( ageYearsContinuous = ageYears + ageMonths/12) # create new variable
+	%>% select(-ageYears,-ageMonths) # remove original age variables
 )
 
 summary(dat)
@@ -352,4 +352,3 @@ ggplot(dat, aes(x=ageYearsContinuous)) + geom_histogram()
 
 corTab <- read_csv('kasaiCorrectionTable.csv')
 dat <- ... ## FIXME
-
