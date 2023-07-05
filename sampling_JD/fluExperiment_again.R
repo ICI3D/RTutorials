@@ -1,6 +1,8 @@
 ## What happens if we add more realistic variation?
 library(tidyverse)
 
+load.environment("fluExperiment.rda")
+
 numCommunities <- 24
 aveElders <- 100
 shapeElders <- 2

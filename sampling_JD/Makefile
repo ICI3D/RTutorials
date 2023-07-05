@@ -18,6 +18,8 @@ Sources += Makefile .gitignore
 
 ###### Influenza example (shown briefly, not participatory)
 
+autopipeR = defined
+
 Sources += $(wildcard *.R)
 
 ## Not done annotating
@@ -28,13 +30,17 @@ fluTest.Rout: fluTest.R
 
 fluExperiment.Rout: fluExperiment.R
 
-fluExperiment_again.Rout: fluExperiment.Rout fluExperiment_again.R
+fluExperiment_again.Rout: fluExperiment.rda fluExperiment_again.R
 
 ###### Cotrim participatory example (not completed in class)
 
 cotrimStudy.Rout: cotrimStudy.R
 
 cotrimTest.Rout: cotrimTest.R
+
+### Live coding 
+
+study.Rout: study.R
 
 ######################################################################
 
@@ -53,7 +59,7 @@ makestuff/%.stamp:
 
 -include makestuff/os.mk
 
-## -include makestuff/pipeR.mk
+-include makestuff/pipeR.mk
 
 -include makestuff/git.mk
 -include makestuff/visual.mk

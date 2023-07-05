@@ -91,3 +91,4 @@ print(
 	+ geom_line()
 )
 
+save("fluExperiment.rda")
