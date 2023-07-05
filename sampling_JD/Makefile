@@ -42,6 +42,8 @@ cotrimTest.Rout: cotrimTest.R
 
 study.Rout: study.R
 
+multistudy.Rout: multistudy.R
+
 ######################################################################
 
 ### Makestuff
