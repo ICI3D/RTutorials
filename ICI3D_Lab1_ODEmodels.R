@@ -71,7 +71,7 @@ sir <- function(t,y,parms){
     dSdt <- -beta*S*I/N
     dIdt <- beta*S*I/N - gamma*I
     # Note: Population size is constant, so don't need to specify dRdt
-    list(c(dSdt,dIdt))
+    return(list(c(dSdt,dIdt)))
   })
 }
 
