@@ -55,3 +55,4 @@ manyStudies(
 	, newEff=0.5, oldEff=0.5
 )
 
+## Continued on [study_design_rep.R]
