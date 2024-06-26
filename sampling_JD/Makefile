@@ -48,7 +48,10 @@ multistudy.Rout: multistudy.R
 
 ### Live coding 2024
 
-study_design.Rout: study_design.R
+## Rename this one maybe
+
+study_design_exp.Rout: study_design.R
+study_design_rep.Rout: study_design_rep.R
 
 ######################################################################
 

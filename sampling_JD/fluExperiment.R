@@ -1,5 +1,6 @@
-library(tidyverse)
+library(tidyverse); theme_set(theme_bw())
 library(shellpipes)
+startGraphics()
 
 numCommunities <- 24
 aveElders <- 100
@@ -91,4 +92,4 @@ print(
 	+ geom_line()
 )
 
-saveEnvironment("fluExperiment.rda")
+saveEnvironment()
