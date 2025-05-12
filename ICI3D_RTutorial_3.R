@@ -27,7 +27,8 @@
 ## Probability distributions
 #################### 
 ## So far the calculations we have been performing have been doable on
-## a modern calculator, so my assertion that R will make things easier
+## a modern calculator (or on your basic phone calculator app), 
+## so my assertion that R will make things easier
 ## for you has not seen any confirmation in experience.
 
 ## In terms of solving probability problems, R does not provide many
@@ -40,10 +41,10 @@
 ## sufficiently self-explanatory with their help files to render a
 ## treatment of them here unnecessary. A third exception is
 ## simulation, which you will try your hand at in the Benchmark
-## Questions, and is an important component of mathematical modelling.
+## Questions, and which is an important component of mathematical modelling.
 
 ## Enter probability distributions. R is able to do in a few
-## milliseconds what took hours of hunting in tables not 30 years
+## milliseconds what took hours of hunting in tables as recently as 30 years
 ## ago. If you understand what a probability distribution is, R will
 ## provide four different utilities for (nearly) any such distribution, as
 ## follows:
@@ -116,7 +117,7 @@ curve(dbinom(ceiling(x), 10, 1/3), add=TRUE, col="red")
 ## but is more easily extended to continuous distributions.
 
 ## Using dbinom() to calculate cumulative probabilities for discrete
-## distributions would be tedious, and we cannot calculate the
+## distributions would be tedious, and we cannot easily calculate the
 ## cumulative probabilities using the equivalent density values from a
 ## continuous distribution (because it requires integration). The
 ## solution in R is to use a function, such as pbinom() for the
@@ -205,7 +206,8 @@ x <- 8; y <- 4; z <- 3
 c(x, y, z) 
 
 ## Using the semicolon in this way will condense your code
-## and make it look cleaner. In most situations, though, clarity is
+## and can make it look cleaner if applied with moderation.
+## In most situations, though, clarity is
 ## more important than compactness, so in general it is best not to
 ## string long lists of commands together on a single line using
 ## semicolons. Remember that the amount of whitespace (such as spaces,
@@ -341,8 +343,8 @@ central.tend3 <- function(x){
 
 if(Inf - Inf > 0){ x <- 5 }
 
-## To make sure that your if statements don’t abort like this, you will
-## use sometime want to use the is.na() function, which returns TRUE if the
+## To make sure that your if statements don’t break like this, you will
+## sometimes want to use the is.na() function, which returns TRUE if the
 ## value being evaluated is NA or NaN.
 
 ## The second big mistake that you can make is assuming that R will act
