@@ -547,13 +547,15 @@ hist(my.randoms)
 
 data()  ## CONSOLE
 
-## but here R stiffs you a little, by not looking in every available
+## but here R isn't completely transparent, and doesn't by default 
+## look in every available
 ## package. It warns you of this at the bottom of its response and
 ## suggests that you should try
 
 data(package = .packages(all.available = TRUE))  ## CONSOLE
 
-## which gives you a complete list, importantly noting in its output
+## which gives you a complete list (of datasets in packages you have already installed),
+## importantly noting in its output
 ## which package each data set comes from.
 
 ## Obtaining and understanding data sets
@@ -573,10 +575,10 @@ data(catsM, package="boot")
 
 ## After performing this step, the data are loaded into the same-named
 ## variable in R's memory, (usually, but not always) as a data frame,
-## another type of data structure. More suited to statistical
-## analysis, data frames are an alternative to standard data
+## but sometimes in another type of data structure. Data frames are an alternative to standard data
 ## structures you may have experience in mathematical programming such
-## as matrices or arrays. While they have incredible sophistication, I
+## as matrices or arrays, and are more suitable to most statistical analysis.
+## While they have incredible sophistication, I
 ## won't be able to introduce most of this here. We will be sticking
 ## to absolute basics for now but will come back to data frames in more
 ## detail later in the week.
@@ -593,7 +595,7 @@ attitude
 ## corresponding numerical answers to different questions regarding
 ## their attitude.
 
-## You can also just view the top of the data set (which allows you
+## You can also just view the first few rows ("top") of the data set (which allows you
 ## to also view the column names) by typing
 
 head(attitude)
@@ -613,6 +615,8 @@ help(catsM, package="boot")  # CONSOLE
 ## assumptions involved in data collection, in addition to a basic
 ## understanding of the data's components. The file's examples also
 ## provide starting points for visualization or analysis of the data.
+## Reminder: you should aim to get similar information for any dataset 
+## that you work with!
 
 ## In addition to data frames, some R data sets include more
 ## specialized collections of data, such as time series or distance
@@ -631,9 +635,9 @@ help(catsM, package="boot")  # CONSOLE
 ## moderately interesting results are produced independently-by-column
 ## with simple commands on the data frame as a whole, for example,
 
-summary(attitude) 
+summary(attitude)
 
-boxplot(attitude) 
+boxplot(attitude)
 
 ## For data frames, the columns are often compared in various ways, so
 ## a special notation, the dollar sign, $, is reserved for accessing
@@ -652,6 +656,43 @@ hist(attitude$complaints)
 
 plot(sort(attitude$critical)) 
 
+## The data handling and visualisation commands you have learned thus far have
+## been written using functions available after installing R ("base R" functions).
+## A more dynamic approach to handling and visualising data can be found with the 
+## "tidyverse" suite of packages.
+
+library(tidyverse)
+## install.packages("tidyverse")
+
+## As a first step, we will replicate the previous two plots, starting with the histogram.
+
+ggplot(data = attitude, aes(x = critical)) +
+  geom_histogram()
+
+## Notice that the plot is created using two functions - 
+## ggplot() and geom_histogram(), linked by a + symbol
+
+?ggplot
+?geom_histogram
+
+## The ggplot() function creates a object called a "geom", which we can re-use.
+
+att_crit <- ggplot(data = attitude, aes(y = critical)) 
+
+att_crit + 
+  geom_point(aes(x = row.names(attitude)))
+
+## **
+## However, geom_point() requires that the x variable and the y variable are both
+## specified using the aes() function. The aes() arguments are inherited for all
+## subsequent "geoms" We add another "aesthetic" to the plot by
+## calling aes() again.
+## (don't worry, it won't be so confusing after you have used it a few times!)
+## Here we specified the "row names" (in this case just the row number) of the dataframe
+## as the x variable. Note that this doesn't quite re-create the plot we did just a few minutes ago
+## using plot(sort(attitude$critical)), even though it is displaying the same data.
+## Sorting the dataframe requires a few more tools, so we will return to that later.
+
 ## Other functions will look at the relationship among columns, about
 ## which much can be said.
 
@@ -660,6 +701,19 @@ plot(sort(attitude$critical))
 ## two columns on each of the axes.
 
 plot(attitude$critical, attitude$privileges) 
+
+## and, using ggplot2
+
+ggplot(attitude, aes(x = critical, y = privileges)) +
+  geom_point(color = "darkgreen")
+
+## You will encounter times when you want to use another variable to set the color
+## of each point. You will learn how to add or categorise variables later, but for now
+## we will use color to indicate the value of the rating column for each point.
+## This requires us to put the "color = " specification inside the aes() function call.
+
+ggplot(data = attitude, aes(x = critical, y = privileges)) +
+  geom_point(aes(color = rating))
 
 ## Once you have found useful figures to output, you must ensure they
 ## are appropriately labeled. The arguments to most graphical
@@ -671,6 +725,18 @@ plot(catsM$Bwt, catsM$Hwt
 		 , ylab="Male Cat Heart Weight (g)"
 		 , main="Body Weight vs. Heart Weight for Male Cats over 2 Pounds"
 )
+
+## Now look at how we construct the same plot using ggplot2.
+
+ggplot(catsM, aes(x = Bwt, y = Hwt)) +
+  labs(
+    title = "Body Weight vs. Heart Weight for Male Cats over 2 Pounds",
+    x = "Male Cat Body Weight (kg)",
+    y = "Male Cat Heart Weight (g)"
+  ) +
+  geom_point(shape = 1)
+
+## try out some difference geom_point parameter shape and size parameter values.
 
 ## Always label your axes (and provide units, when relevant). R will
 ## sometimes generate labels by default, but you will need to ask
