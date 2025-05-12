@@ -25,7 +25,7 @@
 #################### 
 ## Spare the copy and paste!
 #################### 
-## If you are like me, you hate busy-work. To that end, I hope you'll
+## If you are like me, you hate busy-work. To that end, you'll probably want to
 ## make use of the copy and paste functions to transfer text from this
 ## file to R. That said, especially early on, you will learn a LOT
 ## from the typos that inevitably occur when entering text into R. If
@@ -43,7 +43,7 @@
 ## hang of things. So never be afraid to try anything, and if your
 ## program doesn't behave as you expect it to, ask for an
 ## explanation. If you do not finish the tutorials during the lab
-## period, you may work on the during the afternoon or evening work
+## period, you may continue working during the afternoon or evening work
 ## periods.
 #################### 
 ## Make notes in this tutorial!
@@ -88,7 +88,7 @@
 ##  Be introduced to data vectors 
 ##  Know how to access R's intrinsic datasets 
 ##  Know how to produce basic graphics in R [note: here we use what is known as
-##  'base' R for plotting; a later tutorial will introduce plotitng with the
+##  'base' R for plotting; a later tutorial will introduce plotting with the
 ##  the 'ggplot2' package, which is preferred by many because it is simpler to 
 ##  produce publication-quality graphs]
 
@@ -206,7 +206,8 @@ z * z -> z
 
 ## R is case-sensitive, so the variables x and X are
 ## unrelated. Variable names can contain only letters, numbers, underscores, and
-## periods.
+## periods. However, we recommend (for now) beginning variable names with letters, 
+## rather than numbers or symbols.
 
 ## Furthermore, R uses a number of likely variable-name candidates as
 ## functions, making them confusing choices as variables. The worst of
@@ -241,7 +242,7 @@ z * z -> z
 ## Arguments are the input a function needs to perform its task and
 ## produce the desired output.
 
-## This will become slightly clearer when I discuss the help utility
+## This will become slightly clearer when I discuss the "help" utility
 ## below, but arguments can either be required or they can take on
 ## default values if unspecified. Because it would be tricky to keep
 ## track of the order of 10 possible inputs, which all might be
@@ -287,7 +288,7 @@ log(10, base = 10)
 ## you want to run and click the "Run" button at the top of the window. On
 ## a Mac, you can press CMD+Enter, instead of "Run." To repeat multiple lines
 ## of code from the script, highlight the lines and press "Run" or CMD+Enter.
-## On a Windows machine, you can click Ctrl+Enter instead. (For additional 
+## On a Windows machine, you can press Ctrl+Enter instead. (For additional 
 ## keyboard shortcuts in Rstudio, see Tutorial 0: Introduction to R Studio.)
 
 ## Save yourself the time and energy of re-typing by re-using what you have
@@ -307,8 +308,8 @@ ls()
 
 ## This may look weird, given what I just told you about function
 ## arguments above, but it just turns out that the ls() function has
-## arguments, but they all take on default values when none are
-## specified.
+## arguments - they just take on default values when none are
+## specified. You can use "?ls" to view these.
 
 ## If you are working in Rstudio, you can also see the variables and
 ## functions defined in your workspace by clicking on the "Environment"
@@ -399,7 +400,7 @@ RSiteSearch("average")  ## CONSOLE
 ## Google can also be very useful for finding answers to your R questions,
 ## most of which someone else will have asked previously. Answers are often
 ## found on Stack Overflow, https://stackoverflow.com, a Q&A site for
-## programming.
+## programming. Large language models (e.g., ChatGPT) can also provide useful information.
 
 ## With these tools in hand, you should be ready to troubleshoot most
 ## of your R foibles yourself!
