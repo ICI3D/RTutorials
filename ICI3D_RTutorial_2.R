@@ -1,3 +1,5 @@
+
+
 #' @title Tutorial 2: More on Vectors, Data Frames, and Functions
 #'
 #' @author David M. Goehring 2004
@@ -418,6 +420,50 @@ student_df[, 1] # FIRST COLUMN
 student_df[3, ] # THIRD ROW
 student_df[, ] # ENTIRE FRAME, equivalent to "student_df"
 
+#' In the last tutorial, we learned about the tidyverse.
+#' Tidyverse is a group of R packages like dplyr, stringr, ggplot2, and more.
+#' You can find the full list here: https://www.tidyverse.org
+#'
+#' In this example, we’ll use dplyr to access rows and columns in a data frame.
+#' Instead of loading all tidyverse packages using the library(tidyverse) command,
+#'  we can load only the one we need. For now, we just need the dplyr package:
+
+library(dplyr)
+
+#' To select a column, we use the select() function.
+#' The first argument is the data frame, the second is the column we want.
+#' We can use either the column number or the column name.
+
+select(.data = student_df, 1)       # selects the first column by position
+select(.data = student_df, names)   # selects the column called 'names'
+
+#' In select(), the .data argument is where we put the data frame.
+#' The next argument is the column(s) we want to choose.
+
+#' We can also use the pipe symbol (|>) to make the code easier to read.
+#' Think of the pipe as saying "and then".
+#' For example, instead of writing select(.data = student_df, 1),
+#' we can write: student_df |> select(1)
+#' This means: "take student_df and then select column 1"
+
+student_df |> select(1)       # selects the first column
+student_df |> select(names)   # selects the column called 'names'
+
+#' If we want to save the result into a new data frame, we can assign it like this:
+
+student_names_data <- student_df |> select(names)
+
+#' The select() function gives us a one-column data frame.
+#' If we want just a vector (not a data frame), we can use the pull() function.
+
+student_df |> pull(1)       # gets the first column as a vector
+student_df |> pull(names)   # gets the 'names' column as a vector
+
+#' To get a specific row instead of a column, we use the slice() function.
+
+student_df[3, ]             # base R: gets the third row
+student_df |> slice(3)      # dplyr: gets the third row
+
 #' The only other complication is the ability to enter the names() or
 #' row.names() as indices:
 
@@ -431,9 +477,27 @@ student_df[, "class.years"]
 tall_students <- student_df[student_df$height > mean(student_df$height), ]
 tall_students
 
+#' A tidyverse-style way to filter rows is to use the `filter()` function.
+#' This helps us select only the rows that meet a condition.
+tall_students <- filter(student_df, height > mean(height))
+tall_students  
+
+#' Inside `filter()`, we do not use the `$` operator (like student_df$height).
+#' This is because `filter()` automatically looks for column names
+#' within the data frame you pass as the first argument.
+
+#' The same code using a pipe:
+tall_students <- student_df |> filter(height > mean(height))
+tall_students
+
 #' Or sort our data by various aspects:
 
 student_df[order(student_df$class.years), ]
+
+#' Alternatively, using the `arrange` function from dplyr, we have
+student_df |> arrange(class.years)        # in ascending order
+student_df |> arrange(desc(class.years))  # in descending order
+
 
 #' @subsection Introduction to factors
 #'
@@ -496,6 +560,14 @@ boxplot(moths$meters ~ moths$habitat)
 #' The tilde, ~, used in a number of contexts in R, can generally be
 #' read as "by,” which gives a general explanation of its use here –
 #' visualizing transect length ("meters") by habitat type ("habitat").
+#' Recall, we used the ggplot2 package to make prettier plots
+#' We will replicate the `boxplot` above:
+
+library(ggplot2)
+ggplot(data = moths) + 
+  geom_boxplot(mapping = aes(x = habitat, y = meters))
+
+
 #'
 #' @subsection Making a factor
 #'
@@ -525,6 +597,8 @@ levels(student_df$class.years) <- c("Freshman", "Sophomore", "Junior", "Senior")
 
 student_df
 boxplot(student_df$heights ~ student_df$class.years)
+
+#' Replicate the above plot using ggplot2.
 
 #' @subsection Applying functions to data frames
 #'
