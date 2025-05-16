@@ -42,9 +42,8 @@
 ## happens if I tweak this a bit:" That's how you'll really get the
 ## hang of things. So never be afraid to try anything, and if your
 ## program doesn't behave as you expect it to, ask for an
-## explanation. If you do not finish the tutorials during the lab
-## period, you may continue working during the afternoon or evening work
-## periods.
+## explanation. There will be dedicated lab time to ask the 
+## instructional team questions during the workshop.
 #################### 
 ## Make notes in this tutorial!
 #################### 
@@ -87,10 +86,10 @@
 ##  Know how to use the help features of R 
 ##  Be introduced to data vectors 
 ##  Know how to access R's intrinsic datasets 
-##  Know how to produce basic graphics in R [note: here we use what is known as
-##  'base' R for plotting; a later tutorial will introduce plotting with the
-##  the 'ggplot2' package, which is preferred by many because it is simpler to 
-##  produce publication-quality graphs]
+##  Know how to produce basic graphics in R (note: here we use what is known as
+##  'base' R for plotting; and we introduce plotting with the 'ggplot2' package,
+##  which is preferred by many because it is simpler to produce 
+##  publication-quality graphs)
 
 ## R as a calculator 
 
@@ -142,7 +141,7 @@
 (5*+ 2) / 7 # BADCODE
 
 ## This way you will be able to tell when I am asking you to do
-## something stupid.
+## something silly.
 
 ## Making things stick 
 
@@ -231,6 +230,7 @@ z * z -> z
 #################### 
 ## Functions are your friends
 #################### 
+
 ## While basic operations, such as addition, are invaluable features
 ## of R, the real core of R comes in the form of functions. Functions,
 ## in general, take specified types of input ('arguments') and convert
@@ -281,6 +281,7 @@ log(10, base = 10)
 ####################
 ## Repeating lines of code
 #################### 
+
 ## Have you tried pressing the up-arrow? If your cursor is at the
 ## command prompt in the Console window, R will recall each of your
 ## previous commands as you repeatedly press the up-arrow. If you are 
@@ -432,6 +433,7 @@ RSiteSearch("average")  ## CONSOLE
 #################### 
 ## Inputting your own vector
 #################### 
+
 ## In order to generate vectors of any length, R has a somewhat
 ## non-intuitive method, the function c(). The name "c" is short for
 ## concatenate, if that helps you remember its very important role in
@@ -459,6 +461,7 @@ my.last.vector <- c(my.vector, 365, my.other.vector)
 #################### 
 ## Generating random vectors
 #################### 
+
 ## It is a common programming task to want to generate a list of
 ## random numbers. R has a variety of different functions for this, but
 ## I will show you rnorm(), which generates random numbers from the
@@ -476,6 +479,7 @@ my.randoms <- rnorm(110)
 #################### 
 ## Functions on vectors
 #################### 
+
 ## Many functions take a vector as an argument, rather than (or in
 ## addition to) a single number. Now that you know how to generate
 ## vectors to specification, these can be very handy. Some examples:
@@ -497,6 +501,7 @@ c(1, 2, 3)^3
 #################### 
 ## Basic plots
 #################### 
+
 ## Producing a mediocre figure in R is trivial. With most data
 ## structures you will get something just by typing
 
@@ -540,6 +545,7 @@ hist(my.randoms)
 #################### 
 ## Where to find data
 #################### 
+
 ## Importing data into R from your computer is fairly straightforward,
 ## but for now, we will use only the data sets contained in R default
 ## packages. Generating a list of these available data sets is as
@@ -580,8 +586,12 @@ data(catsM, package="boot")
 ## as matrices or arrays, and are more suitable to most statistical analysis.
 ## While they have incredible sophistication, I
 ## won't be able to introduce most of this here. We will be sticking
-## to absolute basics for now but will come back to data frames in more
-## detail later in the week.
+## to absolute basics for now but will come back to data frames in
+## later tutorials.
+
+#################### 
+## Exploring the data visually
+#################### 
 
 ## First, you will likely want to take a look at the data itself, just
 ## to see what it has in store. As you have learned, that can be done
@@ -589,14 +599,13 @@ data(catsM, package="boot")
 
 attitude 
 
-## The resulting chart will (most often) have named rows and columns
-## which correspond to the data for those conditions and property. In
-## this example, individuals are numbered 1 to 30 and each one has
+## The data will (most often) have named rows and columns.
+## In this example, individuals are numbered 1 to 30 and each one has
 ## corresponding numerical answers to different questions regarding
 ## their attitude.
 
-## You can also just view the first few rows ("top") of the data set (which allows you
-## to also view the column names) by typing
+## You can also just view the first few rows ("top") of the data set 
+## (which allows you to also view the column names) by typing
 
 head(attitude)
 
@@ -656,43 +665,6 @@ hist(attitude$complaints)
 
 plot(sort(attitude$critical)) 
 
-## The data handling and visualisation commands you have learned thus far have
-## been written using functions available after installing R ("base R" functions).
-## A more dynamic approach to handling and visualising data can be found with the 
-## "tidyverse" suite of packages.
-
-library(tidyverse)
-## install.packages("tidyverse")
-
-## As a first step, we will replicate the previous two plots, starting with the histogram.
-
-ggplot(data = attitude, aes(x = critical)) +
-  geom_histogram()
-
-## Notice that the plot is created using two functions - 
-## ggplot() and geom_histogram(), linked by a + symbol
-
-?ggplot
-?geom_histogram
-
-## The ggplot() function creates a object called a "geom", which we can re-use.
-
-att_crit <- ggplot(data = attitude, aes(y = critical)) 
-
-att_crit + 
-  geom_point(aes(x = row.names(attitude)))
-
-## **
-## However, geom_point() requires that the x variable and the y variable are both
-## specified using the aes() function. The aes() arguments are inherited for all
-## subsequent "geoms" We add another "aesthetic" to the plot by
-## calling aes() again.
-## (don't worry, it won't be so confusing after you have used it a few times!)
-## Here we specified the "row names" (in this case just the row number) of the dataframe
-## as the x variable. Note that this doesn't quite re-create the plot we did just a few minutes ago
-## using plot(sort(attitude$critical)), even though it is displaying the same data.
-## Sorting the dataframe requires a few more tools, so we will return to that later.
-
 ## Other functions will look at the relationship among columns, about
 ## which much can be said.
 
@@ -701,19 +673,6 @@ att_crit +
 ## two columns on each of the axes.
 
 plot(attitude$critical, attitude$privileges) 
-
-## and, using ggplot2
-
-ggplot(attitude, aes(x = critical, y = privileges)) +
-  geom_point(color = "darkgreen")
-
-## You will encounter times when you want to use another variable to set the color
-## of each point. You will learn how to add or categorise variables later, but for now
-## we will use color to indicate the value of the rating column for each point.
-## This requires us to put the "color = " specification inside the aes() function call.
-
-ggplot(data = attitude, aes(x = critical, y = privileges)) +
-  geom_point(aes(color = rating))
 
 ## Once you have found useful figures to output, you must ensure they
 ## are appropriately labeled. The arguments to most graphical
@@ -725,18 +684,6 @@ plot(catsM$Bwt, catsM$Hwt
 		 , ylab="Male Cat Heart Weight (g)"
 		 , main="Body Weight vs. Heart Weight for Male Cats over 2 Pounds"
 )
-
-## Now look at how we construct the same plot using ggplot2.
-
-ggplot(catsM, aes(x = Bwt, y = Hwt)) +
-  labs(
-    title = "Body Weight vs. Heart Weight for Male Cats over 2 Pounds",
-    x = "Male Cat Body Weight (kg)",
-    y = "Male Cat Heart Weight (g)"
-  ) +
-  geom_point(shape = 1)
-
-## try out some difference geom_point parameter shape and size parameter values.
 
 ## Always label your axes (and provide units, when relevant). R will
 ## sometimes generate labels by default, but you will need to ask
@@ -755,6 +702,95 @@ ggplot(catsM, aes(x = Bwt, y = Hwt)) +
 ## if you press enter while still inside a function, or unclosed
 ## parantheses expression. In RStudio, you can auto-indent a section of
 ## code by highlighting it and pressing Cntrl+i (or CMD+i, on a Mac).
+
+#################### 
+## Introducing ggplot2
+#################### 
+
+## The data handling and visualisation commands you have learned thus far have
+## been written using functions available after installing R ("base R" functions).
+## A more dynamic approach to handling and visualising data can be found with the 
+## "tidyverse" suite of packages, which includes the ggplot2 package.
+
+library(tidyverse)
+
+## if the package is not yet installed, you will first need to run:
+## install.packages("tidyverse")
+
+## We will replicate the previous two plots, starting with the histogram.
+
+ggplot(data = attitude, aes(x = critical)) +
+  geom_histogram()
+
+## Notice that the plot is created using two functions - 
+## ggplot() and geom_histogram(), linked by a + symbol
+
+?ggplot
+?geom_histogram
+
+##  See https://ggplot2.tidyverse.org/: "It’s hard to succinctly describe
+##  how ggplot2 works because it embodies a deep philosophy of visualisation.
+##  However, in most cases you start with ggplot(), supply a dataset and aesthetic
+##  mapping (with aes()). You then add on layers (e.g. geom_histogram), scales, 
+##  faceting specifications and coordinate systems", though we will stick 
+##  to the basics here.
+
+## The ggplot() function creates a object called a "geom", which we can re-use.
+## For example
+
+att_crit <- ggplot(data = attitude, aes(x = critical)) 
+
+att_crit + 
+  geom_histogram()
+
+att_crit + 
+  geom_histogram(bins = 10)
+
+## Moving onto the second plot we produced above:
+
+att_crit <- ggplot(data = attitude, aes(y = critical)) 
+
+att_crit + 
+  geom_point(aes(x = row.names(attitude)))
+
+## However, geom_point() requires that the x variable and the y variable are both
+## specified using the aes() function. The aes() arguments are inherited for all
+## subsequent "geoms" We add another "aesthetic" to the plot by
+## calling aes() again.
+## (don't worry, it won't be so confusing after you have used it a few times!)
+## Here we specified the "row names" (in this case just the row number) of the dataframe
+## as the x variable. Note that this doesn't quite re-create the plot we did just a few 
+## minutes ago using plot(sort(attitude$critical)), even though it is displaying the same
+## data. Sorting the dataframe requires a few more tools, so we will return to that later.
+
+## Continuing to our plot that showed the relationship between two variables: 
+
+ggplot(attitude, aes(x = critical, y = privileges)) +
+  geom_point(color = "darkgreen")
+
+## You will encounter times when you want to use another variable to set the color
+## of each point. You will learn how to add or categorise variables later, but for now
+## we will use color to indicate the value of the rating column for each point.
+## This requires us to put the "color = " specification inside the aes() function call.
+
+ggplot(data = attitude, aes(x = critical, y = privileges)) +
+  geom_point(aes(color = rating))
+
+## Moving onto the last plot we produced above, which included axis labels:
+
+ggplot(catsM, aes(x = Bwt, y = Hwt)) +
+  labs(
+    title = "Body Weight vs. Heart Weight for Male Cats over 2 Pounds",
+    x = "Male Cat Body Weight (kg)",
+    y = "Male Cat Heart Weight (g)"
+  ) +
+  geom_point(shape = 1)
+
+## try out some difference geom_point parameter shape and size parameter values.
+
+###################################################################### 
+## LASTLY, libraries
+######################################################################
 
 ## One final new procedure: 
 ## The command library, used in the manner 
@@ -798,7 +834,7 @@ library("date")
 ## baffled.
 
 ###################################################################### 
-## E. Benchmark Questions
+## Benchmark Questions
 ###################################################################### 
 
 #################### 
@@ -852,9 +888,9 @@ library("date")
 
 #################### 
 ## 3. Generate an epidemic curve using your newly-created vectors and
-## the barplot() function.  Label your x- and y-axes, give your figure
+## the base R barplot() function.  Label your x- and y-axes, give your figure
 ## a title, set the y-axis to go from 0 to 6, and remove the spaces
-## between bars.
+## between bars. Now try to produce the curve using ggplot.
 
 ## Bonus: Examine the epidemic curve and determine whether you think the data
 ## represent a common source, point source, or propagated epidemic (or
