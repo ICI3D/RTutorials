@@ -171,7 +171,7 @@ print(prim)                     # print the list of discovered primes to the con
 # 3. Vectors in R
 ################################################################################
 
-# Look at your workspace (Ctrl+3 if it isn't showing). There are two variables i
+# Look at your workspace (Ctrl+8 if it isn't showing). There are two variables i
 # and j that are single valued variables similar to those we've seen before. i
 # has a value of 100L. The L just refers to the data type associated with i: in 
 # this case it is a "long integer". 
@@ -295,9 +295,9 @@ det(M)
 
 # There are a few more options for running code in RStudio other than typing
 # "Control+Enter". They are provided here with their shortcuts for completeness.
-#     1. Run the ENTIRE script:                              "Control+Shift+O"
-#     2. Run the script FROM THE BEGINNING UP TO THIS LINE:  "Control+Shift+B"
-#     3. Run the script FROM THIS LINE TO THE END:           "Control+Shift+E"
+#     1. Run the ENTIRE script:                              "Control+Alt+R"
+#     2. Run the script FROM THE BEGINNING UP TO THIS LINE:  "Control+Alt+B"
+#     3. Run the script FROM THIS LINE TO THE END:           "Control+Alt+E"
 # These can all be useful in different contexts. You can try them out by moving
 # to various places in this script and typing these key combinations. (Note,
 # however, that there is an error produced on line 96, so you will not be able
@@ -320,11 +320,10 @@ det(M)
 # Ctrl+L          (clear the console)
 # Ctrl+Up-arrow   (Console: see list of previous commands; Editor: go to top of
 # file; use Cmd+Up-arrow on a Mac)
-# Ctrl+Down-arrow (Editor: Go to bottom of file; use Cmd+Down-arrow on a Mac)
-# Ctrl+Shift+R    (Editor: Run the entire script)
-# Ctrl+Shift+B    (Editor: Run the script from beginning to this point)
-# Ctrl+Shift+E    (Editor: Run the script from this point to end)
+# Ctrl+Alt+R      (Editor: Run the entire script)
+# Ctrl+Alt+B      (Editor: Run the script from beginning to this point)
+# Ctrl+Alt+E      (Editor: Run the script from this point to end)
 # F1              (Editor: Get help on whatever is under the cursor)
 # F2              (Editor: Show source code for whatever is under the cursor -
 # if it exists)
-# Ctrl+/          (Editor: Toggle Comment on selected region)
+# Ctrl+Shift+C    (Editor: Toggle Comment on selected region)
