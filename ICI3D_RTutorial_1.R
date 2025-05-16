@@ -735,7 +735,7 @@ ggplot(data = attitude, aes(x = critical)) +
 ##  faceting specifications and coordinate systems", though we will stick 
 ##  to the basics here.
 
-## The ggplot() function creates a object called a "geom", which we can re-use.
+## The ggplot() function creates a ggplot object, which we can re-use.
 ## For example
 
 att_crit <- ggplot(data = attitude, aes(x = critical)) 
