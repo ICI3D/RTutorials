@@ -49,6 +49,12 @@
 ## If you haven't already, it's recommended that you watch _at least_ the second video: Specifying simple models
 #### https://drive.google.com/file/d/1BwAYWPi6e3PDn4AhqVsM14KkHie6Vx26
 
+## Load the library
 library(macpan2)
 
-## Now copy and paste 
+## Now copy and paste the code for the SIR model shown in the video
+#### ML please add link to video code
+## make sure you understand it, and then go ahead and run it.
+
+######################################################################
+## Temporary code block TCB, delete these when you can
