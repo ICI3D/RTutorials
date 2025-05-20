@@ -33,6 +33,13 @@ data:
 
 ######################################################################
 
+## Building macpan labs 2025 May 20 (Tue)
+
+mpLabCompartmental.Rout: mpLabCompartmental.R
+	$(pipeR)
+
+######################################################################
+
 ## Processing machinery
 ## Make an answers file that allows batch.pl to convert the published file into something that runs
 ## There's some confusion as of now (and for a long time up to now) about using batch/ vs. using batchdir; I should clear that up before I resume using this
