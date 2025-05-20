@@ -43,6 +43,12 @@
 
 ######################################################################
 
-## You can learn a bit about macpan2 
+## You can learn a bit about macpan2 at this workshop page
+#### https://canmod.github.io/macpan-workshop/
+
+## If you haven't already, it's recommended that you watch _at least_ the second video: Specifying simple models
+#### https://drive.google.com/file/d/1BwAYWPi6e3PDn4AhqVsM14KkHie6Vx26
 
 library(macpan2)
+
+## Now copy and paste 
