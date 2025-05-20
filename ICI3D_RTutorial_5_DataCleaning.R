@@ -45,6 +45,8 @@
 ## We will be using the 'tidyverse' family of R functions to read in
 ## and clean the data. Let's get started.
 
+## Data are available at https://github.com/ICI3D/datasets under the dataCleaning folder
+
 library(tidyverse) # Load the tidyverse package
 dat  <-  read_csv("tutorial5.csv") # read in the "data"
 

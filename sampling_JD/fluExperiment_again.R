@@ -1,7 +1,10 @@
+## Irrecoverable exception!! 2024 Jun 26 (Wed)
+
 ## What happens if we add more realistic variation?
 library(tidyverse)
+library(shellpipes)
 
-load.environment("fluExperiment.rda")
+loadEnvironments()
 
 numCommunities <- 24
 aveElders <- 100
@@ -96,5 +99,6 @@ print(
 	ggplot(eff, aes(protection, proportion, color=metric))
 	+ geom_line()
 )
+
 
 ## Using mixed models fixes the coverage. Cool!

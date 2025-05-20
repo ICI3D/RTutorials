@@ -38,11 +38,20 @@ cotrimStudy.Rout: cotrimStudy.R
 
 cotrimTest.Rout: cotrimTest.R
 
-### Live coding 
+### Live coding  2023
 
 study.Rout: study.R
 
 multistudy.Rout: multistudy.R
+
+######################################################################
+
+### Live coding 2024
+
+## Rename this one maybe
+
+study_design_exp.Rout: study_design.R
+study_design_rep.Rout: study_design_rep.R
 
 ######################################################################
 

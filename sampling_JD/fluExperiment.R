@@ -1,5 +1,6 @@
-
-library(tidyverse)
+library(tidyverse); theme_set(theme_bw())
+library(shellpipes)
+startGraphics()
 
 numCommunities <- 24
 aveElders <- 100
@@ -77,7 +78,7 @@ effTest <- sapply(prot, function(p){
 })
 
 ## Torture the results of sapply into a tidy data frame
-eff <- (as.tibble(t(as.matrix(effTest)))
+eff <- (as_tibble(t(as.matrix(effTest)))
 	%>% mutate(protection=prot)
 	%>% gather(metric, proportion, coverage:power)
 	%>% mutate(protection=as.numeric(protection))
@@ -91,4 +92,4 @@ print(
 	+ geom_line()
 )
 
-save("fluExperiment.rda")
+saveEnvironment()
