@@ -43,6 +43,6 @@
 
 ######################################################################
 
-## You can learn a bit about macpan2 
+## You can learn a bit about macpan2 via the videos
 
 library(macpan2)
