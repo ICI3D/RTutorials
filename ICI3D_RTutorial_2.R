@@ -1,8 +1,12 @@
+
+
 #' @title Tutorial 2: More on Vectors, Data Frames, and Functions
 #'
 #' @author David M. Goehring 2004
 #' @author Juliet R.C. Pulliam 2008, 2009
 #' @author Steve Bellan 2010, 2012
+#' @author Carl Pearson 2024
+#' @author Stanley Sayianka 2025
 #'
 #' Clinic on Meaningful Modeling of Epidemiological Data
 #' International Clinics on Infectious Disease Dynamics and Data Program
@@ -10,7 +14,7 @@
 #'
 #' @license Some Rights Reserved,
 #' CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
-#' Last updated by Carl A. B. Pearson, June 2024
+#' Last updated by Stanley Sayianka, May 2025
 #'
 #' @description
 #' By the end of this tutorial you should:
@@ -119,7 +123,7 @@ is.finite(x)
 #' especially if you do not have much experience programming in other
 #' languages. It is worth noting that information about these
 #' operations can be pulled up at any time by typing help("&”) or
-#' help(">”) or the using help() function with any of the other
+#' help(">") or the using help() function with any of the other
 #' symbols used in these operations.
 #'
 #' @subsection Vectors of Logical Values
@@ -338,12 +342,14 @@ barplot(
 #' them, but knowing the terminology will improve your understanding
 #' of R's in-line help documents.
 #'
-#' @section B. Data Frames, Redux
+#' @section B. Data Frames and Alternatives
 #'
+#' @subsection Data frames, redux
+#' 
 #' Before we cover advanced topics of data frames, I wanted to point out the
 #' function data.frame(), which puts data together to form data
 #' frames. This is a key alternative to using the prefab data frames
-#' that you used in last week’s assignment.
+#' that you used in the previous tutorial.
 #'
 #' First I want to generate a vector of student class-years to
 #' correspond to the student_names before creating a data frame (Freshmen
@@ -418,8 +424,65 @@ student_df[, 1] # FIRST COLUMN
 student_df[3, ] # THIRD ROW
 student_df[, ] # ENTIRE FRAME, equivalent to "student_df"
 
-#' The only other complication is the ability to enter the names() or
-#' row.names() as indices:
+#' @subsection Tidyverse
+#'
+#' In R, data frames are a common and versatile way to store and work with 
+#' tabular data. However, there are other object types that you may find useful.
+#' For example, tibbles (from tidyverse) behave like data frames but print more
+#' cleanly and are widely used in with modern R workflows. Data tables (from the
+#' data.table package) are another alternative, designed for speed and efficient
+#' handling of large datasets. Choosing the right structure depends on the
+#' context of your analysis and the tools you prefer to use. 
+#' 
+#' In the last tutorial, we learned about the tidyverse.
+#' Tidyverse is a group of R packages like dplyr, stringr, ggplot2, and more.
+#' You can find the full list here: https://www.tidyverse.org
+#'
+#' Instead of loading all tidyverse packages using the library(tidyverse) command,
+#' we can load only the one we need. For now, we just need the dplyr package.
+#' 
+#' We now return to indexing data frames, repeating what we did above 
+#' using dplyr to access rows and columns in a data frame; and extending our 
+#' examples, demonstrating both base R and dplyr implementations.
+
+
+library(dplyr)
+
+#' To select a column, we use the select() function.
+#' The first argument is the data frame, the second is the column we want.
+#' We can use either the column number or the column name.
+
+select(.data = student_df, 1)       # selects the first column by position
+select(.data = student_df, names)   # selects the column called 'names'
+
+#' In select(), the .data argument is where we put the data frame.
+#' The next argument is the column(s) we want to choose.
+
+#' We can also use the pipe symbol (|>) to make the code easier to read.
+#' Think of the pipe as saying "and then".
+#' For example, instead of writing select(.data = student_df, 1),
+#' we can write: student_df |> select(1)
+#' This means: "take student_df and then select column 1"
+
+student_df |> select(1)       # selects the first column
+student_df |> select(names)   # selects the column called 'names'
+
+#' If we want to save the result into a new data frame, we can assign it like this:
+
+student_names_data <- student_df |> select(names)
+
+#' The select() function gives us a one-column data frame.
+#' If we want just a vector (not a data frame), we can use the pull() function.
+
+student_df |> pull(1)       # gets the first column as a vector
+student_df |> pull(names)   # gets the 'names' column as a vector
+
+#' To get a specific row instead of a column, we use the slice() function.
+
+student_df[3, ]             # base R: gets the third row
+student_df |> slice(3)      # dplyr: gets the third row
+
+#' We can also use the values in names() or row.names() as indices:
 
 student_df["4", ]
 student_df[, "class.years"]
@@ -428,12 +491,30 @@ student_df[, "class.years"]
 #' our data. For example, we can create a data frame that includes
 #' only the students with height greater than the mean height:
 
-tall_students <- student_df[student_df$height > mean(student_df$height), ]
+tall_students <- student_df[student_df$heights > mean(student_df$heights), ]
+tall_students
+
+#' A tidyverse-style way to filter rows is to use the `filter()` function.
+#' This helps us select only the rows that meet a condition.
+tall_students <- filter(student_df, heights > mean(heights))
+tall_students  
+
+#' Inside `filter()`, we do not use the `$` operator (like student_df$height).
+#' This is because `filter()` automatically looks for column names
+#' within the data frame you pass as the first argument.
+
+#' The same code using a pipe:
+tall_students <- student_df |> filter(heights > mean(heights))
 tall_students
 
 #' Or sort our data by various aspects:
 
 student_df[order(student_df$class.years), ]
+
+#' Alternatively, using the `arrange` function from dplyr, we have
+student_df |> arrange(class.years)        # in ascending order
+student_df |> arrange(desc(class.years))  # in descending order
+
 
 #' @subsection Introduction to factors
 #'
@@ -496,6 +577,15 @@ boxplot(moths$meters ~ moths$habitat)
 #' The tilde, ~, used in a number of contexts in R, can generally be
 #' read as "by,” which gives a general explanation of its use here –
 #' visualizing transect length ("meters") by habitat type ("habitat").
+#' 
+#' Recall, we used the ggplot2 package to make prettier plots
+#' We will replicate the `boxplot` above:
+
+library(ggplot2)
+ggplot(data = moths) + 
+  geom_boxplot(mapping = aes(x = habitat, y = meters))
+
+
 #'
 #' @subsection Making a factor
 #'
@@ -525,6 +615,8 @@ levels(student_df$class.years) <- c("Freshman", "Sophomore", "Junior", "Senior")
 
 student_df
 boxplot(student_df$heights ~ student_df$class.years)
+
+#' Try to replicate the above plot using ggplot2.
 
 #' @subsection Applying functions to data frames
 #'

@@ -25,7 +25,7 @@
 #################### 
 ## Spare the copy and paste!
 #################### 
-## If you are like me, you hate busy-work. To that end, I hope you'll
+## If you are like me, you hate busy-work. To that end, you'll probably want to
 ## make use of the copy and paste functions to transfer text from this
 ## file to R. That said, especially early on, you will learn a LOT
 ## from the typos that inevitably occur when entering text into R. If
@@ -42,9 +42,8 @@
 ## happens if I tweak this a bit:" That's how you'll really get the
 ## hang of things. So never be afraid to try anything, and if your
 ## program doesn't behave as you expect it to, ask for an
-## explanation. If you do not finish the tutorials during the lab
-## period, you may work on the during the afternoon or evening work
-## periods.
+## explanation. There will be dedicated lab time to ask the 
+## instructional team questions during the workshop.
 #################### 
 ## Make notes in this tutorial!
 #################### 
@@ -87,10 +86,10 @@
 ##  Know how to use the help features of R 
 ##  Be introduced to data vectors 
 ##  Know how to access R's intrinsic datasets 
-##  Know how to produce basic graphics in R [note: here we use what is known as
-##  'base' R for plotting; a later tutorial will introduce plotitng with the
-##  the 'ggplot2' package, which is preferred by many because it is simpler to 
-##  produce publication-quality graphs]
+##  Know how to produce basic graphics in R (note: here we use what is known as
+##  'base' R for plotting; and we introduce plotting with the 'ggplot2' package,
+##  which is preferred by many because it is simpler to produce 
+##  publication-quality graphs)
 
 ## R as a calculator 
 
@@ -142,7 +141,7 @@
 (5*+ 2) / 7 # BADCODE
 
 ## This way you will be able to tell when I am asking you to do
-## something stupid.
+## something silly.
 
 ## Making things stick 
 
@@ -206,7 +205,8 @@ z * z -> z
 
 ## R is case-sensitive, so the variables x and X are
 ## unrelated. Variable names can contain only letters, numbers, underscores, and
-## periods.
+## periods. However, we recommend (for now) beginning variable names with letters, 
+## rather than numbers or symbols.
 
 ## Furthermore, R uses a number of likely variable-name candidates as
 ## functions, making them confusing choices as variables. The worst of
@@ -230,6 +230,7 @@ z * z -> z
 #################### 
 ## Functions are your friends
 #################### 
+
 ## While basic operations, such as addition, are invaluable features
 ## of R, the real core of R comes in the form of functions. Functions,
 ## in general, take specified types of input ('arguments') and convert
@@ -241,7 +242,7 @@ z * z -> z
 ## Arguments are the input a function needs to perform its task and
 ## produce the desired output.
 
-## This will become slightly clearer when I discuss the help utility
+## This will become slightly clearer when I discuss the "help" utility
 ## below, but arguments can either be required or they can take on
 ## default values if unspecified. Because it would be tricky to keep
 ## track of the order of 10 possible inputs, which all might be
@@ -280,6 +281,7 @@ log(10, base = 10)
 ####################
 ## Repeating lines of code
 #################### 
+
 ## Have you tried pressing the up-arrow? If your cursor is at the
 ## command prompt in the Console window, R will recall each of your
 ## previous commands as you repeatedly press the up-arrow. If you are 
@@ -287,7 +289,7 @@ log(10, base = 10)
 ## you want to run and click the "Run" button at the top of the window. On
 ## a Mac, you can press CMD+Enter, instead of "Run." To repeat multiple lines
 ## of code from the script, highlight the lines and press "Run" or CMD+Enter.
-## On a Windows machine, you can click Ctrl+Enter instead. (For additional 
+## On a Windows machine, you can press Ctrl+Enter instead. (For additional 
 ## keyboard shortcuts in Rstudio, see Tutorial 0: Introduction to R Studio.)
 
 ## Save yourself the time and energy of re-typing by re-using what you have
@@ -307,8 +309,8 @@ ls()
 
 ## This may look weird, given what I just told you about function
 ## arguments above, but it just turns out that the ls() function has
-## arguments, but they all take on default values when none are
-## specified.
+## arguments - they just take on default values when none are
+## specified. You can use "?ls" to view these.
 
 ## If you are working in Rstudio, you can also see the variables and
 ## functions defined in your workspace by clicking on the "Environment"
@@ -399,7 +401,7 @@ RSiteSearch("average")  ## CONSOLE
 ## Google can also be very useful for finding answers to your R questions,
 ## most of which someone else will have asked previously. Answers are often
 ## found on Stack Overflow, https://stackoverflow.com, a Q&A site for
-## programming.
+## programming. Large language models (e.g., ChatGPT) can also provide useful information.
 
 ## With these tools in hand, you should be ready to troubleshoot most
 ## of your R foibles yourself!
@@ -431,6 +433,7 @@ RSiteSearch("average")  ## CONSOLE
 #################### 
 ## Inputting your own vector
 #################### 
+
 ## In order to generate vectors of any length, R has a somewhat
 ## non-intuitive method, the function c(). The name "c" is short for
 ## concatenate, if that helps you remember its very important role in
@@ -458,6 +461,7 @@ my.last.vector <- c(my.vector, 365, my.other.vector)
 #################### 
 ## Generating random vectors
 #################### 
+
 ## It is a common programming task to want to generate a list of
 ## random numbers. R has a variety of different functions for this, but
 ## I will show you rnorm(), which generates random numbers from the
@@ -475,6 +479,7 @@ my.randoms <- rnorm(110)
 #################### 
 ## Functions on vectors
 #################### 
+
 ## Many functions take a vector as an argument, rather than (or in
 ## addition to) a single number. Now that you know how to generate
 ## vectors to specification, these can be very handy. Some examples:
@@ -496,6 +501,7 @@ c(1, 2, 3)^3
 #################### 
 ## Basic plots
 #################### 
+
 ## Producing a mediocre figure in R is trivial. With most data
 ## structures you will get something just by typing
 
@@ -539,6 +545,7 @@ hist(my.randoms)
 #################### 
 ## Where to find data
 #################### 
+
 ## Importing data into R from your computer is fairly straightforward,
 ## but for now, we will use only the data sets contained in R default
 ## packages. Generating a list of these available data sets is as
@@ -546,13 +553,15 @@ hist(my.randoms)
 
 data()  ## CONSOLE
 
-## but here R stiffs you a little, by not looking in every available
+## but here R isn't completely transparent, and doesn't by default 
+## look in every available
 ## package. It warns you of this at the bottom of its response and
 ## suggests that you should try
 
 data(package = .packages(all.available = TRUE))  ## CONSOLE
 
-## which gives you a complete list, importantly noting in its output
+## which gives you a complete list (of datasets in packages you have already installed),
+## importantly noting in its output
 ## which package each data set comes from.
 
 ## Obtaining and understanding data sets
@@ -572,13 +581,17 @@ data(catsM, package="boot")
 
 ## After performing this step, the data are loaded into the same-named
 ## variable in R's memory, (usually, but not always) as a data frame,
-## another type of data structure. More suited to statistical
-## analysis, data frames are an alternative to standard data
+## but sometimes in another type of data structure. Data frames are an alternative to standard data
 ## structures you may have experience in mathematical programming such
-## as matrices or arrays. While they have incredible sophistication, I
+## as matrices or arrays, and are more suitable to most statistical analysis.
+## While they have incredible sophistication, I
 ## won't be able to introduce most of this here. We will be sticking
-## to absolute basics for now but will come back to data frames in more
-## detail later in the week.
+## to absolute basics for now but will come back to data frames in
+## later tutorials.
+
+#################### 
+## Exploring the data visually
+#################### 
 
 ## First, you will likely want to take a look at the data itself, just
 ## to see what it has in store. As you have learned, that can be done
@@ -586,14 +599,13 @@ data(catsM, package="boot")
 
 attitude 
 
-## The resulting chart will (most often) have named rows and columns
-## which correspond to the data for those conditions and property. In
-## this example, individuals are numbered 1 to 30 and each one has
+## The data will (most often) have named rows and columns.
+## In this example, individuals are numbered 1 to 30 and each one has
 ## corresponding numerical answers to different questions regarding
 ## their attitude.
 
-## You can also just view the top of the data set (which allows you
-## to also view the column names) by typing
+## You can also just view the first few rows ("top") of the data set 
+## (which allows you to also view the column names) by typing
 
 head(attitude)
 
@@ -612,6 +624,8 @@ help(catsM, package="boot")  # CONSOLE
 ## assumptions involved in data collection, in addition to a basic
 ## understanding of the data's components. The file's examples also
 ## provide starting points for visualization or analysis of the data.
+## Reminder: you should aim to get similar information for any dataset 
+## that you work with!
 
 ## In addition to data frames, some R data sets include more
 ## specialized collections of data, such as time series or distance
@@ -630,9 +644,9 @@ help(catsM, package="boot")  # CONSOLE
 ## moderately interesting results are produced independently-by-column
 ## with simple commands on the data frame as a whole, for example,
 
-summary(attitude) 
+summary(attitude)
 
-boxplot(attitude) 
+boxplot(attitude)
 
 ## For data frames, the columns are often compared in various ways, so
 ## a special notation, the dollar sign, $, is reserved for accessing
@@ -689,6 +703,95 @@ plot(catsM$Bwt, catsM$Hwt
 ## parantheses expression. In RStudio, you can auto-indent a section of
 ## code by highlighting it and pressing Cntrl+i (or CMD+i, on a Mac).
 
+#################### 
+## Introducing ggplot2
+#################### 
+
+## The data handling and visualisation commands you have learned thus far have
+## been written using functions available after installing R ("base R" functions).
+## A more dynamic approach to handling and visualising data can be found with the 
+## "tidyverse" suite of packages, which includes the ggplot2 package.
+
+library(tidyverse)
+
+## if the package is not yet installed, you will first need to run:
+## install.packages("tidyverse")
+
+## We will replicate the previous two plots, starting with the histogram.
+
+ggplot(data = attitude, aes(x = critical)) +
+  geom_histogram()
+
+## Notice that the plot is created using two functions - 
+## ggplot() and geom_histogram(), linked by a + symbol
+
+?ggplot
+?geom_histogram
+
+##  See https://ggplot2.tidyverse.org/: "It’s hard to succinctly describe
+##  how ggplot2 works because it embodies a deep philosophy of visualisation.
+##  However, in most cases you start with ggplot(), supply a dataset and aesthetic
+##  mapping (with aes()). You then add on layers (e.g. geom_histogram), scales, 
+##  faceting specifications and coordinate systems", though we will stick 
+##  to the basics here.
+
+## The ggplot() function creates a ggplot object, which we can re-use.
+## For example
+
+att_crit <- ggplot(data = attitude, aes(x = critical)) 
+
+att_crit + 
+  geom_histogram()
+
+att_crit + 
+  geom_histogram(bins = 10)
+
+## Moving onto the second plot we produced above:
+
+att_crit <- ggplot(data = attitude, aes(y = critical)) 
+
+att_crit + 
+  geom_point(aes(x = row.names(attitude)))
+
+## However, geom_point() requires that the x variable and the y variable are both
+## specified using the aes() function. The aes() arguments are inherited for all
+## subsequent "geoms" We add another "aesthetic" to the plot by
+## calling aes() again.
+## (don't worry, it won't be so confusing after you have used it a few times!)
+## Here we specified the "row names" (in this case just the row number) of the dataframe
+## as the x variable. Note that this doesn't quite re-create the plot we did just a few 
+## minutes ago using plot(sort(attitude$critical)), even though it is displaying the same
+## data. Sorting the dataframe requires a few more tools, so we will return to that later.
+
+## Continuing to our plot that showed the relationship between two variables: 
+
+ggplot(attitude, aes(x = critical, y = privileges)) +
+  geom_point(color = "darkgreen")
+
+## You will encounter times when you want to use another variable to set the color
+## of each point. You will learn how to add or categorise variables later, but for now
+## we will use color to indicate the value of the rating column for each point.
+## This requires us to put the "color = " specification inside the aes() function call.
+
+ggplot(data = attitude, aes(x = critical, y = privileges)) +
+  geom_point(aes(color = rating))
+
+## Moving onto the last plot we produced above, which included axis labels:
+
+ggplot(catsM, aes(x = Bwt, y = Hwt)) +
+  labs(
+    title = "Body Weight vs. Heart Weight for Male Cats over 2 Pounds",
+    x = "Male Cat Body Weight (kg)",
+    y = "Male Cat Heart Weight (g)"
+  ) +
+  geom_point(shape = 1)
+
+## try out some difference geom_point parameter shape and size parameter values.
+
+###################################################################### 
+## LASTLY, libraries
+######################################################################
+
 ## One final new procedure: 
 ## The command library, used in the manner 
 
@@ -731,7 +834,7 @@ library("date")
 ## baffled.
 
 ###################################################################### 
-## E. Benchmark Questions
+## Benchmark Questions
 ###################################################################### 
 
 #################### 
@@ -785,9 +888,9 @@ library("date")
 
 #################### 
 ## 3. Generate an epidemic curve using your newly-created vectors and
-## the barplot() function.  Label your x- and y-axes, give your figure
+## the base R barplot() function.  Label your x- and y-axes, give your figure
 ## a title, set the y-axis to go from 0 to 6, and remove the spaces
-## between bars.
+## between bars. Now try to produce the curve using ggplot.
 
 ## Bonus: Examine the epidemic curve and determine whether you think the data
 ## represent a common source, point source, or propagated epidemic (or
