@@ -103,7 +103,7 @@ N0 <- 7780000
 ## initial values of our 2 state variables:
 
 pop.SI <- c(S = 0.065*N0,  # Initially 6.5% of the population is susceptible
-                I = ???)       # ENTER THE NUMBER INITIALLY INFECTED (20.5)
+                I = ???)       # ENTER THE NUMBER INITIALLY INFECTED (20.5) ## FIXME
 
 ## Notice that I've named the two values in the initial population vector to
 ## help us keep track of which value is which. This also allows us to take
@@ -173,7 +173,7 @@ library(deSolve)                # Load libary to be used for numerical integrati
 ## The function within deSolve that we will be using is called lsoda(). Let's
 ## look at the help file for this function:
 
-?lsoda
+?lsoda ## CONSOLE
 
 ## This help file gives some detail on the history of the algorithm as well as
 ## describing the function's usage. For now, take a look at the "Usage" section
@@ -195,8 +195,8 @@ library(deSolve)                # Load libary to be used for numerical integrati
 ##
 ## Let's ask for output every 0.1 days for 365 days, starting at time 0:
 
-time.out <- seq(0,365,???)     # INCLUDE THE APPROPRIATE VALUE TO GET A SEQUENCE
-                               # FROM 0 to 365 BY STEPS OF 0.1
+# INCLUDE APPROPRIATE CODE TO GET A SEQUENCE FROM 0 to 365 BY STEPS OF 0.1
+time.out <- seq(0,365,???)  ## FIXME  
 
 ## Now let's see what happens if we plug our inputs into lsoda()...
 

@@ -59,6 +59,8 @@ batch/%.R: %.R %.answers.R batch.pl
 %.batch.Rout: batch/%.R
 	$(pipeR)
 
+## ICI3D_Lab1_ODEmodels.batch.Rlog: batch/ICI3D_Lab1_ODEmodels.R
+## ICI3D_Lab1_ODEmodels.batch.Rout: ICI3D_Lab1_ODEmodels.R ICI3D_Lab1_ODEmodels.answers.R
 ## ICI3D_Lab3_EpiStudyDesign.batch.Rout: ICI3D_Lab3_EpiStudyDesign.answers.R
 ## ICI3D_RTutorial_1.batch.Rout: ICI3D_RTutorial_1.answers.R
 ## ICI3D_RTutorial_2.batch.Rout: ICI3D_RTutorial_2.R ICI3D_RTutorial_2.answers.R

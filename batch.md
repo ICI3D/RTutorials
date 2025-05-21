@@ -12,6 +12,7 @@ The currently supported magic words are:
 
 * BADCODE: suppress this line (it has an error that doesn't need to be fixed)
 * CONSOLE: suppress this line (it's more of a console than a script line)
-* FIXME: fix this line by taking the next blank-line delimited ¶ from the .answers.R file and replacing it
+* FIXME: fix this line by taking the next *blank-line delimited ¶* from the .answers.R file and replacing it
+* [Beginning of script]: gets the first blank-line delimited ¶
 
 In theory, it would be slightly better if the .answers.R files were in a private repo, but I don't see it mattering.
