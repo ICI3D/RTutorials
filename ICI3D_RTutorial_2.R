@@ -581,10 +581,10 @@ boxplot(moths$meters ~ moths$habitat)
 #' Recall, we used the ggplot2 package to make prettier plots
 #' We will replicate the `boxplot` above:
 
-library(ggplot2)
+## theme_bw is a ggplot “style” that makes things a bit less fancy and more sharp, you may think it looks more scientific
+library(ggplot2); theme_set(theme_bw())
 ggplot(data = moths) + 
   geom_boxplot(mapping = aes(x = habitat, y = meters))
-
 
 #'
 #' @subsection Making a factor
@@ -632,7 +632,7 @@ summary(nyc_air)
 #' But others that you might try do not work as you want:
 
 sum(nyc_air) # sums wind and temperature together
-mean(nyc_air) # returns an error message
+mean(nyc_air) # returns an error message ## FIXME (or don't, see below)
 
 #' One solution to these troubles is to use the function apply(),
 #' which performs the function named in the third argument on the

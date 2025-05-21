@@ -6,7 +6,6 @@
 ## Juliet R.C. Pulliam 2008, 2009, 2019, 2023
 ## Steve Bellan 2010
 ##
-## Last updated by Juliet R.C. Pulliam, May 2023
 ## Some Rights Reserved
 ## CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
 

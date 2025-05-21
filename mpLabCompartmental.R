@@ -52,47 +52,81 @@
 ## Load the library
 library(macpan2)
 
-## Now copy and paste the code for the SIR model shown in the video
-#### ML please add link to video code
+######################################################################
+
+## Build a model structure
 
 ## default values for quantities required to run simulations
-default = list(
-    beta = 0.2   ## transmission rate
-  , gamma = 0.1  ## recovery rate
-  , N = 100      ## total population size (constant in this model)
-  , I = 1        ## initial number of infectious individuals
-  , R = 0        ## initial number of recovered individuals
+dPar <- list(
+	  beta = 0.2 
+	, gamma = 0.1 
 )
+
+initVals <- list(
+	N = 100
+	, I = 1
+	, R = 0
+ )
 
 ## flow diagram specification
 flows = list(
-    mp_per_capita_flow("S", "I", "beta * I / N", "infection")
-  , mp_per_capita_flow("I", "R", "gamma", "recovery")
+	  mp_per_capita_flow("S", "I", "beta * I / N", "infection")
+	, mp_per_capita_flow("I", "R", "gamma", "recovery")
 )
 
-## compute the initial number of susceptible individuals
 initialize_state = list(S ~ N - I - R)
 
 ## model specification
-spec = mp_tmb_model_spec(
-    before = initialize_state
-  , during = flows
-  , default = default
+sirSpec = mp_tmb_model_spec(
+	  before = initialize_state
+	, during = flows
+	, default = dPar
+	, inits = initVals
 )
-
-# set number of time steps in simulation
-time_steps = 100L
-
-# simulator object
-sir = mp_simulator(  
-    model = spec
-  , time_steps = time_steps
-  , outputs = "I"
-)
-
-
-
-## make sure you understand it, and then go ahead and run it.
 
 ######################################################################
-## Temporary code block TCB, delete these when you can
+
+## Simulate 
+time_steps = 100
+
+# make a default simulator object; this will do a simple discrete-time simulation
+sirDiscrete = mp_simulator(model = sirSpec
+	, time_steps = time_steps
+	, outputs = "I"
+)
+
+# Run
+sirDiscreteTraj <- mp_trajectory(sirDiscrete, include_initial=TRUE)
+
+######################################################################
+
+## Simulate in continuous time
+
+# The mp_ function creates a specification for a particular algorithm
+# rk4 is a well-known algorithm for integrating in continuous time while controlling errors
+sirContinuous = mp_simulator(model = mp_rk4(sirSpec)
+	, time_steps = time_steps
+	, outputs = "I"
+)
+
+# Run
+sirContinuousTraj <- mp_trajectory(sirContinuous, include_initial=TRUE)
+print(sirContinuousTraj)
+
+######################################################################
+
+## Try a simulation with demographic stochasticity
+
+# rk4 is a well-known algorithm for integrating in continuous time while controlling errors
+sirDS = mp_simulator(model = mp_discrete_stoch(sirSpec)
+	, time_steps = time_steps
+	, outputs = "I"
+)
+
+# Run
+## FIXME: What should you add here to make this replicable?
+sirDSTraj <- mp_trajectory(sirDS, include_initial=TRUE)
+print(sirDSTraj)
+
+######################################################################
+

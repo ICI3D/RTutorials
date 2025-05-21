@@ -35,8 +35,7 @@ data:
 
 ## Building macpan labs 2025 May 20 (Tue)
 
-mpLabCompartmental.Rout: mpLabCompartmental.R
-	$(pipeR)
+## mpLabCompartmental.batch.Rout: mpLabCompartmental.R mpLabCompartmental.answers.R
 
 ######################################################################
 
