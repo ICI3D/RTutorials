@@ -54,6 +54,44 @@ library(macpan2)
 
 ## Now copy and paste the code for the SIR model shown in the video
 #### ML please add link to video code
+
+## default values for quantities required to run simulations
+default = list(
+    beta = 0.2   ## transmission rate
+  , gamma = 0.1  ## recovery rate
+  , N = 100      ## total population size (constant in this model)
+  , I = 1        ## initial number of infectious individuals
+  , R = 0        ## initial number of recovered individuals
+)
+
+## flow diagram specification
+flows = list(
+    mp_per_capita_flow("S", "I", "beta * I / N", "infection")
+  , mp_per_capita_flow("I", "R", "gamma", "recovery")
+)
+
+## compute the initial number of susceptible individuals
+initialize_state = list(S ~ N - I - R)
+
+## model specification
+spec = mp_tmb_model_spec(
+    before = initialize_state
+  , during = flows
+  , default = default
+)
+
+# set number of time steps in simulation
+time_steps = 100L
+
+# simulator object
+sir = mp_simulator(  
+    model = spec
+  , time_steps = time_steps
+  , outputs = "I"
+)
+
+
+
 ## make sure you understand it, and then go ahead and run it.
 
 ######################################################################
