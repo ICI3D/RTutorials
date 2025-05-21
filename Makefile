@@ -42,9 +42,9 @@ mpLabCompartmental.Rout: mpLabCompartmental.R
 
 ## Processing machinery
 ## Make an answers file that allows batch.pl to convert the published file into something that runs
-## There's some confusion as of now (and for a long time up to now) about using batch/ vs. using batchdir; I should clear that up before I resume using this
+## Started with a hard-coded batch, then decided to do a weird, flexible batchdir variable. Don't do that; in cases where you want to batch from elsewhere, make new rules
+Sources += batch.md
 
-batchdir = .
 Ignore += batch
 batch:
 	$(mkdir)
@@ -54,12 +54,11 @@ batch/%.R: %.R %.answers.R batch.pl
 	$(MAKE) batch
 	$(PUSHRO)
 
-## batch/ICI3D_RTutorial_1.R: batch.pl
+## ICI3D_RTutorial_1.batch.Rout: ICI3D_RTutorial_1.R ICI3D_RTutorial_1.answers.R
+## ICI3D_RTutorial_2.batch.Rout: ICI3D_RTutorial_2.R ICI3D_RTutorial_2.answers.R
+## ICI3D_RTutorial_3.batch.Rout: ICI3D_RTutorial_3.R ICI3D_RTutorial_3.answers.R
 %.batch.Rout: batch/%.R
 	$(pipeR)
-	- $(MV) $(batchdir)/Rplots.pdf .  
-
-Sources += batch.md
 
 ## ICI3D_Lab3_EpiStudyDesign.batch.Rout: ICI3D_Lab3_EpiStudyDesign.answers.R
 ## ICI3D_RTutorial_1.batch.Rout: ICI3D_RTutorial_1.answers.R
@@ -69,7 +68,9 @@ Sources += batch.md
 
 ## batch/ICI3D_RtvTutorial_4.R: ICI3D_RtvTutorial_4.R ICI3D_RtvTutorial_4.answers.R
 ## ICI3D_RtvTutorial_4.batch.Rout: ICI3D_RtvTutorial_4.R ICI3D_RtvTutorial_4.answers.R
-## Deprecated, use batchdir
+
+######################################################################
+## Not working 2025 May 21 (Wed); make a separate data set of rules
 ICI3D_RtvTutorial_4.batch.Rout: batch/ICI3D_RtvTutorial_4.R
 	$(pipeR)
 	- mv data/visualizingData/Rplots.pdf .

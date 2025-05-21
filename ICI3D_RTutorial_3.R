@@ -341,7 +341,7 @@ central.tend3 <- function(x){
 ## conditional structure. One occurs if the conditional expression
 ## evaluates to NA or NaN – try this out yourself:
 
-if(Inf - Inf > 0){ x <- 5 }
+if(Inf - Inf > 0){ x <- 5 } ## BADCODE
 
 ## To make sure that your if statements don’t break like this, you will
 ## sometimes want to use the is.na() function, which returns TRUE if the
@@ -350,7 +350,7 @@ if(Inf - Inf > 0){ x <- 5 }
 ## The second big mistake that you can make is assuming that R will act
 ## on the elements of a conditional expression that is a vector. Try this:
 
-if(c(T, F, F)){ 1 + 1 }
+if(c(T, F, F)){ 1 + 1 } ## BADCODE
 
 ## As the warning that is generated indicates, R will ignore all but
 ## the first element of the vector. On reflection, this makes sense
