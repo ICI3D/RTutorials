@@ -1,5 +1,4 @@
-
-## This is the brainstorm area, aim to remove it by early in the clinic
+## brainstorm (delete soon)
 
 ## This is intended as a replacement for Lab 1
 #### ICI3D_Lab1_ODEmodels.R
@@ -34,9 +33,11 @@
 ## implementing simple infectious disease models in R using macpan2
 ## this tutorial, you should be able to:
 
-##  Create a model object in macpan2
-##  Run simulations
-##  Plot simulation outputs
+## Create a model object in macpan2
+## Run simulations
+## Plot simulation outputs
+## Run a simple stochastic analogue of the same model
+## Extend your model (add a compartment or a flow)
 
 ## You should already have installed macpan2
 ## If not, please do it (see https://canmod.github.io/macpan2/#installation)
@@ -69,6 +70,7 @@ initVals <- list(
  )
 
 ## flow diagram specification
+## try ?mp_per_capita_flow, and make sure you understand the arguments here
 flows = list(
 	  mp_per_capita_flow("S", "I", "beta * I / N", "infection")
 	, mp_per_capita_flow("I", "R", "gamma", "recovery")
@@ -92,18 +94,40 @@ time_steps = 100
 # make a default simulator object; this will do a simple discrete-time simulation
 sirDiscrete = mp_simulator(model = sirSpec
 	, time_steps = time_steps
-	, outputs = "I"
+	, outputs = c("I", "S") ## FIXME (see below)
 )
 
 # Run
 sirDiscreteTraj <- mp_trajectory(sirDiscrete, include_initial=TRUE)
+
+## Take a look at the simulation object
+View(sirDiscreteTraj) ## CONSOLE
+
+## How would you make plots of an object like this in ggplot?
+## Make a plan, and then look at the suggestion below.
+
+######################################################################
+
+library(ggplot2); theme_set(theme_bw())
+
+print(ggplot(sirDiscreteTraj)
+	+ aes(time, value, color=matrix)
+	+ geom_line()
+)
+
+## You should have a nice epidemic curve now.
+## Play with some of the parameters and see how the curve changes.
+## What are the key parameters?
+## Can you make a function that accepts these parameters and draws epidemic curves?
+## What should you do if you want to plot incidence and recovery instead of S and I?
+## Which of those four values corresponds to disease “prevalence”? In what way?
 
 ######################################################################
 
 ## Simulate in continuous time
 
 # The mp_ function creates a specification for a particular algorithm
-# rk4 is a well-known algorithm for integrating in continuous time while controlling errors
+# rk4 will construct steps that more closely match a continuous process
 sirContinuous = mp_simulator(model = mp_rk4(sirSpec)
 	, time_steps = time_steps
 	, outputs = "I"
@@ -113,11 +137,13 @@ sirContinuous = mp_simulator(model = mp_rk4(sirSpec)
 sirContinuousTraj <- mp_trajectory(sirContinuous, include_initial=TRUE)
 print(sirContinuousTraj)
 
+### ADD Code to plot this. How does it differ from the version above?
+
 ######################################################################
 
 ## Try a simulation with demographic stochasticity
 
-# rk4 is a well-known algorithm for integrating in continuous time while controlling errors
+# rk4 is an algorithm for integrating in continuous time while controlling errors
 sirDS = mp_simulator(model = mp_discrete_stoch(sirSpec)
 	, time_steps = time_steps
 	, outputs = "I"
