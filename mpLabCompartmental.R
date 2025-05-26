@@ -86,6 +86,8 @@ sirSpec = mp_tmb_model_spec(
 	, inits = initVals
 )
 
+print(sirSpec)
+
 ######################################################################
 
 ## Simulate 
