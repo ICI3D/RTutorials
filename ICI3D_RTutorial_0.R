@@ -3,9 +3,9 @@
 ## International Clinics on Infectious Disease Dynamics and Data Program
 ## African Institute for Mathematical Sciences, Muizenberg, Cape Town, RSA
 ##
-## Dario Fanucchi, May 2012
-## Updated by Juliet R.C. Pulliam, December 2014
-## Last updated by Juliet R.C. Pulliam, May 2023
+## Dario Fanucchi 2012
+## Updated by Juliet R.C. Pulliam 2014, 2023
+## 
 ## Some Rights Reserved
 ## CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
 ##

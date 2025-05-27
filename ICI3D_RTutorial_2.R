@@ -6,7 +6,7 @@
 #' @author Juliet R.C. Pulliam 2008, 2009
 #' @author Steve Bellan 2010, 2012
 #' @author Carl Pearson 2024
-#' @author Stanley Sayianka 2025
+#' @author Stanley Sayianka, Reshma Kassanjee 2025
 #'
 #' Clinic on Meaningful Modeling of Epidemiological Data
 #' International Clinics on Infectious Disease Dynamics and Data Program
@@ -14,7 +14,6 @@
 #'
 #' @license Some Rights Reserved,
 #' CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
-#' Last updated by Stanley Sayianka, May 2025
 #'
 #' @description
 #' By the end of this tutorial you should:

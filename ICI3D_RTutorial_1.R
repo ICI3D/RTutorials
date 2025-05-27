@@ -2,9 +2,11 @@
 ## Clinic on Meaningful Modeling of Epidemiological Data
 ## International Clinics on Infectious Disease Dynamics and Data Program
 ## African Institute for Mathematical Sciences, Muizenberg, Cape Town, RSA
+## 
 ## David M. Goehring 2004
 ## Juliet R.C. Pulliam 2008, 2009, 2019, 2023
 ## Steve Bellan 2010
+## Martha Luka, Jeremy Bingham, Reshma Kassanjee 2025
 ##
 ## Some Rights Reserved
 ## CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
