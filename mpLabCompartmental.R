@@ -123,6 +123,7 @@ print(ggplot(sirDiscreteTraj)
 ## Can you make a function that accepts these parameters and draws epidemic curves?
 ## What should you do if you want to plot incidence and recovery instead of S and I?
 ## Which of those four values corresponds to disease “prevalence”? In what way?
+## What are some other ways to improve or extend this plot?
 
 ######################################################################
 
@@ -139,13 +140,14 @@ sirContinuous = mp_simulator(model = mp_rk4(sirSpec)
 sirContinuousTraj <- mp_trajectory(sirContinuous, include_initial=TRUE)
 print(sirContinuousTraj)
 
-### ADD Code to plot this. How does it differ from the version above?
+### ADD Code to plot this. How does the curve differ from the version above?
+### HINT: Maybe not very much. What does that mean?
 
 ######################################################################
 
 ## Try a simulation with demographic stochasticity
 
-# rk4 is an algorithm for integrating in continuous time while controlling errors
+# mp_discrete_stoch uses the method underlying the chain binomial
 sirDS = mp_simulator(model = mp_discrete_stoch(sirSpec)
 	, time_steps = time_steps
 	, outputs = "I"
@@ -154,7 +156,40 @@ sirDS = mp_simulator(model = mp_discrete_stoch(sirSpec)
 # Run
 ## FIXME: What should you add here to make this replicable?
 sirDSTraj <- mp_trajectory(sirDS, include_initial=TRUE)
-print(sirDSTraj)
+## head(sirDSTraj) ## Try this on the console
+
+### ADD Code to plot this, too.
+### ADD anything else you want
+
+## What happened? What can you learn from this? What are some next steps?
 
 ######################################################################
 
+## To properly understand a stochastic simulation, we should try it many times
+## There is a macpan function for this, called mp_trajectory_ensemble
+
+dsReps <- 10
+sirDSTrajectories <- mp_trajectory_replicate(sirDS, include_initial=TRUE, n=dsReps)
+
+## str(sirDSTrajectories) ## Use the console to see what you can figure out about this object
+
+######################################################################
+
+## the _replicate object is a list of trajectories;
+## it's easy to use in ggplot if we “bind” it into big data frame
+
+library(dplyr)
+
+sirBig <- (sirDSTrajectories
+	|> bind_rows(.id="Realization")
+)
+
+## View(sirBig) ## How about this object? What did .id= do??
+
+print(ggplot(sirBig)
+	+ aes(time, value, group=Realization)
+	+ geom_line()
+)
+
+## What is group doing here? What happens if you plot without it? 
+## What other things can you try with this?
