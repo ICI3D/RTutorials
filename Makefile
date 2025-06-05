@@ -12,7 +12,7 @@ vim_session:
 
 alldirs += sampling_JD
 
-Sources += $(wildcard *.R)
+Sources += $(wildcard *.R *.md)
 
 participatoryDesign2021.Rout: participatoryDesign2021.R
 	$(pipeR)
