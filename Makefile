@@ -91,6 +91,10 @@ hetero_play.Rout: HetSIR_functions.Rdata hetero_play.R
 
 HetSIR.Rout: HetSIR_functions.Rdata HetSIR.R
 
+## Dev for MMED 2025
+cbSir.Rout: cbSir.R
+	$(pipeR)
+
 ######################################################################
 
 ### Makestuff
