@@ -18,7 +18,7 @@ in.x0 <- c(S = 980, I = 20, R = 0)
 ## time step and time horizon [days]
 
 in.deltat <- 0.5
-in.maxt <- 400
+in.maxt <- 10
 
 ## FUNCTIONS for stochastic CHAIN binomial 
 
@@ -35,8 +35,8 @@ sir.cb.update <- function(parms,x){
   N <- sum(x) # S + I + R
 
   p.infected <- 1-exp(-beta*I/N*in.deltat)
-  p.recovered <- 1-exp(-1/gamma*in.deltat)
-
+  p.recovered <- 1-exp(-gamma*in.deltat)
+  
   x.infected <- rbinom(1,S,p.infected)
   x.recovered <- rbinom(1,I,p.recovered)
 
