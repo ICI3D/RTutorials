@@ -1,26 +1,3 @@
-## brainstorm (delete soon)
-
-## This is intended as a replacement for Lab 1
-#### ICI3D_Lab1_ODEmodels.R
-
-## Make an SIR object
-## simulate and plot discrete-time trajectories
-
-## Plot
-
-## Other implementations
-#### ODE
-#### Whatever Steve is calling the discrete-time demographic stochastic
-#### Is there even Gillespie?
-
-## Extensions
-#### Birth-death
-#### latent compartment
-#### Be creative
-
-## /brainstorm
-
-######################################################################
 
 ## Introduction to Infectious Disease Dynamics
 ## Clinic on the Meaningful Modeling of Epidemiological Data
