@@ -173,7 +173,7 @@ library(deSolve)                # Load libary to be used for numerical integrati
 ## The function within deSolve that we will be using is called lsoda(). Let's
 ## look at the help file for this function:
 
-?lsoda ## CONSOLE
+## ?lsoda ## CONSOLE
 
 ## This help file gives some detail on the history of the algorithm as well as
 ## describing the function's usage. For now, take a look at the "Usage" section

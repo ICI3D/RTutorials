@@ -1,3 +1,5 @@
+## This tutorial has been REPLACED by another Tutorial 4 ☺
+
 ## Visualizing infectious disease data in R
 ## Clinic on the Meaningful Modeling of Epidemiological Data
 ## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program

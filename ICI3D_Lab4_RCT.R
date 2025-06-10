@@ -4,7 +4,6 @@
 ## Some Rights Reserved
 ## CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
 
-
 # The setting for this tutorial exercise is loosely inspired by the RCT
 #   described by Prajna et al 2010 (https://europepmc.org/article/PMC/3774126).
 #   In this clinical trial of patients presenting to the clinic with corneal 
@@ -17,21 +16,14 @@
 # Try to work through Part One during the tutorial time
 #   Part Two is 'extra' and optional, to do in your own time  
 
-
-
 ########## PART ONE ##########
-
 
 # To begin, let us focus on a simpler version of this trial: 
 #   study subjects were randomized to receive either natamycin
 #   (we will call these subjects the control group) or voriconazole 
 #   (forming the treatment group)
 
-
-
-
 #### RANDOMISATION ####
-
 
 ## How can we randomly assign subjects to the treatment and control groups?  
 
@@ -64,16 +56,12 @@ assignments
 
 which(assignments==1)
 
-
-
-
 #### GENERATING A DATASET ####
 
 # We will now generate a simulated (or fake) dataset, and save it as a data frame. 
 
 # Recall that the outcome is a continuous measure, and that the study aims to
 #   compare the average outcome (i.e., acuity) between the two study groups/arms.
-
 
 ## Warm up exercise: Normal random variables
 
@@ -91,8 +79,6 @@ hist(v1,
      ylab = 'Frequency',
      main = 'Histogram of generated outcomes',
      col = 'red')
-
-
 
 ## Make a dataset
 
@@ -160,11 +146,9 @@ mean(dset$outcome[dset$treatment == 1]) - mean(dset$outcome[dset$treatment == 0]
 #   units larger than in the control group.
 #   i.e., set treatment.effect = 0.7 and regenerate and plot dset.
 
-
 # Let us quickly clear up our environment before moving on. 
 
 rm(list=ls())
-
 
 ## A function to generate data 
 
@@ -189,10 +173,7 @@ gen.data(control.mean = 1, treatment.effect = 0, outcome.sd = 0.3)
 gen.data(control.mean = 1, treatment.effect = 1, outcome.sd = 0.1)
 
 # Replace ?? with your chosen inputs
-gen.data(n.subjects = ??, control.mean = ??, treatment.effect = ??, outcome.sd = ??) 
-
-
-
+gen.data(n.subjects = ??, control.mean = ??, treatment.effect = ??, outcome.sd = ??) ## FIXME
 
 #### UNDERSTANDING HOW RANDOMISATION BALANCES CONFOUNDERS ####
 
@@ -238,9 +219,6 @@ tapply(data.temp$outcome, data.temp[,c('x.severe','treatment')], mean)
 # Highlight the four lines of code above that generate and explore data.temp, 
 #   and run them a few times, and reflect on the outputs.
 
-
-
-
 #### BIAS IN ESTIMATION?? ####
 
 # Let us now analyse the data. For each dataset that we simulate, we will estimate 
@@ -273,8 +251,6 @@ analyse.data(data.temp)
 
 data.temp <- gen.data.severe(treatment.effect = 0.2)
 analyse.data(data.temp)
-
-
 
 ## Let us repeat this process of generating and analysing the data multiple times, 
 #   and explore our results:
@@ -319,11 +295,7 @@ with(df.ests,
 
 mean(df.ests$est) - treatment.effect.in
 
-
 # Think about what all of these outputs show us.
-
-
-
 
 #### BIAS WITHOUT RANDOMISATION ####
 
@@ -392,7 +364,6 @@ with(df.ests.conf,
 
 mean(df.ests.conf$est) - treatment.effect.in
 
-
 # Think about what all of these outputs show us.
 
 # Remember, in each of the two sets of simulations, both severity and treatment
@@ -403,16 +374,7 @@ mean(df.ests.conf$est) - treatment.effect.in
 # What is the interpretation of the estimates in the first simulation 
 #   (with randomisation)  and in the second (without randomisation)?
 
-
 # If you are done, you can play around with different values for some of the inputs.
-
-
-
-
-
-
-
-
 
 ########## PART TWO ##########
 

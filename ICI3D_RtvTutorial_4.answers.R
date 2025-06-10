@@ -7,4 +7,6 @@ setwd("data/visualizingData/")
 
 path <- "nopathinbatch"
 
+## FIXME explanation
+
 geom_line()+geom_point()

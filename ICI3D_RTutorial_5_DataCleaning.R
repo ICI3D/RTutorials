@@ -91,7 +91,7 @@ dat		        # Look at the beginning of the dataset
 ## it will help to know the different ways in which R can store and
 ## interpret data. To see a list of the options for data types:
 
-?typeof
+## ?typeof
 
 #########
 ## Hands off the keyboard! Pick up a writing pad and...

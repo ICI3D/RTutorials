@@ -26,7 +26,7 @@ getwd() # shows you what directory you are currently in ## CONSOLE
 ## Define a variable "path" that gives the file path to the directory
 ## where the data are stored.
 
-#path <- ?? # FIXME Replace the question marks with a character string telling R
+path <- ?? # FIXME Replace the question marks with a character string telling R
 # where to look for the data
 ## NOTE: We use FIXME to tag things that won't work unless you fix them
 
@@ -41,7 +41,6 @@ setwd(path) ## CONSOLE
 library(tidyverse)
 botswana.data <- read_csv('HIV_Botswana.csv')
 head(botswana.data, 5)
-
 
 ## We can first plot a pie chart to understand the proportion of HIV positive and negative
 ## people in a specific year.
@@ -82,7 +81,6 @@ ggplot(botswana.long[botswana.long$year == 1994,], aes(x="", y=prevalence, fill=
 
 ## TRY Change the above code to plot the prevalence of HIV in 2001.
 
-
 ## While pie charts are good for showing % breakdown between
 ## categories, bar plots can do the same with another variable
 ## added.
@@ -100,7 +98,6 @@ ggplot(botswana.data, aes(y=prevHIV, x=year))+
   theme_bw()+ ##remove this or change this to theme_void(), theme_classic() to see the differences
   labs(x="Year", y="% HIV+",   # label the x and y axis
        title="HIV Prevalence in Botswana, 1990-2007") # give the graph a title
-
 
 ## This is much better, but it doesn't really show the HIV- population
 ## like the pie chart did.  It might be cleaner to show this information just as a
@@ -212,7 +209,6 @@ ggplot(measles.London, aes(x=date, y=cases))+
             color="red"
   )
 
-
 ######################################################################
 ## PROBLEM 1A
 ######################################################################
@@ -263,7 +259,6 @@ measles.London$country<-"London"
 
 measles.data<-rbind(measles.Liverpool, measles.London)
 
-
 ## We can now plot the data for both countries
 
 ggplot(measles.data, aes(x=date, y=cases, group=country, colour=country))+ # while plotting, group the data for each country
@@ -272,12 +267,8 @@ ggplot(measles.data, aes(x=date, y=cases, group=country, colour=country))+ # whi
   scale_color_manual( values = c("blue", "red"))+
   labs()# add a x, y axis label and a title for the graph
 
-
-
 ######################################################################
 ######################################################################
-
-
 
 ######################################################################
 ## 2E - Does it look like there is seasonality in measles incidence?
@@ -310,12 +301,10 @@ ggplot(measles.London, aes(x=month, y=cases, ))+geom_point(shape=16)+ # TRY 1, 4
   labs(x="Month", #y=??, # WHAT IS AN APPROPRIATE LABEL?
        title="Weekly Measles Incidence\n in London by Month")
 
-
 ## This gives us some idea about the distribution of weekly incidence
 ## in months, but there are so many points on top of each other we
 ## can't really see the mean.  Let's use summarise() to get mean weekly
 ## incidence by month.
-
 
 measles.London.mean<- measles.London%>%
   group_by(month)%>%
@@ -323,10 +312,7 @@ measles.London.mean<- measles.London%>%
   mutate(month=factor(month, levels=month.abb)) ## arrange the months in the order 
 #they appear in the calendar
 
-
 head(measles.London.mean)
-
-
 
 ## Now let us visualise the data
 
@@ -361,13 +347,11 @@ plot3<-ggplot(measles.London.mean, aes(x=month,y=mean_cases))+geom_col()+
 plot3
 library(gridExtra)
 
-
 ## To observe all three plots in one window,
 ## we will use a function called grid.arrange()  from the
 ## gridExtra package that allows one this functionality.
 
 grid.arrange(plot1, plot2, plot3)
-
 
 ######################################################################
 ## PROBLEM 2
@@ -376,7 +360,6 @@ grid.arrange(plot1, plot2, plot3)
 ## in a single plot where the mean weekly incidence of measles is
 ## displayed with a line for each city.  Remember to use a legend!.
 ######################################################################
-
 
 ######################################################################
 ## SECTION 3 - Histograms
@@ -397,7 +380,6 @@ nrow(hookworm) ## CONSOLE
 ?geom_histogram ## CONSOLE
 ggplot(hookworm, aes(epg))+geom_histogram()
 
-
 ## That's rather ugly and doesn't show us much about the data.  This
 ## is because the bins are extremely big so we don't see much
 ## variability.  If we make the bins smaller we'll see more
@@ -412,8 +394,6 @@ my.breaks <- pretty(range(hookworm$epg),100)
 ggplot(hookworm, aes(epg))+stat_bin( breaks=my.breaks)+
   theme_bw()+
   labs(x="eggs per gram", title="Egg Per Gram Distribution")
-
-
 
 ## This looks much better, but we still cannot see the data clearly
 ## because most of the EPG values were < 10,000 and the xlimit goes
