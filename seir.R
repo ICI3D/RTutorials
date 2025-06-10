@@ -132,9 +132,12 @@ points(I0 / N0, S0 / N0, col = "blue")
 #'
 #' @question
 #'
+#' Recall in today's class on Dynamics of Directly Transmitted Pathogens, we
+#' examined for R0 (13, 18), the transmission rate in a population of 7,200 people,
+#' and the total number of infected persons (E* + I*), Now:
 #' Use the functions E.star() and I.star() to fill in the missing parts of the
-#' table on Slide 27 from this morning’s lecture:
-#' That is, calculate the endemic equilibrium value for the number of infected
+#' table on Slide 32-33 from this morning’s lecture:
+#' That is, calculate the transmission rate (beta) and the endemic equilibrium value for the number of infected
 #' (exposed/latent + infectious) individuals in a population of 300,000 with an
 #' R0 of 13 and in a population of 500,000 with an R0 of 18.
 #'
