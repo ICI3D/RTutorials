@@ -113,8 +113,6 @@ print(ggplot(baseState)
 	+ geom_line()
 )
 
-
-
 quit()
 	|> mutate(matrix = sub("^A([1-4])$", "Infectious and treated, stage \\1", matrix))
 	|> mutate(matrix = sub("^I([1-4])$", "Infectious and untreated, stage \\1", matrix))
