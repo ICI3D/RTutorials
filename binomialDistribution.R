@@ -102,7 +102,7 @@
 
 dbinom(0,2,0.5)
 
-# The syntax is pbinom(x, N, p)
+# The syntax is dbinom(x, N, p)
 
 # That one isn't too hard to calculate in your head, but suppose you wanted to
 # know the probability of getting exactly 20 tails if you flipped a coin 50
