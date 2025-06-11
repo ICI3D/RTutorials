@@ -387,7 +387,7 @@ mean(df.ests.conf$est) - treatment.effect.in
 
 # To load the data, use:
 
-load('MuTxT.Rdata')
+load('Mutxt.Rdata')
 
 # The variables are:
 #   patid           -- patient ID
