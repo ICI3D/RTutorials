@@ -37,6 +37,8 @@ data:
 
 ## mpLabCompartmental.batch.Rout: mpLabCompartmental.R testing/mpLabCompartmental.answers.R
 
+## mpLabFitting.batch.Rout: mpLabFitting.R testing/mpLabFitting.answers.R
+
 ######################################################################
 
 ## Processing machinery
