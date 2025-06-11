@@ -1,29 +1,40 @@
 
-## Originally developed by Travis Porco
-## Last updated by Reshma Kassanjee, June 2023
+## Study design: Randomised Controlled Trials 
+## Clinic on the Meaningful Modeling of Epidemiological Data
+## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
+
+## Travis Porco
+## Reshma Kassanjee 2023 & 2025
 ## Some Rights Reserved
 ## CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
 
-# The setting for this tutorial exercise is loosely inspired by the RCT
-#   described by Prajna et al 2010 (https://europepmc.org/article/PMC/3774126).
-#   In this clinical trial of patients presenting to the clinic with corneal 
-#   ulcers, the primary outcome was spectacle-corrected 
-#   visual acuity (BSCVA) at 3 months, which is a continuous measure. 
-#   Study participants were randomized to 
-#   (1) receive either topical natamycin or topical voriconazole, and
-#   (2) either have repeated scraping of the epithelium or not.
+# The setting for this tutorial:
+#   Suppose you are building a SARS-CoV-2 model, and are 
+#   trying to decide on your inputs and assumptions related to 
+#   transmission rates. 
+#   As part of this, you may want to understand the affect of 
+#   antiviral treatment on changes in viral load in the
+#   infected person, as infectiousness may be higher for 
+#   people with higher levels of the virus.
+#   Here we are considering a study on the outcome: decrease  
+#   in log viral load over 7 days from accessing care.
+#   The exposure of interest is receiving antiviral 
+#   treatment (versus not).
+#   A possible confounder is whether a person has comorbidities 
+#   (other conditions such as diabetes which is known 
+#   to be associated with poorer COVID-19 outcomes)
 
-# Try to work through Part One during the tutorial time
-#   Part Two is 'extra' and optional, to do in your own time  
 
-########## PART ONE ##########
+# In this tutorial, you will: 
+#   Simulate data with randomisation of treatment, and estimate the 'affect'
+#   Simulate data without randomisation of treatment, and estimate the 'affect'
+#   Repeat the above multiple times to understand the affect of 
+#     randomisation on estimation.
 
-# To begin, let us focus on a simpler version of this trial: 
-#   study subjects were randomized to receive either natamycin
-#   (we will call these subjects the control group) or voriconazole 
-#   (forming the treatment group)
+library(tidyverse)
 
-#### RANDOMISATION ####
+
+#### Warm up 1: Randomisation
 
 ## How can we randomly assign subjects to the treatment and control groups?  
 
@@ -56,14 +67,8 @@ assignments
 
 which(assignments==1)
 
-#### GENERATING A DATASET ####
 
-# We will now generate a simulated (or fake) dataset, and save it as a data frame. 
-
-# Recall that the outcome is a continuous measure, and that the study aims to
-#   compare the average outcome (i.e., acuity) between the two study groups/arms.
-
-## Warm up exercise: Normal random variables
+#### Warm up 2: Sample values from a normal distribution
 
 # To simulate a given number of normal random variates, use the 'rnorm' command.  
 #   Here, we simulate 100 normal variates with a mean of 1 and a standard
@@ -71,16 +76,26 @@ which(assignments==1)
 
 v1 <- rnorm(100, mean = 1, sd = 0.3)
 
-par(mfrow = c(1,1),
-    oma = c(0,0,0,0)) # This sets the number of subplots, and margins. 
-# Do not worry about these sorts of details for now.
-hist(v1,
-     xlab = 'Acuity (logMAR)',
-     ylab = 'Frequency',
-     main = 'Histogram of generated outcomes',
-     col = 'red')
+(ggplot(data = data.frame(outcomevar = v1), mapping = aes(x=outcomevar))
+  + labs(x = 'Outcome', y = 'Frequency'
+         , title = 'Histogram of generated outcomes')
+  + geom_histogram(bins = 20, fill = 'red', color = 'black')
+  + theme_minimal()
+  + theme(text = element_text(size = 18))
+)
 
-## Make a dataset
+
+
+#### Warm up 3: Simulate a dataset
+
+# The outcome is a continuous measure (decrease in log viral load),
+#   and the study aims to compare the average outcome between the 
+#   two study groups/arms (antiviral treatment versus not - i.e. 
+#   versus the standard control treatment).
+
+# We will now generate a simulated (or fake) dataset (so something
+#   like what you may have obtained in a real-world study),
+#   and save it as a data frame. 
 
 # We will make a data frame which contains the following columns:
 #   study.id (1,2,..), treatment (0/1), and outcome (a continuous number),
@@ -92,10 +107,10 @@ hist(v1,
 
 # To begin, we will assume the treatment effect is zero. 
 
-n.subjects        <- 500    # number of subjects in study (even number)
-control.mean      <- 0.5    # mean acuity for the control group
-treatment.effect  <- 0      # difference in mean for the treatment group (vs control)
-outcome.sd        <- 0.3    # spread (standard deviation) of the outcome in each arm
+n.subjects        <- 500    # number of subjects in study (even number for this tutorial)
+control.mean      <- 2      # mean outcome for the control group
+treatment.effect  <- 0     # difference in mean for the treatment group (vs control)
+outcome.sd        <- 0.5    # spread (standard deviation) of the outcome in each arm
 
 dset            <- data.frame(study.id = 1:n.subjects)
 dset$treatment  <- sample( c(rep(1,n.subjects/2),rep(0,n.subjects/2)),
@@ -110,125 +125,161 @@ dset$outcome    <- rnorm(n.subjects,
 
 head(dset, 20)
 
+# Take some time to ensure you understand each step above. 
+
 # Let us plot histograms of the outcomes, by arm:
 
-par(mfrow = c(2,1),
-    oma = c(0,0,0,0))
-hist(dset$outcome[dset$treatment==0],
-     xlab = 'Acuity (logMAR)',
-     ylab = 'Frequency',
-     main = 'Control group',
-     col = 'blue',
-     xlim = c(min(dset$outcome)-outcome.sd/10, max(dset$outcome)+outcome.sd/10),
-     breaks = seq(from = min(dset$outcome)-outcome.sd/10
-                  , to = max(dset$outcome)+outcome.sd/10
-                  , length.out = 20))
-hist(dset$outcome[dset$treatment==1],
-     xlab = 'Acuity (logMAR)',
-     ylab = 'Frequency',
-     main = 'Treatment group',
-     col = 'red',
-     xlim = c(min(dset$outcome)-outcome.sd/10, max(dset$outcome)+outcome.sd/10),
-     breaks = seq(from = min(dset$outcome)-outcome.sd/10
-                  , to = max(dset$outcome)+outcome.sd/10
-                  , length.out = 20))
+(ggplot(data = dset, mapping = aes(x=outcome))
+  + labs(x = 'Acuity (logMAR)', y = 'Frequency'
+         , title = 'Acuity by treatment group')
+  + geom_histogram(bins = 20, fill = 'red', color = 'black')
+  + facet_grid(treatment~.)
+  + theme_bw()
+  + theme(text = element_text(size = 18))
+)
 
 # We can also calculate the mean outcome in each arm
 
-tapply(dset$outcome, dset[,'treatment'], mean)
+dset |> group_by(treatment) |> summarise(mean = mean(outcome))
 
 # and the difference in means (estimated treatment effect):  
 
-mean(dset$outcome[dset$treatment == 1]) - mean(dset$outcome[dset$treatment == 0])
+means <- dset |> group_by(treatment) |> summarise(mean = mean(outcome))
+with(means, mean[treatment == 1] - mean[treatment == 0]) 
 
 # Now change the treatment effect to be non-zero. For example, 
 #   suppose that the average outcome in the treatment group is 0.7
-#   units larger than in the control group.
-#   i.e., set treatment.effect = 0.7 and regenerate and plot dset.
+#   units larger than in the control group - generate dset and the plot. 
+# Each time you run the code above, do you create the same dataset?
 
+
+# Now that we have warmed up, let's dive in. 
 # Let us quickly clear up our environment before moving on. 
 
 rm(list=ls())
 
-## A function to generate data 
+
+#### A function to generate data
+
+# Our goal is to explore effect estimation under two different scenarios - 
+#   (I) One for a study where treatment is not randomly assigned 
+#   (II) One for a study where treatment is randomly assigned. 
+
+# Each person in our dataset either receives antiviral treatment or not, 
+#   and can have a comordity or not.
+# The presence of comorbities is a confounder, because a doctor 
+#   may decide on the treatment according to this, and 
+#   comorbidities can also directly impact our outcome
+#   (e.g. perhaps people with other illness have a slower drop in 
+#   in viral load)
 
 # Since we will want to generate a dataset multiple times below,
-#   we have written a function to make the data. 
-#   We have also specified default values for the inputs. 
+#   we write a function to make the data. 
+#   We have also specified default values for all inputs to the 
+#   function.
 
-gen.data <- function(n.subjects = 100, 
-                     control.mean = 0.5, treatment.effect = 0.7, outcome.sd = 0.3) {
-  dset            <- data.frame(study.id = 1:n.subjects)
-  dset$treatment  <- sample( c(rep(1,n.subjects/2),rep(0,n.subjects/2)), size = n.subjects, replace = FALSE)
-  mean.vector     <- control.mean + treatment.effect*dset$treatment
-  dset$outcome    <- rnorm(n.subjects, mean=mean.vector, sd=outcome.sd)
+# Carefully work through the function below and make sure you understand each line. 
+# Also think about how the inputs need to be set for scenarios (I) and (II).  
+
+# Suppose now that randomisation was not applied. 
+#   Instead doctors could choose treatment assignments, and they based their decisions
+#   on how compromised baseline acuity was.
+#   Here we extend our data generation function to take this into account:
+#   people who were 'severe' were provided the treatment with 
+#   probability treatment.prob.severe (default of 0.8), and people not 'severe' 
+#   received the treatment with probability treatment.prob.notsevere 
+#   (default of 0.4)
+
+# Ask mentors and faculty if you are confused or would like to confirm you understanding
+# Or talk it through with your neighbour.
+
+gen.data <- function(n.subjects = 100 # number of subjects
+                     , ref.mean = 2 # mean outcome in control group without comorbidites
+                     , treatment.effect = 1.5 # effect of treatment on outcome
+                     , comorb.effect = -1 # effect of comorbidity on outcome
+                     , prev.comorb = 0.2 # prevalence of comorbidities
+                     , prob.treat.nocomorb = 0.5 # probability of treatment in people without comorbidites
+                     , prob.treat.comorb = 0.5 # probability of treatment in people with comorbidites
+                     , outcome.sd = 0.75 # standard deviation of outcome
+){
+  dset                <- data.frame(study.id = 1:n.subjects)
+  dset$comorbidity    <- rbinom(n.subjects, 1, prev.comorb)
+  prob.treatment      <- prob.treat.comorb*dset$comorbidity + prob.treat.nocomorb*(1-dset$comorbidity)
+  dset$treatment      <- rbinom(n.subjects, 1, prob.treatment)
+  mean.vector         <- ref.mean + treatment.effect*dset$treatment + comorb.effect*dset$comorbidity
+  dset$outcome        <- rnorm(n.subjects, mean = mean.vector, sd = outcome.sd)
   dset
 }
 
-# Try out the function
 
-gen.data() # when you do not specify any of the inputs, the default value is used for that input
+# Let us try out the function
 
-gen.data(control.mean = 1, treatment.effect = 0, outcome.sd = 0.3) 
-gen.data(control.mean = 1, treatment.effect = 1, outcome.sd = 0.1)
+gen.data() # when you do not specify an input, the default value
 
-# Replace ?? with your chosen inputs
-gen.data(n.subjects = ??, control.mean = ??, treatment.effect = ??, outcome.sd = ??) ## FIXME
+# Choose a couple of inputs to change (one at a time), and try to check whether 
+# the dataset changes in the expected way - using some of what you have learnt
+# about exploring data 
 
-#### UNDERSTANDING HOW RANDOMISATION BALANCES CONFOUNDERS ####
+# For example, compare 
+d1 <- gen.data(treatment.effect = 0) 
+d2 <- gen.data(treatment.effect = 1)
+d3 <- gen.data(treatment.effect = 2)
 
-# Suppose that how compromised acuity is at 0 months also affects the outcome. 
-#   The baseline acuity is classified as either severely compromised / 'severe' (1) 
-#   or not (0).
-# Let us generate our dataset again, but this time subjects also have a 
-#   (binary) baseline value (called x.severe, either 0 or 1). 
-#   If a subject starts as 'severe' (1), their outcome is shifted by some
-#     amount (called severe.effect below, with a default values of -0.3).
-#   There is a probability severe.prob (default of 0.5) of starting in the
-#   'severe' class. 
+# using 
+d1 |> group_by(treatment) |> summarise(mean = mean(outcome))
+d2 |> group_by(treatment) |> summarise(mean = mean(outcome))
+d3 |> group_by(treatment) |> summarise(mean = mean(outcome))
 
-# Because treatment is randomised, the proportion of subjects with 'severe'
-#   should be similar in each arm. By chance, they may be quite different for any 
-#   given dataset, but overall, on average, the arms should be well balanced.
 
-gen.data.severe <- function(n.subjects = 100,
-                            control.mean = 0.5, treatment.effect = 0.7, outcome.sd = 0.3,
-                            severe.prob = 0.5, severe.effect = -0.3) {
-  dset            <- data.frame(study.id = 1:n.subjects)
-  dset$x.severe   <- rbinom(n.subjects, 1, severe.prob)
-  dset$treatment  <- sample( c(rep(1,n.subjects/2),rep(0,n.subjects/2)), size = n.subjects, replace = FALSE)
-  mean.vector     <- control.mean + treatment.effect*dset$treatment + severe.effect*dset$x.severe
-  dset$outcome    <- rnorm(n.subjects, mean = mean.vector, sd = outcome.sd)
-  dset
-}
 
-# Let us generate a dataset using our default inputs, 
-#   and calculate the proportion severe in each arm, 
-#   and the mean outcome for each group of subjects.
+#### Understanding how randomisation balances confounders
+  
+# Let's return to our two study designs:
+#   (I) A study where treatment is not randomly assigned 
+#   (II) A study where treatment is randomly assigned. 
+  
+# In (I), the doctor can decide who gets treatment and may decide to 
+#   more frequently provide patients with comorbidities antivirals. 
+#   Which inputs above would change?
+  
+# An example of data that may be generated in such a scenario is:    
+  
+d1.norandom <- gen.data(prob.treat.nocomorb = 0.5 
+                          , prob.treat.comorb = 0.8)
 
-# Generate data:
-data.temp <- gen.data.severe() 
+d1.norandom |> group_by(comorbidity) |> summarise(mean = mean(treatment))
+d1.norandom |> group_by(treatment) |> summarise(mean = mean(comorbidity))
 
-# Proportion with severe infection in each arm:
-mean(data.temp$x.severe[data.temp$treatment==0])
-mean(data.temp$x.severe[data.temp$treatment==1])
+# We can see that the confounder is not balanced between the two treatment arms. 
 
-# Mean outcome by whether 'severe' and treatment:
-tapply(data.temp$outcome, data.temp[,c('x.severe','treatment')], mean)
+# In (II) treatment is randomly assigned, and therefore cannot 
+#   be related to whether the person has a comorbidity. 
 
-# Highlight the four lines of code above that generate and explore data.temp, 
-#   and run them a few times, and reflect on the outputs.
+d1.random <- gen.data(prob.treat.nocomorb = 0.70 
+                      , prob.treat.comorb = 0.70)
 
-#### BIAS IN ESTIMATION?? ####
+d1.random |> group_by(comorbidity) |> summarise(mean = mean(treatment))
+d1.random |> group_by(treatment) |> summarise(mean = mean(comorbidity))
 
-# Let us now analyse the data. For each dataset that we simulate, we will estimate 
-#   the treatment effect, with a 95% confidence interval (CI).
+# We can see that the confounder is balanced between the two treatment arms
+#   by study design.
 
-# *NB*. You do not need to worry about how we analyse the data,
-#   please rather spend this time understanding the other concepts. 
-#   You can just apply the function we provide below to a dataset.
+# It is sometimes difficult to see the above because of noise in our dataset.
+# Try to increase the study size and rerun the lines above to convince yourself
+#   of the imbalance / balance of comorbity by treatment arm. 
 
-# This is the function we will use to analyse the data:
+
+
+#### Estimating the difference
+
+# We are going to need a way to analyse the data. Below is a function for doing 
+#   this. Don't worry about the details (if you have time at the end you can 
+#   investigate it more) - just know if you provide it a dataset with columns
+#   'treatment' (0 for control and 1 for treatment) and 'outcome' (numerical)
+#   it will provide you an estimate of the difference in the average outcome for 
+#   your treatment and control arms, with a 95% confidence interval. 
+#   It obtains this estimate by comparing the recorded outcomes for the two groups.
+
 
 analyse.data <- function(data.in){
   # using central limit theorem
@@ -241,169 +292,113 @@ analyse.data <- function(data.in){
   return(round(c(est = est.point, lower = est.ci.lower, upper = est.ci.upper),3))
 }
 
-# Importantly, we assume that we do not record the variable x.severe (baseline severity)
-#   and thus do not include it in the analysis, even though it affects our outcome. 
+# For example, here we generate two large datasets, and analyse them:
 
-# For example, here we generate two datasets, and analyse them:
-
-data.temp <- gen.data.severe(treatment.effect = 0.2)
+data.temp <- gen.data(n.subjects = 1000, treatment.effect = 0.2)
 analyse.data(data.temp)
 
-data.temp <- gen.data.severe(treatment.effect = 0.2)
+data.temp <- gen.data(n.subjects = 1000, treatment.effect = 0.2)
 analyse.data(data.temp)
+
+# Very importantly - what the is the TRUE values that we are trying to estimate?
+# It is the 'treatment.effect'. 
+# You specified this value to generate the data, so we know the correct 'answer' to 
+# our estimation - this is what makes simulation so useful!
+
+
+
+#### Multiple studies - without and with randomisation 
 
 ## Let us repeat this process of generating and analysing the data multiple times, 
-#   and explore our results:
+#   and explore our results.
+#  We will 'repeat' our study multiple times using a 'for' loop, and gatHering our
+#  estimates in a data frame. We will do 500 simulations. 
 
-# First we specify our inputs
+# We will set the treatment.effect to 1 - this is the number we are trying to estimate.
+# We will mostly keep the other inputs as the default values.
 
-n.sims              <-  500    # Number of times to repeat the study
-treatment.effect.in <-  0.8    # Input treatment effect
+in.treatment.effect <- 1
 
-# Then we generate and analyse the datasets, saving the results in df.ests
+# In scenario (I), doctors get to decide on treatment. 
+# Let's suppose they provide antivirals to 50% of those without comorbidities and 80% with. 
 
-df.ests <- data.frame(study.number = 1:n.sims, est = NA, lower = NA, upper = NA)
+n.sims <-  500
+
+df.ests1 <- data.frame(study.number = 1:n.sims, est = NA, lower = NA, upper = NA)
 for (ii in 1:n.sims) {
-  data.ii <- gen.data.severe(treatment.effect = treatment.effect.in)
+  data.ii <- gen.data(treatment.effect = in.treatment.effect
+                      , prob.treat.nocomorb = 0.5 
+                      , prob.treat.comorb = 0.8)
   ests.ii <- analyse.data(data.ii)
-  df.ests$est[ii]   <- ests.ii['est']
-  df.ests$lower[ii] <- ests.ii['lower']
-  df.ests$upper[ii] <- ests.ii['upper'] 
+  df.ests1$est[ii]   <- ests.ii['est']
+  df.ests1$lower[ii] <- ests.ii['lower']
+  df.ests1$upper[ii] <- ests.ii['upper'] 
 }
 
 # Let us plot the estimates and CIs for the studies, and add a 
 #   horizontal line showing the true treatment effect.
 
-par(mfrow = c(1,1)
-    , oma = c(0,0,0,0))
-y.min.temp <- min(df.ests$lower)-0.1
-y.max.temp <- max(df.ests$upper)+0.1
-with(df.ests, 
-     {plot(study.number
-           , est
-           , xlab = 'Study number'
-           , ylab = 'Estimated treatment effect (and 95% CI)'
-           , main = 'Estimated treatment effect over multiple studies \n (with randomisation)'
-           , ylim = c(y.min.temp, y.max.temp)
-           , type = 'n'); 
-       arrows(x0 = study.number, y0 = lower, y1 = upper, code = 0, col = 'darkgrey');
-       points(study.number, est, pch = 20, col = 'red');
-       abline(h=treatment.effect.in, col = 'blue', lwd = 2)
-     })
+ggplot(data = df.ests1, aes(x = study.number, y = est)) +
+  geom_errorbar(aes(ymin = lower, ymax = upper), colour = "grey") +
+  geom_point(color = "red", size = 1.5) +
+  geom_hline(yintercept = in.treatment.effect, colour = "blue") +
+  labs(
+    title = "Estimated treatment effect over multiple studies\n(without randomisation)",
+    x = "Study number",
+    y = "Estimated treatment effect (and 95% CI)"
+  ) +
+  theme_minimal() +
+  theme(text = element_text(size = 14)
+  )
+
+# Are we estimating the treatment effect well?
+# Why?
+# what else do we learn from the plot?
 
 # Let us calculate the bias, i.e., the average estimate minus the true treatment effect
 
-mean(df.ests$est) - treatment.effect.in
+mean(df.ests$est) - in.treatment.effect
 
-# Think about what all of these outputs show us.
 
-#### BIAS WITHOUT RANDOMISATION ####
+# In scenario (II), doctors do not get to decide on treatment - we set it randomly. 
+# Let's suppose we provide antivirals to 70% of people, randomly. 
 
-# Suppose now that randomisation was not applied. 
-#   Instead doctors could choose treatment assignments, and they based their decisions
-#   on how compromised baseline acuity was.
-#   Here we extend our data generation function to take this into account:
-#   people who were 'severe' were provided the treatment with 
-#   probability treatment.prob.severe (default of 0.8), and people not 'severe' 
-#   received the treatment with probability treatment.prob.notsevere 
-#   (default of 0.4)
-
-gen.data.conf <- function(n.subjects = 100
-                          , control.mean = 0.5, treatment.effect = 0.7, outcome.sd = 0.3
-                          , severe.prob = 0.5, severe.effect = -0.3
-                          , treatment.prob.severe = 0.8, treatment.prob.notsevere = 0.4) {
-  dset            <- data.frame(study.id = 1:n.subjects)
-  dset$x.severe   <- rbinom(n.subjects, 1, severe.prob)
-  prob.treatment  <- treatment.prob.severe*dset$x.severe + treatment.prob.notsevere*(1-dset$x.severe)
-  dset$treatment  <- rbinom(n.subjects, 1, prob.treatment)
-  mean.vector     <- control.mean + treatment.effect*dset$treatment + severe.effect*dset$x.severe
-  dset$outcome    <- rnorm(n.subjects, mean = mean.vector, sd = outcome.sd)
-  dset
-}
-
-## Let us repeat the process of generating and analysing the data multiple times, 
-#   as above, and compare our results.
-
-# Let us use the same inputs as above
-
-n.sims              <- 500   
-treatment.effect.in <- 0.8   
-
-# And generate and analyse the data, saving the estimates in
-#   df.ests.conf (conf is for confounding)
-
-df.ests.conf <- data.frame(study.number = 1:n.sims, est = NA, lower = NA, upper = NA)
+df.ests2 <- data.frame(study.number = 1:n.sims, est = NA, lower = NA, upper = NA)
 for (ii in 1:n.sims) {
-  data.ii <- gen.data.conf(treatment.effect = treatment.effect.in)
+  data.ii <- gen.data(treatment.effect = in.treatment.effect
+                      , prob.treat.nocomorb = 0.7 
+                      , prob.treat.comorb = 0.7)
   ests.ii <- analyse.data(data.ii)
-  df.ests.conf$est[ii]   <- ests.ii['est']
-  df.ests.conf$lower[ii] <- ests.ii['lower']
-  df.ests.conf$upper[ii] <- ests.ii['upper'] 
+  df.ests2$est[ii]   <- ests.ii['est']
+  df.ests2$lower[ii] <- ests.ii['lower']
+  df.ests2$upper[ii] <- ests.ii['upper'] 
 }
 
-# Let us explore the results as before.
+# Let us plot as before
 
-par(mfrow = c(1,1)
-    , oma = c(0,0,0,0))
-y.min.temp <- min(df.ests.conf$lower)-0.1
-y.max.temp <- max(df.ests.conf$upper)+0.1
-with(df.ests.conf, 
-     {plot(study.number
-           , est
-           , xlab = 'Study number'
-           , ylab = 'Estimated treatment effect (and 95% CI)'
-           , main = 'Estimated treatment effect over multiple studies \n (without randomisation)'
-           , ylim = c(y.min.temp, y.max.temp)
-           , type = 'n'); 
-       arrows(x0 = study.number, y0 = lower, y1 = upper, code = 0, col = 'darkgrey');
-       points(study.number, est, col = 'red', pch = 20);
-       abline(h=treatment.effect.in, col = 'blue', lwd = 2)
-     })
+ggplot(data = df.ests2, aes(x = study.number, y = est)) +
+  geom_errorbar(aes(ymin = lower, ymax = upper), colour = "grey") +
+  geom_point(color = "red", size = 1.5) +
+  geom_hline(yintercept = in.treatment.effect, colour = "blue") +
+  labs(
+    title = "Estimated treatment effect over multiple studies\n(with randomisation)",
+    x = "Study number",
+    y = "Estimated treatment effect (and 95% CI)"
+  ) +
+  theme_minimal() +
+  theme(text = element_text(size = 14)
+  )
 
-# And calculate the bias again
+# Let's also calculate the bias again
 
-mean(df.ests.conf$est) - treatment.effect.in
+? ## FIXME
+  
+# Again, are we estimating the value well? Why? What else do we learn from the plot?
 
-# Think about what all of these outputs show us.
+# Once you understand and reflect on the above - try play around. For example
+# To look at the results in a different way you could order the studies in the plot
+# by the size of estimates, or draw histograms of your estimates for the two scenarios. 
+# You can try different study sizes, different prevalence values for comorbities, and 
+# more or less extreme confounder imbalances between the two arms (by changing inputs). 
 
-# Remember, in each of the two sets of simulations, both severity and treatment
-#   affect the outcome. In both, we assume that we cannot measure severity and
-#   cannot include it in our analysis.  Our goal is to understand the effect 
-#   of treatment on the outcome.
-
-# What is the interpretation of the estimates in the first simulation 
-#   (with randomisation)  and in the second (without randomisation)?
-
-# If you are done, you can play around with different values for some of the inputs.
-
-########## PART TWO ##########
-
-# Here you will get to explore some clinical trial data. These data (from the
-#   Mycotic Ulcer Therapeutic Exploratory Trial) can only be used for this lab.
-#   To protect confidentiality, we have added a tiny random value to some of 
-#   the scar values from the actual trial.
-
-# The (secondary) outcome you will focus on here is the scar size at 3 weeks.
-
-# To load the data, use:
-
-load('MuTxT.Rdata')
-
-# The variables are:
-#   patid           -- patient ID
-#   drug            -- drug assignment: 0 is natamycin, 1 is voriconazole 
-#   scrape          -- scraping: 0 is no, 1 is yes
-#   age             -- age
-#   sex             -- sex
-#   if_perf         -- 1 if a perforation happened
-#   scar_baseline   -- scar size at baseline
-#   scar_3W        -- scar size at 3 weeks
-
-# Try to estimate the treatment effect on scar size at 3 weeks. 
-#   Consider controlling for baseline scar size.
-#   Is it necessary to control for a covariate? Why might one do so?
-
-# An example of an analysis is
-
-summary(lm(scar_3W ~ drug + scrape, data=mutxt))
-
+  
