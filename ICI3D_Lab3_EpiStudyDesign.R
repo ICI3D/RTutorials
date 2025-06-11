@@ -4,7 +4,10 @@
 ## African Institute for Mathematical Sciences, Muizenberg, RSA
 ## Jim Scott 2012
 
+
 ## Identifying study designs
+## ==============================================================================
+
 
 ## For each of the following descriptions, determine what type of 
 ## study design was used.  The answers are at the end of this tutorial
@@ -52,8 +55,8 @@
 ## do so, researchers solicited participants from two neighboring towns.  
 ## All participants recieved clear plastic water containers.  However, 
 ## participants in town A were asked to treat their drinking water
-## using the solar radtion method while those in town B were given no specific
-## instructions.  AFter 6 months of follow-up, diarrhea incidence rates were 
+## using the solar radiation method while those in town B were given no specific
+## instructions.  After 6 months of follow-up, diarrhea incidence rates were 
 ## compared.
 ##
 ## What type of study design best describes this study?
@@ -82,7 +85,9 @@
 
 
 ## Analyzing a 2 x 2 table
-##
+## ==============================================================================
+
+
 ## In order to demonstrate 2 x 2 table analysis and to calculate measures of effect,
 ## we'll look at some data collected by Lefevre, et. al (2010).  In that study 
 ## researchers conducted an experiment to determine if beer consumption increases how
@@ -92,7 +97,7 @@
 ## empty tent of outdoor air (uncontaminated by participants).  Two different mosquito
 ## releases were performed, once before beer was consumed and once after.
 ## You can read more details about the complete experiment online:
-##  http://www.plosone.org/article/info:doi%2F10.1371%2Fjournal.pone.0009546
+##  https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0009546
 
 ## Prior to beer consumption, 215 mosquitoes flew towards the tent containing study 
 ## participants while 219 flew toward the outdoor air.  After beer consumption 369
@@ -126,6 +131,8 @@ barplot(table(MosquitoData))
 ## consumption.  Also, the plot is lacking appropriate labels and a title.
 
 table(Choice, Timing)  # Timing variable now in columns
+# or
+t(table(MosquitoData)) 
 
 ## This is an immidiate improvement, but still somewhat misleading:
 barplot(table(Choice,Timing),main="Mosquito choice by Timing of release",
@@ -151,15 +158,15 @@ barplot(prop.table(table(Choice, Timing),margin=2),
 ## experimenting with different colors.  Also, it's probably more appropriate 
 ## to change the column ordering so that the 'Before' column is first.  Try using
 ## your knowledge of R's indexing system to do this on your own.  One possible 
-## answer appears at the end of this tutorial.
+## answer appears at the end of this tutorial. (A)
 
 ## Now that you've looked at the data, a natural question that arises is:
-## "Did drinking the beer really increase the attractiveness of the particiapnts?
+## "Did drinking the beer really increase the attractiveness of the participants?
 ## (as far as the mosquitoes are concerned, that is!)" -or- "Could the observed
-## difference be do to chance?"
+## difference be due to chance?"
 
 ## There are a number of statistical tests that could be used to answer this question.
-## (in particular, you could use a permuation test as demonstrated in previous lectures)
+## (for example, you could use a permutation test)
 ## Possibly the simplest method would be to use a Chi-square test of independence.
 ## The null hypothesis for this test is that the column and row variables are
 ## independent.  In this case, we could state the null hypothesis as:
@@ -180,31 +187,27 @@ summary(table(Choice,Timing))
 
 ## Perform the same chi-square test that you did previously, but this time, use 
 ## the chisq.test() command.  Note: you may need to change one of the input arguments
-## to get results that exaclty match those that you previous obtained.
+## to get results that exactly match those that you previous obtained. (B)
 
 ## Measures of effect
-## The odds ratio and relative risk can be calculated directly from our table:
+## The odds ratio (OR) and relative risk (RR) can be calculated directly from our table:
 table(Choice,Timing)
 
 ## Take a minute to perform these calculations by hand - then check your results 
-## using R.  Also be sure you know how to interpret these measures.  which of these
-## measures of effect is most appropriate for the given study?  
+## using R, below.  Also be sure you know how to interpret these measures.  which of these
+## measures of effect is most appropriate for the given study? (C)  
 
-## It's good practice to provide confidence intervales (CIs) when reporting ORs and 
+## It's good practice to provide confidence intervals (CIs) when reporting ORs and 
 ## RRs. These convey the degree of uncertainty (due to sampling) that is present in  
 ## the estimate(s) and represent a range of plausible values for the true measure of 
 ## effect.  Different methods exist for calculating CIs.  We'll rely on R to do the 
 ## calculating for us.  One way to obtain CIs is via the 'epiDisplay' package.  In 
 ## R-studio, it should be listed under the 'Packages' tab.  To load it you need 
 ## check its box or, alternatively, type: library(epiDisplay). If it isn't installed,
-## do install.packages('epiDisplay') and then library(epiDisplay)
+## first run install.packages('epiDisplay'); or you can click the 'Install' button
+## and type 'epiDisplay'.
 
 library(epiDisplay)
-
-##
-## If you don't see it listed under the 'Packages' tab, it may not be installed on 
-## your computer.  You can attempt to do so by clicking the 'Install Packages' button
-## and typing in: epiDisplay.
 
 ## Once epiDisplay is loaded, you have access to many commands relevant to 
 ## epidemiological analysis.  The command cci() provides the OR, CI, and results
@@ -220,17 +223,27 @@ table(Choice, Timing)
 ## Selecting the appropriate values for the cci command:
 cci(369, 221, 215, 219, graph=FALSE)
 
-## Analagously, metrics associated with the RR can be obtained through epiDisplay's
+## Try graph=TRUE too (or because TRUE is the default value of graph, you can omit the
+## graph argument). Try to add appropriate labels to the graph too. (D)
+
+## Analogously, metrics associated with the RR can be obtained through epiDisplay's
 ## csi() command.  Try using csi() to obtain a CI for the RR. Note: csi doesn't 
-## plot a graph for a 2x2 table, so you don't need to specify graph=FALSE
+## plot a graph for a 2x2 table, so you don't need to specify graph=FALSE. (E)
 
 ## Based on the CI's for the OR and RR, what conclusions can you draw about the 
-## relationship between the variables in the table?
+## relationship between the variables in the table? (F)
+
+## Note that while it useful to do the calculation above to build understanding,
+## in practice, you would avoid entering numbers by hand if you have a dataset. 
+## We could have instead used
+cc(Choice,Timing)
+# or 
+cc(MosquitoData$Choice,MosquitoData$Timing)
 
 
 ## Often, it is necessary to control for the effects that a potentially confounding 
 ## variable may have on an exposure/disease relationship.  When confounding is
-## present, it is not possible to obtain an ubiased a measure of effect
+## present, it is not possible to obtain an unbiased measure of effect
 ## One way to determine if confounding is present is through the application 
 ## of stratified analysis. Consider the following raw dataset from a 
 ## hypothetical case-control study investigating gender as a risk factor for
@@ -255,22 +268,22 @@ table(Gender,Malaria)
 
 ## An OR can be obtained using the cci command.  Try it out.  Note: remember 
 ## the format is cci(caseexp, controlex, casenoex, controlnoex, graph=FALSE).  
-## Assume exposed = male:
+## Assume exposed = male. (G)
 
 ## You should have found the OR = 1.71.  This represent the "crude" or "unadjusted"
 ## OR.  It suggests that the odds of malaria is higher for men than for women.  Now,
 ## let's see what happens when we stratify the data by workplace.  If workplace is 
 ## unrelated to these data (i.e. not a confounder) then we should get approximately
 ## the same OR (OR=1.71) as we did before for both levels of workplace.
-##
 table(Gender,Malaria,Workplace)
 
-## Compute the ORs for each table separately using cci().  
+## Compute the ORs for each table separately using cci(). (H) 
 
-## The resulting OR's are both close to 1.00.  This reveals two things: 1) Workplace 
-## appears to be a confounder - the stratified ORs differ from the crude OR. 2) 
-## Since the stratified ORs are approximately equal, workplace does not appear to 
-## be an effect modifier (i.e. the ORs do not vary by workplace).  
+## The resulting OR's are both close to 1.00.  This reveals two things: 
+## 1) Workplace appears to be a confounder - the stratified ORs differ 
+## from the crude OR. 2) Since the stratified ORs are approximately
+## equal, workplace does not appear to be an effect modifier 
+## (i.e. the ORs do not vary by workplace).  
 ##
 ## We can further explore the confounding nature of  Workplace by examining the 
 ## relationships between workplace & gender and workplace & malaria
@@ -306,3 +319,132 @@ exp(my.model$coefficients)
 
 ## confidence intervals for the ORs can be obtained using:
 exp(confint.default(my.model))
+
+
+##  Answers
+## ==============================================================================
+##  Answers to selected exercises appear below
+##
+##
+##
+##
+##
+##
+##
+##
+##
+##
+##
+##
+##
+##
+##
+##
+##
+##
+##
+##
+## Identifying Study Designs
+## -------------------------------
+##
+## Study 1: Case control - participants were enrolled based on disease status
+## (i.e. "falls") distributions of various exposures were then investigated.
+##
+## Study 2: Cross sectional - disease (needle stick) and exposure status 
+## (e.g. attending a seminar) were assessed at the same time.  There is no
+## way to know for certain which came first.  A very detailed survey may have
+## asked about dates, but even then, results may be vulnerable to recall bias.
+##
+## Study 3: Cohort (best answer) - exposed (solar radiation) and unexposed 
+## (no solar radiation) groups are followed over time and incidence rates 
+## between the two groups are compared.  This could be considered a RCT but
+## ONLY IF participants were randomly assigned to a treatment group.
+##
+## Study 4: Correlational - the unit of analysis is country.  No individual
+## level data were collected.  Incidentally, there is no way to determine if 
+## those who are HIV positive actually consumed more alcohol (on average) than 
+## those who are HIV negative.  
+##
+##
+## Examining the data
+## ------------------------
+##
+## (A)
+##
+## One answer to column switching exercise: 
+## barplot(prop.table(table(Choice, Timing)[,c(2,1)],margin=2),
+##       main="Distribution of Mosquito Choice by Timing of release",
+##       xlab="Timing of release relative to beer consumption", 
+##       ylab="Proportion Choosing Participants (dark)", 
+##       col = c("darkblue", "lightblue"))
+##
+## (B)
+##
+## Chi-square test:
+## chisq.test(Choice,Timing, correct=FALSE)
+##
+## (C)
+##
+## Measures of effect:
+## 369*219 / (221*215)  ## OR = 1.7007
+##
+## The odds of attracting a mosquito are 1.70 times higher after consuming beer
+## (compared to no beer consumption)
+##  
+## (369/(369+221))/(215/(215+219))  ## RR = 1.2625
+##
+## The risk of attracting a mosquito is 1.26 times higher after consuming beer
+## (compared to no beer consumption)
+##
+## Which is more appropriate?  In this study we know the distribution of exposure
+## (i.e. before/after) conditional on disease (i.e. human/outdoors) AND the 
+## distribution of disease conditional on exposure.  As a result, either measure is
+## appropriate - however, it's conventional to provide RR whenever possible because
+## it is usually considered to be a more intuitive measure.  In a case-control study
+## only the distribution of exposure conditional on disease is known - in that case,
+## it would NOT be appropriate to calculate the RR - only the OR.
+##
+## (D)
+##
+## cci command with appropriate labels:
+## cci(369, 221, 215, 219, xlab="Timing",xaxis=c("Before","After"),
+## ylab="Odds of choosing a human",yaxis=c("Human","Outdoors"), 
+## main="Odds of choosing a human by exposure status")  
+##
+## (E)
+##
+## csi command:
+## csi(369, 221, 215, 219)
+##
+## (F)
+##
+## A possible interpretation:
+## The range of plausible values for the OR does not include the value 1.00, 
+## and the range of plausible values for the RR does not include 1.00. 
+## We have statistical evidence that suggests the null hypothesis is false, 
+## I.e. evidence against the variables being unrelated.
+##
+## (G)
+##
+## Crude OR for Malaria Data:
+## cci(88,68,62,82, graph=FALSE)
+## cc(MalariaData$Gender, MalariaData$Malaria, graph = FALSE)
+##
+## (H)
+##
+## Stratified ORs
+## cci(35,53,52,79,graph=FALSE)
+## cc(MalariaData$Gender[MalariaData$Workplace == 'indoor'], MalariaData$Malaria[MalariaData$Workplace == 'indoor'], graph = FALSE)
+## cci(53,15,10,3,graph=FALSE)
+## cc(MalariaData$Gender[MalariaData$Workplace == 'outdoor'], MalariaData$Malaria[MalariaData$Workplace == 'outdoor'], graph = FALSE)
+
+
+##  References:
+## ------------------------
+##
+## 1. Lefevre T, et. al. (2010) Beer Consumption Increases Human Attractiveness to 
+##    Malarial Mosquitoes. Plos ONE 5(3); e9546.
+##  
+## 2. Szklo & Nieto, Epidemiology: Beyond the Basics, 2000 Aspen Publishers.
+##
+
