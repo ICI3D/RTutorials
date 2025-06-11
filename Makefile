@@ -88,9 +88,8 @@ ICI3D_RTutorial_5_DataCleaning.batch.Rout: batchdir=data/dataCleaning/
 
 ## ICI3D_Lab6_MLE_SIV_HIV.batch.Rout: ICI3D_Lab6_MLE_SIV_HIV.R ICI3D_Lab6_MLE_SIV_HIV.answers.R
 
-## Not the current Lab 6
-## ICI3D_Lab6_HetSIR_exercise.R
-
+## Not the current Lab 6 ## Not passing tests
+## ICI3D_Lab6_HetSIR_exercise.batch.Rout: ICI3D_Lab6_HetSIR_exercise.R ## ICI3D_Lab6_HetSIR_exercise.answers.R
 
 ## ICI3D_Lab7_MCMC-Binomial.R
 ## ICI3D_Lab8_MCMC-SI_HIV.R
