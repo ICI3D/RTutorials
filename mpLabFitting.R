@@ -5,6 +5,9 @@
 ## Jonathan Dushoff 2025
 ## See also https://github.com/canmod/macpan2/tree/main/inst/starter_models/hiv for the full Granich model with treatmeant
 
+## We are going to be using the macpan2 package
+## You can get installation instructions and background info here:
+#### https://canmod.github.io/macpan2/
 library(macpan2)
 
 ######################################################################
@@ -35,6 +38,8 @@ flows = list(
 hiv4spec = mp_tmb_model_spec(
 		during = c(fn, flows)
 )
+
+## What's a good way to quickly show the diagram but without misleading people about the flows to nowhere?
 
 ######################################################################
 
@@ -79,11 +84,9 @@ baseSim <- (hiv4impl
 	|> mp_trajectory()
 )
 
-head(baseSim) ## TEMP
-
 ## TASK: Examine baseSim in Rstudio.
 
-## It might be good to use dplyr to manipulate it.
+## It might be good to use dplyr to manipulate this object.
 ## Usually it's good to put library functions at the beginning of scripts to crash out early, but we're making an exception
 
 library(dplyr)
@@ -111,14 +114,4 @@ baseState <- (baseSim
 print(ggplot(baseState)
 	+ aes(time, proportion, color=state)
 	+ geom_line()
-)
-
-quit()
-	|> mutate(matrix = sub("^A([1-4])$", "Infectious and treated, stage \\1", matrix))
-	|> mutate(matrix = sub("^I([1-4])$", "Infectious and untreated, stage \\1", matrix))
-	|> ggplot()
-	+ geom_line(aes(time, value))
-	+ facet_wrap(~ matrix, ncol = 2, scales = 'free', dir = "v")
-	+ scale_y_continuous(limits = c(0, NA), expand = c(0, 0))
-	+ theme_bw()
 )

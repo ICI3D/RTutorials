@@ -33,6 +33,15 @@ data:
 
 ######################################################################
 
+## Branching
+
+Ignore += branchdir
+
+branchdir:
+	git clone https://github.com/ICI3D/RTutorials $@
+
+######################################################################
+
 ## Building macpan labs 2025 May 20 (Tue)
 
 ## mpLabCompartmental.batch.Rout: mpLabCompartmental.R testing/mpLabCompartmental.answers.R
