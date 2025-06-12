@@ -24,16 +24,13 @@
 #   (other conditions such as diabetes which is known 
 #   to be associated with poorer COVID-19 outcomes)
 
-
 # In this tutorial, you will: 
 #   Simulate data with randomisation of treatment, and estimate the 'effect'
 #   Simulate data without randomisation of treatment, and estimate the 'effect'
 #   Repeat the above multiple times to understand the effect of 
 #     randomisation on estimation.
 
-
 library(tidyverse)
-
 
 #### Warm up 1: Randomisation
 
@@ -68,7 +65,6 @@ assignments
 
 which(assignments==1)
 
-
 #### Warm up 2: Sample values from a normal distribution
 
 # To simulate a given number of normal random variates, use the 'rnorm' command.  
@@ -85,8 +81,6 @@ v1 <- rnorm(100, mean = 1, sd = 0.3)
   + theme_minimal()
   + theme(text = element_text(size = 18))
 )
-
-
 
 #### Warm up 3: Simulate a dataset
 
@@ -109,13 +103,21 @@ v1 <- rnorm(100, mean = 1, sd = 0.3)
 
 # To begin, we will assume the treatment effect is zero. 
 
-n.subjects        <- 500    # number of subjects in study (choose even number for this tutorial)
+## What parameters do we need?
+n.subjects        <- 501 
 control.mean      <- 2      # mean outcome for the control group
 treatment.effect  <- 0      # difference in mean for the treatment group (vs control)
 outcome.sd        <- 0.5    # spread (standard deviation) of the outcome in each arm
 
+## Make the data frame
+## JD: Should we do this with dplyr tools instead?
+
+## Carefully split the group in two (in case we have an odd number of subjects)
+pos.subj <- round(n.subjects/2)
+neg.subj <- n.subjects - pos.subj
+
 dset            <- data.frame(study.id = 1:n.subjects)
-dset$treatment  <- sample( c(rep(1,n.subjects/2),rep(0,n.subjects/2)),
+dset$treatment  <- sample( c(rep(1,pos.subj),rep(0,neg.subj)),
                            size = n.subjects,
                            replace = FALSE)
 dset.mean       <- control.mean + treatment.effect*dset$treatment
@@ -123,13 +125,12 @@ dset$outcome    <- rnorm(n.subjects,
                          mean = dset.mean,
                          sd = outcome.sd)
 
-# Let us look at the first (up to) 20 rows of the dataset:
+# Take a look at the dataset:
+# View(dset)
 
-head(dset, 20)
+### Take some time to ensure you understand each step above. ###
 
-# Take some time to ensure you understand each step above. 
-
-# Let us plot histograms of the outcomes, by arm:
+# We can plot histograms of the outcomes, by arm:
 
 (ggplot(data = dset, mapping = aes(x=outcome))
   + labs(x = 'Outcome (change log viral load)', y = 'Frequency'
@@ -154,12 +155,10 @@ with(means, mean[treatment == 1] - mean[treatment == 0])
 #   units larger than in the control group - generate dset and the plot. 
 # Each time you run the code above, do you create the same dataset?
 
-
 # Now that we have warmed up, let's dive into our simulation. 
 # Let us clear up our environment before moving on. 
 
 rm(list=ls())
-
 
 #### (1) A function to generate data
 
@@ -204,7 +203,6 @@ gen.data <- function(n.subjects = 100 # number of subjects
   dset
 }
 
-
 # Let us try out the function
 
 gen.data() # when you do not specify an input, the default value is used, 
@@ -223,20 +221,18 @@ d1 |> group_by(treatment) |> summarise(mean = mean(outcome))
 d2 |> group_by(treatment) |> summarise(mean = mean(outcome))
 d3 |> group_by(treatment) |> summarise(mean = mean(outcome))
 
-
-
 #### (2) Understanding how randomisation balances confounders
-  
+
 # Let's return to our two study designs:
 #   (I) A study where treatment is not randomly assigned 
 #   (II) A study where treatment is randomly assigned. 
-  
+
 # In (I), the doctor can decide who gets treatment and may decide to 
 #   more frequently provide antivirals to patients with comorbidities.  
 #   Which inputs above would change?
-  
+
 # An example of data that may be generated in scenario (I) is:    
-  
+
 d1.norandom <- gen.data(prob.treat.nocomorb = 0.5 
                           , prob.treat.comorb = 0.8)
 
@@ -263,8 +259,6 @@ d1.random |> group_by(treatment) |> summarise(mean = mean(comorbidity))
 # If needed, increase the study size and rerun the lines above to convince
 #   yourself of the imbalance / balance of comorbidity by treatment arm. 
 
-
-
 #### (3) Estimating the difference
 
 # We are going to need a way to analyse the data. Below is a function for 
@@ -275,7 +269,6 @@ d1.random |> group_by(treatment) |> summarise(mean = mean(comorbidity))
 #   for your treatment and control arms, with a 95% confidence interval. 
 #   It obtains this estimate by comparing the recorded outcomes for the two
 #   groups.
-
 
 analyse.data <- function(data.in){
   # difference in means using central limit theorem
@@ -301,8 +294,6 @@ analyse.data(data.temp)
 # You specified this value to generate the data, so we know the correct/ideal 
 # 'answer' to our estimation - this is what makes simulation so useful!
 
-
-
 #### (4) Multiple studies - without and with randomisation 
 
 ## Let us repeat this process of generating and analysing the data, multiple
@@ -321,6 +312,7 @@ in.treatment.effect <- 1
 
 n.sims <-  500
 
+## JD: This is a fairly awkward 
 df.ests1 <- data.frame(study.number = 1:n.sims, est = NA, lower = NA, upper = NA)
 for (ii in 1:n.sims) {
   data.ii <- gen.data(treatment.effect = in.treatment.effect
@@ -348,15 +340,14 @@ ggplot(data = df.ests1, aes(x = study.number, y = est)) +
   theme(text = element_text(size = 14)
   )
 
-# Are we estimating the treatment effect well?
-# Why?
+# Does it look like we are estimating the treatment effect well?
+# What do you think is the reason for this?
 # what else do we learn from the plot?
 
 # Let us calculate the bias, i.e., the average estimate minus the true 
 #   treatment effect
 
 mean(df.ests1$est) - in.treatment.effect
-
 
 # In scenario (II), doctors do not get to decide on treatment - we set it randomly. 
 #   Let's suppose we provide antivirals to 70% of people, randomly. 
@@ -390,8 +381,6 @@ ggplot(data = df.ests2, aes(x = study.number, y = est)) +
 
 # Let's also calculate the bias again
 
-? ## FIXME
-  
 # Again, are we estimating the value well? Why? What else do we learn 
 #   from the plot?
 
@@ -403,7 +392,7 @@ ggplot(data = df.ests2, aes(x = study.number, y = est)) +
 #   You can try different study sizes, different prevalence values for 
 #   comorbidities, and more or less extreme confounder imbalances between
 #   the two arms (by changing inputs).
-  
+
 # Circling back to where we started:
 #   When you are looking for data and results to inform inputs and assumptions 
 #   related to  transmission rates for your SARS-CoV-2 model, think carefully
@@ -411,4 +400,4 @@ ggplot(data = df.ests2, aes(x = study.number, y = est)) +
 #   In the estimates that you find, think carefully about potential bias and 
 #   variability.
 #   Incorrect model inputs/assumptions --> incorrect outputs!
-  
+
