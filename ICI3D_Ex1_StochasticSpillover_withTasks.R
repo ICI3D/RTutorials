@@ -17,7 +17,6 @@
 
 library(tidyverse)
 
-
 ## PART 1: SIR 
 ## --------------------------------------------------------------------
 
@@ -38,6 +37,7 @@ library(tidyverse)
 
 event_sir <- function(time, S, I, R, params, t_end, count.inf) {
   with(as.list(params), {
+    N <- S+I+R
     
     rates <- c(
       infect = beta * I * S / N,
@@ -91,10 +91,10 @@ simulate_sir <- function(t_end, y, params) {
 
 ## Run the model for specified inputs:
 
-N <- 50                                 # population size
+pop <- 50                                 # population size
 params <- c(beta = 0.3, gamma = 0.1)    # parameter values
 final_time <- 400                       # end time
-y0 <- c(S = N - 1, I = 1, R = 0)        # initial state
+y0 <- c(S = pop - 1, I = 1, R = 0)        # initial state
 
 ts1 <- simulate_sir(final_time, y0, params)
 
@@ -113,7 +113,6 @@ ggplot(ts1_long, aes(x = time, y = count, color = Compartment)) +
 # Generate the data and produce the plot multiple times, by running the relevant
 # lines above. What do you see?
 
-
 ## PART 2: SIR with spillover
 ## --------------------------------------------------------------------
 
@@ -123,7 +122,7 @@ ggplot(ts1_long, aes(x = time, y = count, color = Compartment)) +
 
 # TASK 1: Make a copy of all the code presented for part 1 and modify it to 
 # introduce spillover events - 
-# make functions event_sirspill and simulate_sirspill.
+# make functions event_sirspill and simulate_sirspill. ## FIXME
 # More specifically, assume that, in addition to the transmission already 
 # occurring, there is an additional rate of infection of susceptibles of 
 # lambda*S/N (total rate). Here lambda is the rate at which, for example,
@@ -150,15 +149,15 @@ ggplot(ts1_long, aes(x = time, y = count, color = Compartment)) +
 #   showing several different possible trajectories, for a set of input 
 #   parameter values
 
-plot_sirspill <- function(ntrajectories = 16, N, params, final_time, y0){
+plot_sirspill <- function(nTraj = 16, params, final_time, y0){
   
   ts_collect <- list()
-  for (ii in 1:ntrajectories){
+  for (ii in 1:nTraj){
     ts_collect[[ii]] <- simulate_sirspill(final_time, y0, params)
   }
   
   ts_collect_df <- (bind_rows(ts_collect, .id = "Simulation")
-                    |> mutate(Simulation = factor(Simulation, levels = 1:ntrajectories))
+                    |> mutate(Simulation = factor(Simulation, levels = 1:nTraj))
   )
   
   gg <- ggplot(ts_collect_df, aes(x = time, y = I)) +
@@ -170,15 +169,16 @@ plot_sirspill <- function(ntrajectories = 16, N, params, final_time, y0){
     theme_minimal(base_size = 14)
 
   print(gg)
-  
 }
 
 # We can now easily now easily plot trajectories - here we plot 
 # 16 trajectories for a set of inputs
 
-N <- 50
-
-plot_sirspill(16, N, c(beta = 0.3, gamma = 0.1,lambda = 0.01), 400, c(S = N - 1, I = 1, R = 0))
+plot_sirspill(nTraj=16, 
+	params=c(beta = 0.3, gamma = 0.1,lambda = 0.01)
+	, final_time=400
+	, y0 = c(S = pop - 1, I = 1, R = 0)
+)
 
 # TASK 2: 
 # Use the function plot_sirspill to compare outputs for different parameter
@@ -190,30 +190,28 @@ plot_sirspill(16, N, c(beta = 0.3, gamma = 0.1,lambda = 0.01), 400, c(S = N - 1,
 # Don't forget to erase your graphs every now and then using graphics.off().
 
 # (1) 1 infected animal to begin, with different beta and gamma values
-# c(beta = 0.3, gamma = 0.1,lambda = 0.01), 400, c(S = N - 1, I = 1, R = 0))
+# c(beta = 0.3, gamma = 0.1,lambda = 0.01), 400, c(S = pop - 1, I = 1, R = 0))
 # versus 
-# c(beta = 0.2, gamma = 0.2,lambda = 0.01), 400, c(S = N - 1, I = 1, R = 0))
+# c(beta = 0.2, gamma = 0.2,lambda = 0.01), 400, c(S = pop - 1, I = 1, R = 0))
 
 # (2) as for (1) but with 0 infected animals to begin
-# c(beta = 0.3, gamma = 0.1,lambda = 0.01), 400, c(S = N, I = 0, R = 0))
+# c(beta = 0.3, gamma = 0.1,lambda = 0.01), 400, c(S = pop, I = 0, R = 0))
 # versus 
-# c(beta = 0.2, gamma = 0.2,lambda = 0.01), 400, c(S = N, I = 0, R = 0))
+# c(beta = 0.2, gamma = 0.2,lambda = 0.01), 400, c(S = pop, I = 0, R = 0))
 
 # (3) as for (1) but with a higher spillover rate
-# c(beta = 0.3, gamma = 0.1,lambda = 0.04), 400, c(S = N-1, I = 1, R = 0))
+# c(beta = 0.3, gamma = 0.1,lambda = 0.04), 400, c(S = pop-1, I = 1, R = 0))
 # versus 
-# c(beta = 0.2, gamma = 0.2,lambda = 0.04), 400, c(S = N-1, I = 1, R = 0))
+# c(beta = 0.2, gamma = 0.2,lambda = 0.04), 400, c(S = pop-1, I = 1, R = 0))
 
 # Lastly, would we have been able to study these patterns using 
 # a deterministic model? If you have time, refer back to previous labs, 
 # and try fit and plot a corresponding deterministic model. 
 
-
-
-
-
 ## PART 2: Solution 
 ## --------------------------------------------------------------------
+
+## Our version of the functions for 
 
 # Compartments:
 # (S,I,R) = (susceptible, infectious, removed)
@@ -224,74 +222,13 @@ plot_sirspill(16, N, c(beta = 0.3, gamma = 0.1,lambda = 0.01), 400, c(S = N - 1,
 # Infection (S)                   (S,I,R)->(S-1,I+1,R)             beta*I*S/N
 # Recovery/Removal (I)            (S,I,R)->(S,I-1,R+1)             gamma*I
 
-## Function to step forward in time to next event and update states:
-
-event_sirspill <- function(time, S, I, R, params, t_end, count.inf, count.spill) {
-  with(as.list(params), {
-    
-    rates <- c(spillover = lambda*S/N, 
-               infect = beta * I * S / N,
-               recover = gamma * I
-    )
-    
-    total_rate <- sum(rates)
-    
-    if (total_rate == 0) {
-      
-      event_time <- t_end
-      
-    } else {
-      
-      event_time <- time + rexp(1, total_rate)
-      event_type <- sample(c("Spillover","Infect","Recover"), 1, prob = rates / total_rate)
-      
-      switch(event_type,
-             "Spillover" = {
-               S <- S-1
-               I <- I+1
-               count.spill = count.spill+1
-             },
-             "Infect" = {
-               S <- S-1
-               I <- I+1
-               count.inf = count.inf+1
-             },
-             "Recover" = {
-               I <- I-1
-               R <- R+1
-             })
-    }
-    
-    return(data.frame(time = event_time, S = S, I = I, R = R, count.inf = count.inf, count.spill = count.spill))
-  })
-}
-
-## Function to simulate states from time 0 to t_end:
-
-simulate_sirspill <- function(t_end, y, params) {
-  with(as.list(y), {
-    
-    count.inf <-  I
-    count.spill <-  0
-    ts <- data.frame(time = 0, S = S, I = I, R = R, count.inf = I, count.spill = 0)
-    next_event <- ts
-    
-    while (next_event$time < t_end) {
-      next_event <- event_sirspill(next_event$time, next_event$S, next_event$I, next_event$R, params, t_end, count.inf, count.spill)
-      ts <- rbind(ts, next_event)
-    }
-    
-    return(ts)
-  })
-}
 
 ## Run the model for specified inputs:
 
-N <- 50                                 # population size
 params <- c(beta = 0.3, gamma = 0.1
             , lambda = 0.02)            # parameter values
 final_time <- 400                       # end time
-y0 <- c(S = N - 1, I = 1, R = 0)        # initial state
+y0 <- c(S = pop - 1, I = 1, R = 0)        # initial state
 
 ts1 <- simulate_sirspill(final_time, y0, params)
 
@@ -304,6 +241,6 @@ ts1_long <- (ts1
 
 ggplot(ts1_long, aes(x = time, y = count, color = Compartment)) +
   geom_step(linewidth = 1.2) +
-  labs(title = "SIR dynamics without spillover", y = "Count", x = "Time") +
+  labs(title = "SIR dynamics with spillover", y = "Count", x = "Time") +
   theme_minimal(base_size = 14)
 

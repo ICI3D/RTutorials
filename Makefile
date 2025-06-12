@@ -80,8 +80,15 @@ ICI3D_RTutorial_5_DataCleaning.batch.Rout: batchdir=data/dataCleaning/
 
 ## ICI3D_Ex1_StochasticSpillover.batch.Rout: ICI3D_Ex1_StochasticSpillover.R testing/ICI3D_Ex1_StochasticSpillover.answers.R
 
-## ICI3D_Lab4_RCT.batch.Rout: ICI3D_Lab4_RCT.R testing/ICI3D_Lab4_RCT.answers.R
+## ICI3D_Ex1_StochasticSpillover_withTasks.batch.Rout: ICI3D_Ex1_StochasticSpillover_withTasks.R testing/ICI3D_Ex1_StochasticSpillover_withTasks.answers.R
+ICI3D_Ex1_StochasticSpillover_withTasks.batch.Rout: ICI3D_Ex1_StochasticSpillover_functions.R
 
+## ICI3D_Lab1_ODEmodels.batch.Rout: ICI3D_Lab1_ODEmodels.R testing/ICI3D_Lab1_ODEmodels.answers.R
+
+## ICI3D_Lab2_Heterogeneity.R
+## ICI3D_Lab3_EpiStudyDesign.batch.Rout: ICI3D_Lab3_EpiStudyDesign.R testing/ICI3D_Lab3_EpiStudyDesign.answers.R
+
+## ICI3D_Lab4_RCT.batch.Rout: ICI3D_Lab4_RCT.R testing/ICI3D_Lab4_RCT.answers.R
 ## ICI3D_Lab5a_introLikelihoodPlusRejectionP.R
 ## ICI3D_Lab5_introLikelihood.R
 

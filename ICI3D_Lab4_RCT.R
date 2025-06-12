@@ -110,9 +110,8 @@ treatment.effect  <- 0      # difference in mean for the treatment group (vs con
 outcome.sd        <- 0.5    # spread (standard deviation) of the outcome in each arm
 
 ## Make the data frame
-## JD: Should we do this with dplyr tools instead?
 
-## Carefully split the group in two (in case we have an odd number of subjects)
+## Carefully split the group in two (need to be careful in case we have an odd number of subjects)
 pos.subj <- round(n.subjects/2)
 neg.subj <- n.subjects - pos.subj
 
