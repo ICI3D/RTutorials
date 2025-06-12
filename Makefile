@@ -37,11 +37,14 @@ data:
 
 ## mpLabCompartmental.batch.Rout: mpLabCompartmental.R testing/mpLabCompartmental.answers.R
 
+## mpLabFitting.batch.Rout: mpLabFitting.R testing/mpLabFitting.answers.R
+
 ######################################################################
 
 ## Processing machinery
 ## Make an answers file that allows batch.pl to convert the published file into something that runs
 ## Started with a hard-coded batch, then decided to do a weird, flexible batchdir variable. Don't do that; in cases where you want to batch from elsewhere, make new rules
+Sources += $(wildcard testing/*.R)
 Sources += batch.md
 
 Ignore += batch
