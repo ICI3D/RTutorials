@@ -211,7 +211,8 @@ plot_sirspill(nTraj=16,
 ## PART 2: Solution 
 ## --------------------------------------------------------------------
 
-## Our version of the functions for part 2 can be found 
+## Our version of the functions for part 2 can be found  ICI3D_Ex1_StochasticSpillover_functions.R in this directory: 
+#### https://raw.githubusercontent.com/ICI3D/RTutorials/refs/heads/master/ICI3D_Ex1_StochasticSpillover_functions.R
 
 # Compartments:
 # (S,I,R) = (susceptible, infectious, removed)
