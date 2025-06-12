@@ -29,9 +29,9 @@ library(tidyverse)
 # (S,I,R) = (susceptible, infectious, removed)
 
 # Transitions:
-# Event                           Change        									  Rate
-# Infection (S)                   (S,I,R)->(S-1,I+1,R)              beta*I*S/N
-# Recovery/Removal (I)            (S,I,R)->(S,I-1,R+1)              gamma*I
+# Event                           Change        	  	Rate
+# Infection (S)                   (S,I,R)->(S-1,I+1,R)        	beta*I*S/N
+# Recovery/Removal (I)            (S,I,R)->(S,I-1,R+1)         	gamma*I
 
 ## Function to step forward in time to next event and update states:
 
@@ -91,10 +91,10 @@ simulate_sir <- function(t_end, y, params) {
 
 ## Run the model for specified inputs:
 
-pop <- 50                                 # population size
-params <- c(beta = 0.3, gamma = 0.1)    # parameter values
-final_time <- 400                       # end time
-y0 <- c(S = pop - 1, I = 1, R = 0)        # initial state
+pop <- 50                                 	# population size
+params <- c(beta = 0.3, gamma = 0.1)    	# parameter values
+final_time <- 400                       	# end time
+y0 <- c(S = pop - 1, I = 1, R = 0)        	# initial state
 
 ts1 <- simulate_sir(final_time, y0, params)
 
@@ -122,7 +122,7 @@ ggplot(ts1_long, aes(x = time, y = count, color = Compartment)) +
 
 # TASK 1: Make a copy of all the code presented for part 1 and modify it to 
 # introduce spillover events - 
-# make functions event_sirspill and simulate_sirspill. ## FIXME
+# make functions event_sirspill and simulate_sirspill.
 # More specifically, assume that, in addition to the transmission already 
 # occurring, there is an additional rate of infection of susceptibles of 
 # lambda*S/N (total rate). Here lambda is the rate at which, for example,
@@ -174,8 +174,8 @@ plot_sirspill <- function(nTraj = 16, params, final_time, y0){
 # We can now easily now easily plot trajectories - here we plot 
 # 16 trajectories for a set of inputs
 
-plot_sirspill(nTraj=16, 
-	params=c(beta = 0.3, gamma = 0.1,lambda = 0.01)
+plot_sirspill(nTraj=16
+	, params=c(beta = 0.3, gamma = 0.1,lambda = 0.01)
 	, final_time=400
 	, y0 = c(S = pop - 1, I = 1, R = 0)
 )
@@ -211,25 +211,26 @@ plot_sirspill(nTraj=16,
 ## PART 2: Solution 
 ## --------------------------------------------------------------------
 
-## Our version of the functions for part 2 can be found  ICI3D_Ex1_StochasticSpillover_functions.R in this directory: 
-#### https://raw.githubusercontent.com/ICI3D/RTutorials/refs/heads/master/ICI3D_Ex1_StochasticSpillover_functions.R
+## Our version of the functions for part 2 can be found in
+## ICI3D_Ex1_StochasticSpillover_functions.R in the tutorials repo: 
+## https://raw.githubusercontent.com/ICI3D/RTutorials/refs/heads/master/ICI3D_Ex1_StochasticSpillover_functions.R
 
 # Compartments:
 # (S,I,R) = (susceptible, infectious, removed)
 
 # Transitions:
-# Event                           Change        									 Rate
-# Spillover (S)									  (S,I,R)->(S-1,I+1,R)						 lambda*S/N
-# Infection (S)                   (S,I,R)->(S-1,I+1,R)             beta*I*S/N
-# Recovery/Removal (I)            (S,I,R)->(S,I-1,R+1)             gamma*I
+# Event                           Change        		 Rate
+# Spillover (S)			  (S,I,R)->(S-1,I+1,R)		 lambda*S/N
+# Infection (S)                   (S,I,R)->(S-1,I+1,R)           beta*I*S/N
+# Recovery/Removal (I)            (S,I,R)->(S,I-1,R+1)           gamma*I
 
 
 ## Run the model for specified inputs:
 
 params <- c(beta = 0.3, gamma = 0.1
-            , lambda = 0.02)            # parameter values
-final_time <- 400                       # end time
-y0 <- c(S = pop - 1, I = 1, R = 0)        # initial state
+            , lambda = 0.02)            	# parameter values
+final_time <- 400                       	# end time
+y0 <- c(S = pop - 1, I = 1, R = 0)        	# initial state
 
 ts1 <- simulate_sirspill(final_time, y0, params)
 
