@@ -13,7 +13,7 @@
 # introducing spillover infection events. 
 
 # You will be asked to extend code - though we provide example
-# solutions, we encourage you take the time to first try. 
+# solutions, we encourage you take the time to first try!  
 
 library(tidyverse)
 
@@ -21,8 +21,8 @@ library(tidyverse)
 ## PART 1: SIR 
 ## --------------------------------------------------------------------
 
-# We begin with a closed population of animals, with infection spreading 
-# as per an SIR model. 
+# Context: We begin with a closed population of animals, with infection
+# modelled to spread as per a stochastic SIR model. 
 
 # Take some time to understand the implementation below. 
 
@@ -30,9 +30,9 @@ library(tidyverse)
 # (S,I,R) = (susceptible, infectious, removed)
 
 # Transitions:
-# Event                           Change        										Rate
-# Infection (S)                   (S,I,R)->(S-1,I+1,R)             beta*I*S/N
-# Recovery/Removal (I)            (S,I,R)->(S,I-1,R+1)             gamma*I
+# Event                           Change        									  Rate
+# Infection (S)                   (S,I,R)->(S-1,I+1,R)              beta*I*S/N
+# Recovery/Removal (I)            (S,I,R)->(S,I-1,R+1)              gamma*I
 
 ## Function to step forward in time to next event and update states:
 
@@ -100,9 +100,12 @@ ts1 <- simulate_sir(final_time, y0, params)
 
 ## And plot:
 
-ts1_long <- ts1 |> pivot_longer(cols = c(S, I, R), names_to = "compartment", values_to = "count")
+ts1_long <- (ts1 
+             |> pivot_longer(cols = c(S, I, R), names_to = "Compartment", values_to = "count")
+             |> mutate(Compartment = factor(Compartment, levels = c('S','I','R')))
+)
 
-ggplot(ts1_long, aes(x = time, y = count, color = compartment)) +
+ggplot(ts1_long, aes(x = time, y = count, color = Compartment)) +
   geom_step(linewidth = 1.2) +
   labs(title = "SIR dynamics without spillover", y = "Count", x = "Time") +
   theme_minimal(base_size = 14)
@@ -118,21 +121,21 @@ ggplot(ts1_long, aes(x = time, y = count, color = compartment)) +
 # population due to other exposures - for example, due to infected animals
 # in some other maintenance population briefly entering the territory. 
 
-# TASK: Make a copy of the code presented for part 1 and modify it to 
+# TASK 1: Make a copy of all the code presented for part 1 and modify it to 
 # introduce spillover events - 
 # make functions event_sirspill and simulate_sirspill.
 # More specifically, assume that, in addition to the transmission already 
-# occurring in the model above, there is an additional rate of infection of 
-# susceptibles of lambda*S/N (total rate). Here lambda is the rate at which, 
-# for example, animals from outside of the population manage to make contact 
+# occurring, there is an additional rate of infection of susceptibles of 
+# lambda*S/N (total rate). Here lambda is the rate at which, for example,
+# animals from outside of the population manage to make contact 
 # with animals in our population of interest. 
 
-# When you are ready, scroll down to the bottom of the tutorial to find an example
-# solution, and then move onto the next parts of the tutorial using it.
+# When you are ready, scroll down to the bottom of the tutorial to find an
+# example solution, and then move onto the next parts of the tutorial using it.
 
 # Here are some hints if needed: 
 #   Update the list of '## Transitions'
-#   In the function event_sirspill, include a third event type 
+#   In the function event_sirspill, include a third event type 'Spillover'
 #   Also try to include a counter for spillovers (count.spillovers) - 
 #     this may prove handy if you get time to explore. 
 #   To run the model, think about whether any of the inputs needs to change.
@@ -141,44 +144,48 @@ ggplot(ts1_long, aes(x = time, y = count, color = compartment)) +
 ## PART 3: Explore patterns
 ## --------------------------------------------------------------------
 
-# Let's plot S, I, R over time, for different parameter values
-# Let's write a function so that it is easy to make these plots, many times.
+# Let's compare outputs for different parameter values. .
 
-plot_sirspill <- function(N, params, final_time, y0){
+# To make this easier, let's write a function that plots I over time,
+#   showing several different possible trajectories, for a set of input 
+#   parameter values
+
+plot_sirspill <- function(ntrajectories = 16, N, params, final_time, y0){
   
-  ts1 <- simulate_sirspill(final_time, y0, params)
+  ts_collect <- list()
+  for (ii in 1:ntrajectories){
+    ts_collect[[ii]] <- simulate_sirspill(final_time, y0, params)
+  }
   
-  ts1_long <- ts1 |> pivot_longer(cols = c(S, I, R), names_to = "compartment", values_to = "count")
+  ts_collect_df <- (bind_rows(ts_collect, .id = "Simulation")
+                    |> mutate(Simulation = factor(Simulation, levels = 1:ntrajectories))
+  )
   
-  gg <- ggplot(ts1_long, aes(x = time, y = count, color = compartment)) +
+  gg <- ggplot(ts_collect_df, aes(x = time, y = I)) +
     geom_step(linewidth = 1.2) +
-    labs(title = "SIR dynamics without spillover", y = "Count", x = "Time") +
+    facet_wrap(~Simulation) +
+    labs(title = "I over time", y = "Count", x = "Time") +
+    scale_x_continuous(breaks = NULL) +
     coord_cartesian(xlim=c(0, final_time)) +
     theme_minimal(base_size = 14)
-  
+
   print(gg)
   
-  return(gg)
-  
-  
 }
 
-# We can now easily now easily plot trajectories - here we plot 20 trajectories for a set of inputs
+# We can now easily now easily plot trajectories - here we plot 
+# 16 trajectories for a set of inputs
 
 N <- 50
-for (ii in 1:20){
-  print(ii)
-  readline() 
-  plot_sirspill(N, c(beta = 0.3, gamma = 0.1,lambda = 0.01), 400, c(S = N - 1, I = 1, R = 0))
-}
 
-# You need to press enter for the next plot to appear (because of readline())
-# Once you have them all, you can scroll through the plots use the right and left arrows 
-# in the plot tab
+plot_sirspill(16, N, c(beta = 0.3, gamma = 0.1,lambda = 0.01), 400, c(S = N - 1, I = 1, R = 0))
 
-# Use the above code to produce output for the following comparisons of parameter values and 
-# think about the patterns you see. Also think about how the patterns you see relate 
-# to R0 = beta/gamma, and, later in time, Reff = R0*S/N
+# TASK 2: 
+# Use the function plot_sirspill to compare outputs for different parameter
+# values (specified below) and think about the patterns you see. Also think 
+# about how the  patterns you see relate to R0 = beta/gamma, and, later in
+# time, Reff = R0*S/N
+# Pay attention to the scale of y-axis.
 
 # Don't forget to erase your graphs every now and then using graphics.off().
 
@@ -187,7 +194,7 @@ for (ii in 1:20){
 # versus 
 # c(beta = 0.2, gamma = 0.2,lambda = 0.01), 400, c(S = N - 1, I = 1, R = 0))
 
-# (2) as for (1) but with 0 infected animal to begin
+# (2) as for (1) but with 0 infected animals to begin
 # c(beta = 0.3, gamma = 0.1,lambda = 0.01), 400, c(S = N, I = 0, R = 0))
 # versus 
 # c(beta = 0.2, gamma = 0.2,lambda = 0.01), 400, c(S = N, I = 0, R = 0))
@@ -200,10 +207,6 @@ for (ii in 1:20){
 # Lastly, would we have been able to study these patterns using 
 # a deterministic model? If you have time, refer back to previous labs, 
 # and try fit and plot a corresponding deterministic model. 
-
-
-
-
 
 
 
@@ -294,9 +297,12 @@ ts1 <- simulate_sirspill(final_time, y0, params)
 
 ## And plot:
 
-ts1_long <- ts1 |> pivot_longer(cols = c(S, I, R), names_to = "compartment", values_to = "count")
+ts1_long <- (ts1 
+             |> pivot_longer(cols = c(S, I, R), names_to = "Compartment", values_to = "count")
+             |> mutate(Compartment = factor(Compartment, levels = c('S','I','R')))
+)
 
-ggplot(ts1_long, aes(x = time, y = count, color = compartment)) +
+ggplot(ts1_long, aes(x = time, y = count, color = Compartment)) +
   geom_step(linewidth = 1.2) +
   labs(title = "SIR dynamics without spillover", y = "Count", x = "Time") +
   theme_minimal(base_size = 14)
