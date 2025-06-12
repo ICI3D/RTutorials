@@ -312,21 +312,21 @@ in.treatment.effect <- 1
 n.sims <-  500
 
 ## JD: This is a fairly awkward 
-df.ests1 <- data.frame(study.number = 1:n.sims, est = NA, lower = NA, upper = NA)
+haphazardEstimates <- data.frame(study.number = 1:n.sims, est = NA, lower = NA, upper = NA)
 for (ii in 1:n.sims) {
   data.ii <- gen.data(treatment.effect = in.treatment.effect
                       , prob.treat.nocomorb = 0.5 
                       , prob.treat.comorb = 0.8)
   ests.ii <- analyse.data(data.ii)
-  df.ests1$est[ii]   <- ests.ii['est']
-  df.ests1$lower[ii] <- ests.ii['lower']
-  df.ests1$upper[ii] <- ests.ii['upper'] 
+  haphazardEstimates$est[ii]   <- ests.ii['est']
+  haphazardEstimates$lower[ii] <- ests.ii['lower']
+  haphazardEstimates$upper[ii] <- ests.ii['upper'] 
 }
 
 # Let us plot the estimates and CIs for the studies, and add a 
 #   horizontal line showing the true treatment effect.
 
-ggplot(data = df.ests1, aes(x = study.number, y = est)) +
+hplot <- ggplot(data = haphazardEstimates, aes(x = study.number, y = est)) +
   geom_errorbar(aes(ymin = lower, ymax = upper), colour = "grey") +
   geom_point(color = "red", size = 1.5) +
   geom_hline(yintercept = in.treatment.effect, colour = "blue") +
@@ -339,6 +339,8 @@ ggplot(data = df.ests1, aes(x = study.number, y = est)) +
   theme(text = element_text(size = 14)
   )
 
+print(hplot)
+
 # Does it look like we are estimating the treatment effect well?
 # What do you think is the reason for this?
 # what else do we learn from the plot?
@@ -346,37 +348,30 @@ ggplot(data = df.ests1, aes(x = study.number, y = est)) +
 # Let us calculate the bias, i.e., the average estimate minus the true 
 #   treatment effect
 
-mean(df.ests1$est) - in.treatment.effect
+mean(haphazardEstimates$est) - in.treatment.effect
 
 # In scenario (II), doctors do not get to decide on treatment - we set it randomly. 
 #   Let's suppose we provide antivirals to 70% of people, randomly. 
 #   We repeat the simulation exercise above.
 
-df.ests2 <- data.frame(study.number = 1:n.sims, est = NA, lower = NA, upper = NA)
+randomEstimates <- data.frame(study.number = 1:n.sims, est = NA, lower = NA, upper = NA)
 for (ii in 1:n.sims) {
   data.ii <- gen.data(treatment.effect = in.treatment.effect
                       , prob.treat.nocomorb = 0.7 
                       , prob.treat.comorb = 0.7)
   ests.ii <- analyse.data(data.ii)
-  df.ests2$est[ii]   <- ests.ii['est']
-  df.ests2$lower[ii] <- ests.ii['lower']
-  df.ests2$upper[ii] <- ests.ii['upper'] 
+  randomEstimates$est[ii]   <- ests.ii['est']
+  randomEstimates$lower[ii] <- ests.ii['lower']
+  randomEstimates$upper[ii] <- ests.ii['upper'] 
 }
 
-# Let us plot as before
+# ggplot lets us _redraw_ our named plot with the new data
+# %+% replaces the data
+# + adds or replaces ggplot elements
 
-ggplot(data = df.ests2, aes(x = study.number, y = est)) +
-  geom_errorbar(aes(ymin = lower, ymax = upper), colour = "grey") +
-  geom_point(color = "red", size = 1.5) +
-  geom_hline(yintercept = in.treatment.effect, colour = "blue") +
-  labs(
-    title = "Estimated treatment effect over multiple studies\n(with randomisation)",
-    x = "Study number",
-    y = "Estimated treatment effect (and 95% CI)"
-  ) +
-  theme_minimal() +
-  theme(text = element_text(size = 14)
-  )
+print(hplot %+% randomEstimates + labs(
+    title = "Estimated treatment effect over multiple studies\n(with randomisation)"
+))
 
 # Let's also calculate the bias again
 
@@ -392,7 +387,6 @@ ggplot(data = df.ests2, aes(x = study.number, y = est)) +
 #   comorbidities, and more or less extreme confounder imbalances between
 #   the two arms (by changing inputs).
 
-<<<<<<< HEAD
 # Circling back to where we started:
 #   When you are looking for data and results to inform inputs and assumptions 
 #   related to  transmission rates for your SARS-CoV-2 model, think carefully
@@ -400,7 +394,7 @@ ggplot(data = df.ests2, aes(x = study.number, y = est)) +
 #   In the estimates that you find, think carefully about potential bias and 
 #   variability.
 #   Incorrect model inputs/assumptions --> incorrect outputs!
-=======
+
 # Remember, in each of the two sets of simulations, both severity and treatment
 #   affect the outcome. In both, we assume that we cannot measure severity and
 #   cannot include it in our analysis.  Our goal is to understand the effect 
@@ -441,5 +435,4 @@ load('Mutxt.Rdata')
 # An example of an analysis is
 
 summary(lm(scar_3W ~ drug + scrape, data=mutxt))
->>>>>>> master
 
