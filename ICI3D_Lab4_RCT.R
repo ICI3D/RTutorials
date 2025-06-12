@@ -12,7 +12,7 @@
 #   Suppose you are building a SARS-CoV-2 model, and are 
 #   trying to decide on your inputs and assumptions related to 
 #   transmission rates. 
-#   As part of this, you may want to understand the affect of 
+#   As part of this, you may want to understand the effect of 
 #   antiviral treatment on changes in viral load in the
 #   infected person, as infectiousness may be higher for 
 #   people with higher levels of the virus.
@@ -26,10 +26,11 @@
 
 
 # In this tutorial, you will: 
-#   Simulate data with randomisation of treatment, and estimate the 'affect'
-#   Simulate data without randomisation of treatment, and estimate the 'affect'
-#   Repeat the above multiple times to understand the affect of 
+#   Simulate data with randomisation of treatment, and estimate the 'effect'
+#   Simulate data without randomisation of treatment, and estimate the 'effect'
+#   Repeat the above multiple times to understand the effect of 
 #     randomisation on estimation.
+
 
 library(tidyverse)
 
@@ -71,6 +72,7 @@ which(assignments==1)
 #### Warm up 2: Sample values from a normal distribution
 
 # To simulate a given number of normal random variates, use the 'rnorm' command.  
+#   You were introduced to sampling from distributions in Tutorial 3.
 #   Here, we simulate 100 normal variates with a mean of 1 and a standard
 #   deviation of 0.3, and plot the data in a histogram
 
@@ -99,7 +101,7 @@ v1 <- rnorm(100, mean = 1, sd = 0.3)
 
 # We will make a data frame which contains the following columns:
 #   study.id (1,2,..), treatment (0/1), and outcome (a continuous number),
-#   and where each row provides the data for one subject.
+#   where each row provides the data for one subject.
 
 # The average or mean outcome for the treatment group can be different to that
 #   in the control group --  this difference is the 'treatment effect',
@@ -107,9 +109,9 @@ v1 <- rnorm(100, mean = 1, sd = 0.3)
 
 # To begin, we will assume the treatment effect is zero. 
 
-n.subjects        <- 500    # number of subjects in study (even number for this tutorial)
+n.subjects        <- 500    # number of subjects in study (choose even number for this tutorial)
 control.mean      <- 2      # mean outcome for the control group
-treatment.effect  <- 0     # difference in mean for the treatment group (vs control)
+treatment.effect  <- 0      # difference in mean for the treatment group (vs control)
 outcome.sd        <- 0.5    # spread (standard deviation) of the outcome in each arm
 
 dset            <- data.frame(study.id = 1:n.subjects)
@@ -130,8 +132,8 @@ head(dset, 20)
 # Let us plot histograms of the outcomes, by arm:
 
 (ggplot(data = dset, mapping = aes(x=outcome))
-  + labs(x = 'Acuity (logMAR)', y = 'Frequency'
-         , title = 'Acuity by treatment group')
+  + labs(x = 'Outcome (change log viral load)', y = 'Frequency'
+         , title = 'Outcome by treatment group')
   + geom_histogram(bins = 20, fill = 'red', color = 'black')
   + facet_grid(treatment~.)
   + theme_bw()
@@ -153,22 +155,22 @@ with(means, mean[treatment == 1] - mean[treatment == 0])
 # Each time you run the code above, do you create the same dataset?
 
 
-# Now that we have warmed up, let's dive in. 
-# Let us quickly clear up our environment before moving on. 
+# Now that we have warmed up, let's dive into our simulation. 
+# Let us clear up our environment before moving on. 
 
 rm(list=ls())
 
 
-#### A function to generate data
+#### (1) A function to generate data
 
 # Our goal is to explore effect estimation under two different scenarios - 
-#   (I) One for a study where treatment is not randomly assigned 
-#   (II) One for a study where treatment is randomly assigned. 
+#   (I) A study where treatment is not randomly assigned. 
+#   (II) A study where treatment is randomly assigned. 
 
 # Each person in our dataset either receives antiviral treatment or not, 
-#   and can have a comordity or not.
-# The presence of comorbities is a confounder, because a doctor 
-#   may decide on the treatment according to this, and 
+#   and can have a comorbidity or not.
+# The presence of comorbidities is a confounder, because a doctor 
+#   may decide on the treatment plan according to this, and 
 #   comorbidities can also directly impact our outcome
 #   (e.g. perhaps people with other illness have a slower drop in 
 #   in viral load)
@@ -178,20 +180,11 @@ rm(list=ls())
 #   We have also specified default values for all inputs to the 
 #   function.
 
-# Carefully work through the function below and make sure you understand each line. 
+# Work through the function below and make sure you understand each line. 
 # Also think about how the inputs need to be set for scenarios (I) and (II).  
 
-# Suppose now that randomisation was not applied. 
-#   Instead doctors could choose treatment assignments, and they based their decisions
-#   on how compromised baseline acuity was.
-#   Here we extend our data generation function to take this into account:
-#   people who were 'severe' were provided the treatment with 
-#   probability treatment.prob.severe (default of 0.8), and people not 'severe' 
-#   received the treatment with probability treatment.prob.notsevere 
-#   (default of 0.4)
-
-# Ask mentors and faculty if you are confused or would like to confirm you understanding
-# Or talk it through with your neighbour.
+# Ask the teaching team if you are confused or would like to confirm you 
+# understanding. Or talk it through with your neighbour!
 
 gen.data <- function(n.subjects = 100 # number of subjects
                      , ref.mean = 2 # mean outcome in control group without comorbidites
@@ -214,11 +207,11 @@ gen.data <- function(n.subjects = 100 # number of subjects
 
 # Let us try out the function
 
-gen.data() # when you do not specify an input, the default value
+gen.data() # when you do not specify an input, the default value is used, 
 
-# Choose a couple of inputs to change (one at a time), and try to check whether 
-# the dataset changes in the expected way - using some of what you have learnt
-# about exploring data 
+# Choose a couple of inputs to change (one at a time), and try to check 
+# whether the dataset changes in the expected way - using some of what
+# you have learnt about exploring data.
 
 # For example, compare 
 d1 <- gen.data(treatment.effect = 0) 
@@ -232,17 +225,17 @@ d3 |> group_by(treatment) |> summarise(mean = mean(outcome))
 
 
 
-#### Understanding how randomisation balances confounders
+#### (2) Understanding how randomisation balances confounders
   
 # Let's return to our two study designs:
 #   (I) A study where treatment is not randomly assigned 
 #   (II) A study where treatment is randomly assigned. 
   
 # In (I), the doctor can decide who gets treatment and may decide to 
-#   more frequently provide patients with comorbidities antivirals. 
+#   more frequently provide antivirals to patients with comorbidities.  
 #   Which inputs above would change?
   
-# An example of data that may be generated in such a scenario is:    
+# An example of data that may be generated in scenario (I) is:    
   
 d1.norandom <- gen.data(prob.treat.nocomorb = 0.5 
                           , prob.treat.comorb = 0.8)
@@ -250,10 +243,12 @@ d1.norandom <- gen.data(prob.treat.nocomorb = 0.5
 d1.norandom |> group_by(comorbidity) |> summarise(mean = mean(treatment))
 d1.norandom |> group_by(treatment) |> summarise(mean = mean(comorbidity))
 
-# We can see that the confounder is not balanced between the two treatment arms. 
+# We can see that the confounder is not balanced between the two 
+# treatment arms. 
 
 # In (II) treatment is randomly assigned, and therefore cannot 
-#   be related to whether the person has a comorbidity. 
+#   be related to whether the person has a comorbidity.
+# An example of data that may be generated in scenario (II) is:   
 
 d1.random <- gen.data(prob.treat.nocomorb = 0.70 
                       , prob.treat.comorb = 0.70)
@@ -265,24 +260,25 @@ d1.random |> group_by(treatment) |> summarise(mean = mean(comorbidity))
 #   by study design.
 
 # It is sometimes difficult to see the above because of noise in our dataset.
-# Try to increase the study size and rerun the lines above to convince yourself
-#   of the imbalance / balance of comorbity by treatment arm. 
+# If needed, increase the study size and rerun the lines above to convince
+#   yourself of the imbalance / balance of comorbidity by treatment arm. 
 
 
 
-#### Estimating the difference
+#### (3) Estimating the difference
 
-# We are going to need a way to analyse the data. Below is a function for doing 
-#   this. Don't worry about the details (if you have time at the end you can 
-#   investigate it more) - just know if you provide it a dataset with columns
+# We are going to need a way to analyse the data. Below is a function for 
+#   doing this. Don't worry about or spend time on the details!  
+#   Just know that if you provide it a dataset with columns
 #   'treatment' (0 for control and 1 for treatment) and 'outcome' (numerical)
-#   it will provide you an estimate of the difference in the average outcome for 
-#   your treatment and control arms, with a 95% confidence interval. 
-#   It obtains this estimate by comparing the recorded outcomes for the two groups.
+#   it will provide you an estimate of the difference in the average outcome
+#   for your treatment and control arms, with a 95% confidence interval. 
+#   It obtains this estimate by comparing the recorded outcomes for the two
+#   groups.
 
 
 analyse.data <- function(data.in){
-  # using central limit theorem
+  # difference in means using central limit theorem
   mean.diff <- mean(data.in$outcome[data.in$treatment == 1]) - mean(data.in$outcome[data.in$treatment == 0])
   est.sd <- sqrt(var(data.in$outcome[data.in$treatment == 1])/length(data.in$outcome[data.in$treatment == 1]) +
                    var(data.in$outcome[data.in$treatment == 0])/length(data.in$outcome[data.in$treatment == 0]))
@@ -302,25 +298,26 @@ analyse.data(data.temp)
 
 # Very importantly - what the is the TRUE values that we are trying to estimate?
 # It is the 'treatment.effect'. 
-# You specified this value to generate the data, so we know the correct 'answer' to 
-# our estimation - this is what makes simulation so useful!
+# You specified this value to generate the data, so we know the correct/ideal 
+# 'answer' to our estimation - this is what makes simulation so useful!
 
 
 
-#### Multiple studies - without and with randomisation 
+#### (4) Multiple studies - without and with randomisation 
 
-## Let us repeat this process of generating and analysing the data multiple times, 
-#   and explore our results.
-#  We will 'repeat' our study multiple times using a 'for' loop, and gatHering our
-#  estimates in a data frame. We will do 500 simulations. 
+## Let us repeat this process of generating and analysing the data, multiple
+#   times, and explore our results.
+#   We will 'repeat' our study using a 'for' loop, and gathering our estimates 
+#   in a data frame. We will do 500 simulations. 
 
-# We will set the treatment.effect to 1 - this is the number we are trying to estimate.
-# We will mostly keep the other inputs as the default values.
+# We will set the treatment.effect to 1 - this is the number we are trying 
+#   to estimate. We will mostly keep the other inputs as the default values.
 
 in.treatment.effect <- 1
 
 # In scenario (I), doctors get to decide on treatment. 
-# Let's suppose they provide antivirals to 50% of those without comorbidities and 80% with. 
+# Let's suppose they provide antivirals to 50% of those without comorbidities 
+#   and 80% with. 
 
 n.sims <-  500
 
@@ -355,13 +352,15 @@ ggplot(data = df.ests1, aes(x = study.number, y = est)) +
 # Why?
 # what else do we learn from the plot?
 
-# Let us calculate the bias, i.e., the average estimate minus the true treatment effect
+# Let us calculate the bias, i.e., the average estimate minus the true 
+#   treatment effect
 
-mean(df.ests$est) - in.treatment.effect
+mean(df.ests1$est) - in.treatment.effect
 
 
 # In scenario (II), doctors do not get to decide on treatment - we set it randomly. 
-# Let's suppose we provide antivirals to 70% of people, randomly. 
+#   Let's suppose we provide antivirals to 70% of people, randomly. 
+#   We repeat the simulation exercise above.
 
 df.ests2 <- data.frame(study.number = 1:n.sims, est = NA, lower = NA, upper = NA)
 for (ii in 1:n.sims) {
@@ -393,12 +392,23 @@ ggplot(data = df.ests2, aes(x = study.number, y = est)) +
 
 ? ## FIXME
   
-# Again, are we estimating the value well? Why? What else do we learn from the plot?
+# Again, are we estimating the value well? Why? What else do we learn 
+#   from the plot?
 
-# Once you understand and reflect on the above - try play around. For example
-# To look at the results in a different way you could order the studies in the plot
-# by the size of estimates, or draw histograms of your estimates for the two scenarios. 
-# You can try different study sizes, different prevalence values for comorbities, and 
-# more or less extreme confounder imbalances between the two arms (by changing inputs). 
-
+# Once you understand and reflect on the above - try play around. 
+# For example:
+#   To look at the results in a different way you could order the studies
+#   in the plot by the size of estimates, or draw histograms of your 
+#   500 estimates for the two scenarios. 
+#   You can try different study sizes, different prevalence values for 
+#   comorbidities, and more or less extreme confounder imbalances between
+#   the two arms (by changing inputs).
+  
+# Circling back to where we started:
+#   When you are looking for data and results to inform inputs and assumptions 
+#   related to  transmission rates for your SARS-CoV-2 model, think carefully
+#   about the studies you use.
+#   In the estimates that you find, think carefully about potential bias and 
+#   variability.
+#   Incorrect model inputs/assumptions --> incorrect outputs!
   
