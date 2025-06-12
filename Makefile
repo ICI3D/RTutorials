@@ -90,6 +90,9 @@ ICI3D_RTutorial_5_DataCleaning.batch.Rout: batchdir=data/dataCleaning/
 
 ######################################################################
 
+## ICI3D_Ex1_StochasticSpillover.batch.Rout: ICI3D_Ex1_StochasticSpillover.R testing/ICI3D_Ex1_StochasticSpillover.answers.R
+ICI3D_Ex1_StochasticSpillover.batch.Rout: ICI3D_Ex1_StochasticSpillover_functions.R
+
 ## ICI3D_Lab1_ODEmodels.batch.Rout: ICI3D_Lab1_ODEmodels.R testing/ICI3D_Lab1_ODEmodels.answers.R
 
 ## ICI3D_Lab2_Heterogeneity.R

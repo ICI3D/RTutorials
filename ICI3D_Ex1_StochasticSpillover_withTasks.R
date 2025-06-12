@@ -203,8 +203,7 @@ plot_sirspill(nTraj=16,
 # c(beta = 0.3, gamma = 0.1,lambda = 0.04), 400, c(S = pop-1, I = 1, R = 0))
 # versus 
 # c(beta = 0.2, gamma = 0.2,lambda = 0.04), 400, c(S = pop-1, I = 1, R = 0))
-
-# Lastly, would we have been able to study these patterns using 
+* # Lastly, would we have been able to study these patterns using 
 # a deterministic model? If you have time, refer back to previous labs, 
 # and try fit and plot a corresponding deterministic model. 
 
