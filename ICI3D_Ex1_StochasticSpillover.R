@@ -211,7 +211,7 @@ plot_sirspill(nTraj=16,
 ## PART 2: Solution 
 ## --------------------------------------------------------------------
 
-## Our version of the functions for 
+## Our version of the functions for part 2 can be found 
 
 # Compartments:
 # (S,I,R) = (susceptible, infectious, removed)
