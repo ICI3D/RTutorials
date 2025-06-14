@@ -18,6 +18,7 @@
 
 ## You should already have installed macpan2
 ## If not, please do it (see https://canmod.github.io/macpan2/#installation)
+packageVersion("macpan2") ## should be version >=2.4.0, reinstall if not
 
 ######################################################################
 
@@ -73,7 +74,7 @@ time_steps = 100
 # make a default simulator object; this will do a simple discrete-time simulation
 sirDiscrete = mp_simulator(model = sirSpec
 	, time_steps = time_steps
-	, outputs = c("I", "S") ## FIXME (see below)
+	, outputs = c("I", "S")
 )
 
 # Run
@@ -131,8 +132,7 @@ sirDS = mp_simulator(model = mp_discrete_stoch(sirSpec)
 )
 
 # Run
-## FIXME: What should you add here to make this replicable?
-sirDSTraj <- mp_trajectory(sirDS, include_initial=TRUE)
+sirDSTraj <- mp_trajectory(sirDS, include_initial = TRUE)
 ## head(sirDSTraj) ## Try this on the console
 
 ### ADD Code to plot this, too.
@@ -143,7 +143,7 @@ sirDSTraj <- mp_trajectory(sirDS, include_initial=TRUE)
 ######################################################################
 
 ## To properly understand a stochastic simulation, we should try it many times
-## There is a macpan function for this, called mp_trajectory_ensemble
+## There is a macpan2 function for this, called mp_trajectory_ensemble
 
 dsReps <- 10
 sirDSTrajectories <- mp_trajectory_replicate(sirDS, include_initial=TRUE, n=dsReps)
