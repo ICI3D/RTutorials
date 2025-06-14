@@ -16,15 +16,15 @@
 ## Run a simple stochastic analogue of the same model
 ## Extend your model (add a compartment or a flow)
 
-## You should already have installed macpan2
-## If not, please do it (see https://canmod.github.io/macpan2/#installation)
+## Please make sure macpan2 is installed
+## For help, see https://canmod.github.io/macpan2/#installatio)
 
 ######################################################################
 
 ## You can learn a bit about macpan2 at this workshop page
 #### https://canmod.github.io/macpan-workshop/
 
-## If you haven't already, it's recommended that you watch _at least_ the second video: Specifying simple models
+## It's recommended that you watch at least the second video: Specifying simple models
 #### https://drive.google.com/file/d/1BwAYWPi6e3PDn4AhqVsM14KkHie6Vx26
 
 ## Load the library
@@ -168,5 +168,10 @@ print(ggplot(sirBig)
 	+ geom_line()
 )
 
-## What is group doing here? What happens if you plot without it? 
+## What is group doing above? What happens if you plot without it? 
 ## What other things can you try with this?
+
+######################################################################
+
+## Can you extend this model? What would be a simple, logical extension?
+## Can you make code for it and do some experiments?

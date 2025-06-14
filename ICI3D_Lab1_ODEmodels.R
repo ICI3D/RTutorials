@@ -173,6 +173,7 @@ library(deSolve)                # Load libary to be used for numerical integrati
 ## The function within deSolve that we will be using is called lsoda(). Let's
 ## look at the help file for this function:
 
+## Things like help and View statements, which are for looking at now, may be better typed directly into the console below.
 ## ?lsoda ## CONSOLE
 
 ## This help file gives some detail on the history of the algorithm as well as
@@ -182,7 +183,7 @@ library(deSolve)                # Load libary to be used for numerical integrati
 ## and parms. Read through the "Arguments" section for the descriptions of these
 ## four inputs. Because we have already defined our function and seen how it
 ## works, these arguments should seem familiar.
-##
+
 ## We have already defined the vectors that we will use for two of the arguments
 ## (y, the vector of the initial values of the state variables, and parms, the
 ## vector of parameter values). We have also defined a third argumet, func,

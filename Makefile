@@ -47,6 +47,7 @@ branchdir:
 ## mpLabCompartmental.batch.Rout: mpLabCompartmental.R testing/mpLabCompartmental.answers.R
 
 ## mpLabFitting.batch.Rout: mpLabFitting.R testing/mpLabFitting.answers.R
+## git log -- mpLabFitting.R 
 
 ######################################################################
 
@@ -90,6 +91,9 @@ ICI3D_RTutorial_5_DataCleaning.batch.Rout: batchdir=data/dataCleaning/
 
 ######################################################################
 
+ICI3D_Lab_Heterogeneous_Groups.batch.Rout: ICI3D_Heterogeneous_Groups.R ICI3D_Lab_Heterogeneous_Groups.R
+## ICI3D_Lab_Heterogeneous_Groups.batch.Rout: ICI3D_Lab_Heterogeneous_Groups.R testing/ICI3D_Lab_Heterogeneous_Groups.answers.R 
+
 ## ICI3D_Ex1_StochasticSpillover.batch.Rout: ICI3D_Ex1_StochasticSpillover.R testing/ICI3D_Ex1_StochasticSpillover.answers.R
 ICI3D_Ex1_StochasticSpillover.batch.Rout: ICI3D_Ex1_StochasticSpillover_functions.R
 
@@ -126,6 +130,12 @@ HetSIR.Rout: HetSIR_functions.Rdata HetSIR.R
 
 seir.w.seasonal.Rout: seir.w.seasonal.R
 	$(pipeR)
+
+######################################################################
+
+## Edit in place
+
+## perl -pi -f "test.pl"
 
 ######################################################################
 
