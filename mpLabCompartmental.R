@@ -20,18 +20,24 @@
 ## If not, please do it (see https://canmod.github.io/macpan2/#installation)
 packageVersion("macpan2") ## should be version >=2.4.0, reinstall if not
 
-######################################################################
 
-## You can learn a bit about macpan2 at this workshop page
+##### Reference Material #############################################
+
+## You can learn a bit about macpan2 here
+#### https://canmod.github.io/macpan2
 #### https://canmod.github.io/macpan-workshop/
 
 ## If you haven't already, it's recommended that you watch _at least_ the second video: Specifying simple models
 #### https://drive.google.com/file/d/1BwAYWPi6e3PDn4AhqVsM14KkHie6Vx26
 
-## Load the library
-library(macpan2)
+## If you prefer to read rather than watch, see this quick start guide
+#### https://canmod.github.io/macpan2/articles/quickstart
 
 ######################################################################
+
+
+## Load the library
+library(macpan2)
 
 ## Build a model structure
 
