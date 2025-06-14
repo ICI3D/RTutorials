@@ -1,0 +1,16 @@
+ICI3D_Ex1_StochasticSpillover_functions.R ICI3D_Stochastic_Functions.R
+ICI3D_Ex1_StochasticSpillover.R ICI3D_Stochastic_Exercise.R
+ICI3D_Lab1_ODEmodels.R ICI3D_ODE_Lab.R
+ICI3D_Lab2_Heterogeneity.R ICI3D_HeterogeneityStochastic_Lab.R
+ICI3D_Lab3_EpiStudyDesign.answers.R ICI3D_EpiStudyDesign_Lab.answers.R
+ICI3D_Lab3_EpiStudyDesign.R ICI3D_EpiStudyDesign_LabH.R
+ICI3D_Lab4_RCT.R ICI3D_RCT_Lab.R
+ICI3D_Lab5a_introLikelihoodPlusRejectionP.R ICI3D_LikelihoodPlusRejection_Lab.R
+ICI3D_Lab5_introLikelihood.R ICI3D_introLikelihood_Lab.R
+ICI3D_Lab6_MLE_SIV_HIV.R ICI3D_MLE_HIV_Lab.R
+ICI3D_Lab7_MCMC-Binomial.R ICI3D_MCMC_Binomial_Lab7.R
+ICI3D_Lab8_MCMC-SI_HIV.R ICI3D_MCMC_HIV_Lab.R
+ICI3D_RTutorial_4_VisualizingData.R ICI3D_VisualizingDataBase.R
+ICI3D_RTutorial_5_DataCleaning.R ICI3D_DataCleaning_Exercise.R
+ICI3D_RtvTutorial_4.R ICI3D_VisualizingDataTidy.R
+## One highly obsolete lab has been deleted for now (it was called Lab6 and basically the same as Lab2)
