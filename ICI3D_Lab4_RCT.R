@@ -311,7 +311,6 @@ in.treatment.effect <- 1
 
 n.sims <-  500
 
-## JD: This is a fairly awkward 
 haphazardEstimates <- data.frame(study.number = 1:n.sims, est = NA, lower = NA, upper = NA)
 for (ii in 1:n.sims) {
   data.ii <- gen.data(treatment.effect = in.treatment.effect
@@ -394,45 +393,3 @@ print(hplot %+% randomEstimates + labs(
 #   In the estimates that you find, think carefully about potential bias and 
 #   variability.
 #   Incorrect model inputs/assumptions --> incorrect outputs!
-
-# Remember, in each of the two sets of simulations, both severity and treatment
-#   affect the outcome. In both, we assume that we cannot measure severity and
-#   cannot include it in our analysis.  Our goal is to understand the effect 
-#   of treatment on the outcome.
-
-# What is the interpretation of the estimates in the first simulation 
-#   (with randomisation)  and in the second (without randomisation)?
-
-# If you are done, you can play around with different values for some of the inputs.
-
-########## PART TWO ##########
-
-# Here you will get to explore some clinical trial data. These data (from the
-#   Mycotic Ulcer Therapeutic Exploratory Trial) can only be used for this lab.
-#   To protect confidentiality, we have added a tiny random value to some of 
-#   the scar values from the actual trial.
-
-# The (secondary) outcome you will focus on here is the scar size at 3 weeks.
-
-# To load the data, use:
-
-load('Mutxt.Rdata')
-
-# The variables are:
-#   patid           -- patient ID
-#   drug            -- drug assignment: 0 is natamycin, 1 is voriconazole 
-#   scrape          -- scraping: 0 is no, 1 is yes
-#   age             -- age
-#   sex             -- sex
-#   if_perf         -- 1 if a perforation happened
-#   scar_baseline   -- scar size at baseline
-#   scar_3W        -- scar size at 3 weeks
-
-# Try to estimate the treatment effect on scar size at 3 weeks. 
-#   Consider controlling for baseline scar size.
-#   Is it necessary to control for a covariate? Why might one do so?
-
-# An example of an analysis is
-
-summary(lm(scar_3W ~ drug + scrape, data=mutxt))
-
