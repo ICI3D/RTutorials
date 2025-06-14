@@ -137,7 +137,13 @@ seir.w.seasonal.Rout: seir.w.seasonal.R
 
 Sources += names.csv
 
-## perl -pi -f "test.pl"
+changeNames: names.perl
+	perl -pi -f $< *.R
+
+Ignore += names.perl
+names.perl: names.csv names.pl
+	$(NOTSED)
+
 
 ######################################################################
 
