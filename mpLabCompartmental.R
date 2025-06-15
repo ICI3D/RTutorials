@@ -19,18 +19,23 @@
 ## Please make sure macpan2 is installed
 ## For help, see https://canmod.github.io/macpan2/#installatio)
 
-######################################################################
+##### Reference Material #############################################
 
-## You can learn a bit about macpan2 at this workshop page
+## You can learn a bit about macpan2 here
+#### https://canmod.github.io/macpan2
 #### https://canmod.github.io/macpan-workshop/
 
 ## It's recommended that you watch at least the second video: Specifying simple models
 #### https://drive.google.com/file/d/1BwAYWPi6e3PDn4AhqVsM14KkHie6Vx26
 
-## Load the library
-library(macpan2)
+## If you prefer to read rather than watch, see this quick start guide
+#### https://canmod.github.io/macpan2/articles/quickstart
 
 ######################################################################
+
+
+## Load the library
+library(macpan2)
 
 ## Build a model structure
 
@@ -73,7 +78,7 @@ time_steps = 100
 # make a default simulator object; this will do a simple discrete-time simulation
 sirDiscrete = mp_simulator(model = sirSpec
 	, time_steps = time_steps
-	, outputs = c("I", "S") ## FIXME (see below)
+	, outputs = c("I", "S")
 )
 
 # Run
@@ -131,8 +136,7 @@ sirDS = mp_simulator(model = mp_discrete_stoch(sirSpec)
 )
 
 # Run
-## FIXME: What should you add here to make this replicable?
-sirDSTraj <- mp_trajectory(sirDS, include_initial=TRUE)
+sirDSTraj <- mp_trajectory(sirDS, include_initial = TRUE)
 ## head(sirDSTraj) ## Try this on the console
 
 ### ADD Code to plot this, too.
@@ -143,7 +147,7 @@ sirDSTraj <- mp_trajectory(sirDS, include_initial=TRUE)
 ######################################################################
 
 ## To properly understand a stochastic simulation, we should try it many times
-## There is a macpan function for this, called mp_trajectory_ensemble
+## There is a macpan2 function for this, called mp_trajectory_ensemble
 
 dsReps <- 10
 sirDSTrajectories <- mp_trajectory_replicate(sirDS, include_initial=TRUE, n=dsReps)
