@@ -31,7 +31,10 @@ args(makeGroups)
 
 ## Try: 
 makeGroups(n=10, m=2, kappa=1)
-boxplot(makeGroups(n=10, m=2, kappa=1))
+boxplot(makeGroups(n=10, m=2, kappa=1)
+	, main="Activity rate by group"
+	, ylab = "Group reproductive number"
+)
 
 ## You can see that even kappa=1 (standard deviation equals mean)
 ## gives big differences between groups

@@ -16,6 +16,6 @@ rates <- (ggplot()
 	+ geom_line(aes(y=cI))
 	+ geom_line(aes(y=cS), color="blue")
 )
-print(rates %+% groupSim(cbar=4.0, kappa=0.2))
-print(rates %+% groupSim(cbar=4.0, kappa=0.8))
+print(rates %+% groupSim(cbar=2.0, kappa=0.2))
+print(rates %+% groupSim(cbar=2.0, kappa=0.8))
 
