@@ -26,13 +26,13 @@ numControl <- numCommunities - numVacc
 ## We're going to do a hazard-based model;
 ## that means we describe risk as total Force of Infection (foi)
 dat <- tibble(
-	village = as.character(1:numCommunities)
-	, treatment = sample(c(
-		rep("Vaccinate", numVacc)
-		, rep("Control", numControl)
-	))
-	, numElders = rnbinom(numCommunities, mu=aveElders, size=shapeElders)
-	, foi = rlnorm(numCommunities, foiMean, foilsd)
+  village = as.character(1:numCommunities)
+  , treatment = sample(c(
+    rep("Vaccinate", numVacc)
+    , rep("Control", numControl)
+  ))
+  , numElders = rnbinom(numCommunities, mu=aveElders, size=shapeElders)
+  , foi = rlnorm(numCommunities, foiMean, foilsd)
 )
 
 summary(dat)
@@ -41,33 +41,33 @@ summary(dat)
 ## Randomly infect people and calculate the proportion infected
 ## The probability of _surviving_ infection is 1 - exp(-foi)
 dat <- (dat
-	%>% mutate(
-		foi = ifelse(treatment=="Vaccinate", foi*(1-protection), foi)
-		, infected = rbinom(numCommunities, numElders, 1-exp(-foi))
-		, propInf = infected/numElders
-	)
+        |> mutate(
+          foi = ifelse(treatment=="Vaccinate", foi*(1-protection), foi)
+          , infected = rbinom(numCommunities, numElders, 1-exp(-foi))
+          , propInf = infected/numElders
+        )
 )
 
 ## Now examine the table visually in rstudio by clicking on the right
 
 ## Check the distribution of populations 
 print(dat 
-	%>% summarise(
-		meanSize=mean(numElders)
-		, sdSize = sd(numElders)
-	)
+      |> summarise(
+        meanSize=mean(numElders)
+        , sdSize = sd(numElders)
+      )
 )
 
 ## Visualize the results
 print(
-	ggplot(dat, aes(treatment, propInf))
-	+ geom_boxplot()
+  ggplot(dat, aes(treatment, propInf))
+  + geom_boxplot()
 )
 
 ## Make a model and fit it
 m <- glm(propInf ~ treatment
-	, data=dat, weights=numElders
-	, family=binomial(link="cloglog")
+         , data=dat, weights=numElders
+         , family=binomial(link="cloglog")
 )
 
 ##
