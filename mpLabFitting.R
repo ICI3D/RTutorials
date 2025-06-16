@@ -173,6 +173,7 @@ calibrator = (hiv4init
         ## allows us to fit on the transformed scale)
       ## , par = c("log_lambda0")
       , par = c("log_lambda0", "alpha")
+      ## , par = c("log_lambda0", "alpha", "rho")
   )
 )
 
