@@ -28,16 +28,16 @@ pC = 1 - exp(-hC*studyTime)
 pT = 1 - exp(-hT*studyTime)
 
 study <- tibble(id = as.factor(1:N)
-	, group = sample(c("C", "T"), N, replace=TRUE)
-	, risk = case_when(
-		group=="C" ~ pC 
-		, group=="T" ~ pT 
-	)
+                , group = sample(c("C", "T"), N, replace=TRUE)
+                , risk = case_when(
+                  group=="C" ~ pC 
+                  , group=="T" ~ pT 
+                )
 )
 
 study <- (study
-	%>% mutate(inf = rbinom(N, 1, risk))
-	%>% select(-risk)
+          |> mutate(inf = rbinom(N, 1, risk))
+          |> select(-risk)
 )
 
 print(study)
