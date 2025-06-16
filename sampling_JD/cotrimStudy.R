@@ -17,7 +17,7 @@ seed <- 228
 
 ### Calculate protection proportions
 oddProb <- function(o){
-	return(o/(o+1))
+  return(o/(o+1))
 }
 
 ## Derived quantities
@@ -34,26 +34,26 @@ newNum <- participants-socNum
 set.seed(seed)
 
 setup <- tibble(
-	people = as.factor(1:participants)
-	, treatment = sample(c(
-		rep("cotrim", socNum)
-		, rep("new", newNum)
-	))
+  people = as.factor(1:participants)
+  , treatment = sample(c(
+    rep("cotrim", socNum)
+    , rep("new", newNum)
+  ))
 )
 
 result <- (setup
-	%>% mutate(
-		cureProb = ifelse(treatment=="cotrim", base_cure, new_cure)
-		, cured = rbinom(participants, size=1, prob=cureProb)
-	)
+           |> mutate(
+             cureProb = ifelse(treatment=="cotrim", base_cure, new_cure)
+             , cured = rbinom(participants, size=1, prob=cureProb)
+           )
 )
 
 ## Let's imagine you're a researcher and all you see is these data
 ## What would you conclude?
 
 mod <- glm(cured ~ treatment
-	, family=binomial()
-	, data = result
+           , family=binomial()
+           , data = result
 )
 
 print(mod)
