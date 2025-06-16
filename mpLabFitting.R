@@ -39,8 +39,7 @@ hiv4spec = mp_tmb_model_spec(
 		during = c(fn, flows)
 )
 
-## What's a good way to quickly show the diagram but without misleading people about the flows to nowhere?
-##   SW: does this work for you?
+## We can make a rough sketch to confirm that we have the right model!
 system.file("utils", "box-drawing.R", package = "macpan2") |> source()
 layout = mp_layout_grid(hiv4spec)
 (layout
@@ -49,7 +48,6 @@ layout = mp_layout_grid(hiv4spec)
   |> draw_inflows(layout, show_labels = TRUE, lab = "rate")
 )
 
-
 ######################################################################
 
 ## Pick some parameters and create an implementation of our specification
@@ -57,16 +55,19 @@ layout = mp_layout_grid(hiv4spec)
 ## parameters: all rates are per year.
 ## Inspired by Kretzschmar et al. 2013
 ## https://www.pnas.org/doi/full/10.1073/pnas.1301801110
+
+rho <- mean(c(1/0.271, 1/8.31, 1/1.184, 1/1.316))
+print(rho)
 params = list(
 	# per-capita demographics
 		mu = 0.018	 ## death rate
 	, beta = 0.02	## birth rate
 
 	# per-capita progression rates
-	, rho = mean(c(1/0.271, 1/8.31, 1/1.184, 1/1.316)) ## untreated
+	, rho = rho
 
 	, lambda0 = 0.65	## baseline transmission rate
-	, alpha = 1 ## non-linearity parameter
+	, alpha = 4 ## non-linearity parameter
 )
 
 ## initial conditions
@@ -108,7 +109,7 @@ basePrev <- (baseSim
 	|> rename(prevalence=value)
 )
 
-## And now we want to use ggplot to plot these structured objects
+## And now we want to use ggplot to plot these structured objects (another exception)
 library(ggplot2); theme_set(theme_bw())
 
 ## Modelers have historically looked at prevalence here
@@ -117,18 +118,20 @@ print(ggplot(basePrev)
 	+ geom_line()
 )
 
-## But the inferred population effects are quite dramatic
+## But the inferred population effects are quite dramatic!
+## Worth keeping in mind
 baseState <- (baseSim 
 	|> filter(matrix!="P")
-	|> rename(proportion=value, state=matrix)
+	|> rename(indivs=value, state=matrix)
 )
 
 ## Showing state variables as a proportion of the _starting_ population size
 print(ggplot(baseState)
-	+ aes(time, proportion, color=state)
+	+ aes(time, indivs, color=state)
 	+ geom_line()
 )
 
+######################################################################
 
 ## Now we will try calibration. Please read this article before 
 ## proceeding: https://canmod.github.io/macpan2/articles/calibration
@@ -158,7 +161,7 @@ set.seed(1)
 calibrator = (hiv4init
 	## Change the value of lambda0 so that the calibrator has to infer 
 	## the true value (0.65) from the noisy simulated data.
-  |> mp_tmb_update(default = list(lambda0 = 1))
+  |> mp_tmb_update(default = list(lambda0 = 1, alpha=0))
 	|> mp_tmb_calibrator(
         data = noisyI
         
@@ -168,7 +171,8 @@ calibrator = (hiv4init
         ## The parameter to fit is the log transform of lambda0
         ## (prefixing parameters by common transformation names
         ## allows us to fit on the transformed scale)
-      , par = c("log_lambda0")
+      ## , par = c("log_lambda0")
+      , par = c("log_lambda0", "alpha")
   )
 )
 
