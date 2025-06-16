@@ -48,14 +48,14 @@ head(botswana.data, 5)
 
 ## We will create a column called prevHIVneg which will have the proportion who are negative
 ## "mutate" is a way to manipulate data frames with readable code
-## Note the use of the "pipe" operator %>% to pass information from one step to the next
-botswana.data<- botswana.data%>%
+## Note the use of the "pipe" operator |> to pass information from one step to the next
+botswana.data<- botswana.data|>
   mutate(prevHIVneg= 1-prevHIV)
 
 ## we transpose the data to long format using a function called pivot_longer 
 ?pivot_longer # run this to read more about this function ## CONSOLE
 
-botswana.long<-botswana.data%>%
+botswana.long<-botswana.data|>
   pivot_longer(cols=prevHIV:prevHIVneg, names_to="type", values_to="prevalence")
 
 ## ggplot is part of the tidyverse
@@ -146,7 +146,7 @@ class(measles.London$date)
 ## want to convert the dates to a format that R understands as a date.
 ## One way to do this is using the build-in as.Date() function.
 
-measles.London<- measles.London%>%
+measles.London<- measles.London|>
   mutate(date = as.Date(date))
 head(measles.London) ## CONSOLE
 class(measles.London$date) ## CONSOLE
@@ -276,7 +276,7 @@ ggplot(measles.data, aes(x=date, y=cases, group=country, colour=country))+ # whi
 ## the cases for each month of the year and then plot by month using a
 ## boxplot.
 
-measles.London<- measles.London%>%
+measles.London<- measles.London|>
   mutate(month =format(date, format = "%b"))    # TRY "%B", "%m", "%b" and# "%b-%Y".  
 #Pick the value
 # that gives you months as
@@ -286,7 +286,7 @@ head(measles.London)
 ## equal to month.abb, a default vector in R that gives:
 print(month.abb)
 
-measles.London<- measles.London%>%
+measles.London<- measles.London|>
   mutate(month=factor(month, levels = month.abb))
 
 head(measles.London)
@@ -306,9 +306,9 @@ ggplot(measles.London, aes(x=month, y=cases, ))+geom_point(shape=16)+ # TRY 1, 4
 ## can't really see the mean.  Let's use summarise() to get mean weekly
 ## incidence by month.
 
-measles.London.mean<- measles.London%>%
-  group_by(month)%>%
-  summarise(mean_cases=mean(cases))%>%
+measles.London.mean<- measles.London|>
+  group_by(month)|>
+  summarise(mean_cases=mean(cases))|>
   mutate(month=factor(month, levels=month.abb)) ## arrange the months in the order 
 #they appear in the calendar
 

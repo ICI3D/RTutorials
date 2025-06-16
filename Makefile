@@ -82,6 +82,11 @@ batch/%.R: %.R testing/%.answers.R batch.pl
 ## Two Tutorial 4 files; this one is obsolete, I think
 ## ICI3D_RTutorial_4_VisualizingData.Rout: ICI3D_RTutorial_4_VisualizingData.R testing/ICI3D_RTutorial_4_VisualizingData.answers.R
 
+## Warning! This uses setwd, and thus default plots are made elsewhere
+## ICI3D_RtvTutorial_4.batch.pdf: ICI3D_RtvTutorial_4.R testing/ICI3D_RtvTutorial_4.answers.R
+Ignore += ICI3D_RtvTutorial_4.batch.pdf
+ICI3D_RtvTutorial_4.batch.pdf: ICI3D_RtvTutorial_4.batch.Rout
+	$(MV) data/visualizingData/Rplots.pdf $@
 ## ICI3D_RtvTutorial_4.batch.Rout: ICI3D_RtvTutorial_4.R testing/ICI3D_RtvTutorial_4.answers.R
 ## batch/ICI3D_RtvTutorial_4.R: ICI3D_RtvTutorial_4.R testing/ICI3D_RtvTutorial_4.answers.R
 
