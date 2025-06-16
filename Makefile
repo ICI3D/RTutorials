@@ -134,8 +134,7 @@ seir.w.seasonal.Rout: seir.w.seasonal.R
 ######################################################################
 
 ## Edit in place
-
-Sources += names.csv
+Sources += names.txt
 
 ## perl -pi -f "test.pl"
 
