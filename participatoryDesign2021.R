@@ -44,24 +44,24 @@ challengeProb <- 0.6
 VE <- 0.5
 
 pop <- tibble(NULL
-	, id = as.character(1:N)
-	, age = round(runif(N, minAge, maxAge))
-	, vaccProb = baseVacc + (maxVacc-baseVacc)*(age-minAge)/(maxAge-minAge)
-	, challengeProb = challengeProb
-	, progProb = baseProg + (maxProg-baseProg)*(age-minAge)/(maxAge-minAge) 
-	, vaccStatus = rbinom(N, 1, vaccProb)
+              , id = as.character(1:N)
+              , age = round(runif(N, minAge, maxAge))
+              , vaccProb = baseVacc + (maxVacc-baseVacc)*(age-minAge)/(maxAge-minAge)
+              , challengeProb = challengeProb
+              , progProb = baseProg + (maxProg-baseProg)*(age-minAge)/(maxAge-minAge) 
+              , vaccStatus = rbinom(N, 1, vaccProb)
 )
 
 pop <- (pop
-	%>% mutate(NULL
-		, disProb = challengeProb*progProb
-		, disProb = ifelse(vaccStatus==1, (1-VE)*disProb, disProb)
-		, disease = rbinom(N, 1, disProb)
-	)
+        |> mutate(NULL
+                   , disProb = challengeProb*progProb
+                   , disProb = ifelse(vaccStatus==1, (1-VE)*disProb, disProb)
+                   , disease = rbinom(N, 1, disProb)
+        )
 )
 
 dat <- (pop
-	%>% select(id, age, vaccStatus, disease)
+        |> select(id, age, vaccStatus, disease)
 )
 
 ## Do a logistic regression
@@ -76,6 +76,6 @@ confint(mod)
 print(pop, n=Inf)
 
 print(ggplot(pop)
-	+ aes(x=age, y=vaccProb)
-	+ geom_point()
+      + aes(x=age, y=vaccProb)
+      + geom_point()
 )
