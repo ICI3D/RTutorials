@@ -19,45 +19,45 @@ year = 7.1
 
 
 doStudy <- function(studyTime, hC, N, hreduction){
-	## Calculations
-	hT = hC/hreduction
-	pC = 1 - exp(-hC*studyTime)
-	pT = 1 - exp(-hT*studyTime)
-
-	study <- tibble(id = as.factor(1:N)
-		, group = sample(c("C", "T"), N, replace=TRUE)
-		, risk = case_when(
-			group=="C" ~ pC 
-			, group=="T" ~ pT 
-		)
-	)
-
-	study <- (study
-		%>% mutate(inf = rbinom(N, 1, risk))
-		%>% select(-risk)
-	)
-
-	m <- glm(inf ~ group, data=study, family=binomial())
-	return(confint(m, method="Wald")["groupT", ])
-	## Wald confidence are less accurate but more computationally robust
+  ## Calculations
+  hT = hC/hreduction
+  pC = 1 - exp(-hC*studyTime)
+  pT = 1 - exp(-hT*studyTime)
+  
+  study <- tibble(id = as.factor(1:N)
+                  , group = sample(c("C", "T"), N, replace=TRUE)
+                  , risk = case_when(
+                    group=="C" ~ pC 
+                    , group=="T" ~ pT 
+                  )
+  )
+  
+  study <- (study
+            |> mutate(inf = rbinom(N, 1, risk))
+            |> select(-risk)
+  )
+  
+  m <- glm(inf ~ group, data=study, family=binomial())
+  return(confint(m, method="Wald")["groupT", ])
+  ## Wald confidence are less accurate but more computationally robust
 }
 
 ## Study parameters
 m <- doStudy(studyTime = 1*year
-	, hC = 0.05/year
-	, N = 500
-	, hreduction = 3
+             , hC = 0.05/year
+             , N = 500
+             , hreduction = 3
 )
 
 ## Validate: in the null world do we get the right amount of coverage?
 
 numTrials <- 1000
 validationStudy <- as.data.frame(t(replicate(numTrials 
-	, doStudy(studyTime = 1*year
-		, hC = 0.05/year
-		, N = 500
-		, hreduction = 1
-	)
+                                             , doStudy(studyTime = 1*year
+                                                       , hC = 0.05/year
+                                                       , N = 500
+                                                       , hreduction = 1
+                                             )
 )))
 
 print(mean(validationStudy[[1]] > 0))
@@ -66,11 +66,11 @@ print(mean(validationStudy[[2]] < 0))
 
 numTrials <- 1000
 powerStudy <- as.data.frame(t(replicate(numTrials 
-	, doStudy(studyTime = 1*year
-		, hC = 0.05/year
-		, N = 500
-		, hreduction = 3
-	)
+                                        , doStudy(studyTime = 1*year
+                                                  , hC = 0.05/year
+                                                  , N = 500
+                                                  , hreduction = 3
+                                        )
 )))
 
 print(mean(powerStudy[[1]] > 0))

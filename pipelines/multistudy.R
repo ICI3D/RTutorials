@@ -30,64 +30,64 @@ set.seed(20230705)
 #' 
 #' @return confidence interval for treatment effect
 doStudy <- function(
-	studyTime, hC, N, hreduction
+    studyTime, hC, N, hreduction
 ){
-	## Calculations
-	hT = hC/hreduction
-	pC = 1 - exp(-hC*studyTime)
-	pT = 1 - exp(-hT*studyTime)
-
-	study <- tibble(id = as.factor(1:N)
-		, group = sample(c("C", "T"), N, replace=TRUE)
-		, risk = case_when(
-			group=="C" ~ pC 
-			, group=="T" ~ pT 
-		)
-	)
-
-	study <- (study
-		%>% mutate(inf = rbinom(N, 1, risk))
-		%>% select(-risk)
-	)
-
-	m <- glm(inf ~ group, data=study, family=binomial())
-	return(confint(m, method="Wald")["groupT", ])
-	## Wald confidence are less accurate but more computationally robust
+  ## Calculations
+  hT = hC/hreduction
+  pC = 1 - exp(-hC*studyTime)
+  pT = 1 - exp(-hT*studyTime)
+  
+  study <- tibble(id = as.factor(1:N)
+                  , group = sample(c("C", "T"), N, replace=TRUE)
+                  , risk = case_when(
+                    group=="C" ~ pC 
+                    , group=="T" ~ pT 
+                  )
+  )
+  
+  study <- (study
+            |> mutate(inf = rbinom(N, 1, risk))
+            |> select(-risk)
+  )
+  
+  m <- glm(inf ~ group, data=study, family=binomial())
+  return(confint(m, method="Wald")["groupT", ])
+  ## Wald confidence are less accurate but more computationally robust
 }
 
 doResult <- function(
-	numTrials, studyTime, hC, N, hreduction
+    numTrials, studyTime, hC, N, hreduction
 ) {
-	## Validate: in the null world do we get the right amount of coverage?
-	validationStudy <- as.data.frame(t(replicate(numTrials 
-		, doStudy(studyTime = studyTime
-		, hC = hC
-		, N = N
-		, hreduction = 1
-		)
-	)))
-
-	## Power: in the alternative world what is chance of success?
-	powerStudy <- as.data.frame(t(replicate(numTrials 
-		, doStudy(studyTime = 1*year
-			, hC = hC
-			, N = N
-			, hreduction = hreduction
-		)
-	)))
-
-	return(list(
-		CIabove = mean(validationStudy[[1]] > 0),
-		CIbelow = mean(validationStudy[[2]] < 0),
-		someEffect = mean(powerStudy[[1]] > 0),
-		wrongEffect = mean(powerStudy[[2]] < 0)
-	))
-
+  ## Validate: in the null world do we get the right amount of coverage?
+  validationStudy <- as.data.frame(t(replicate(numTrials 
+                                               , doStudy(studyTime = studyTime
+                                                         , hC = hC
+                                                         , N = N
+                                                         , hreduction = 1
+                                               )
+  )))
+  
+  ## Power: in the alternative world what is chance of success?
+  powerStudy <- as.data.frame(t(replicate(numTrials 
+                                          , doStudy(studyTime = 1*year
+                                                    , hC = hC
+                                                    , N = N
+                                                    , hreduction = hreduction
+                                          )
+  )))
+  
+  return(list(
+    CIabove = mean(validationStudy[[1]] > 0),
+    CIbelow = mean(validationStudy[[2]] < 0),
+    someEffect = mean(powerStudy[[1]] > 0),
+    wrongEffect = mean(powerStudy[[2]] < 0)
+  ))
+  
 }
 
 # 
 .args <- if (interactive()) {
-	c(0.05/year, 3, "test.rds")
+  c(0.05/year, 3, "test.rds")
 } else commandArgs(trailingOnly = TRUE)
 control_hazard <- as.numeric(.args[1])
 treatreduction <- as.numeric(.args[2])

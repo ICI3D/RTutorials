@@ -27,11 +27,11 @@ getwd() # shows you what directory you are currently in ## CONSOLE
 ## where the data are stored.
 
 path <- ?? # FIXME Replace the question marks with a character string telling R
-# where to look for the data
-## NOTE: We use FIXME to tag things that won't work unless you fix them
-
-## and you can replace it with where you have saved the data set.
-setwd(path) ## CONSOLE
+  # where to look for the data
+  ## NOTE: We use FIXME to tag things that won't work unless you fix them
+  
+  ## and you can replace it with where you have saved the data set.
+  setwd(path) ## CONSOLE
 
 ######################################################################
 ## 2A - Loading and exploring the data.
@@ -72,12 +72,12 @@ ggplot(botswana.long[botswana.long$year == 1994,], aes(x="", y=prevalence, fill=
 ## Now let's add some labels to show the prevalence percentages:
 
 ggplot(botswana.long[botswana.long$year == 1994,], aes(x="", y=prevalence, fill=type))+
-	geom_bar(stat = "identity", width = 1) + 
-	coord_polar("y", start = 0) +
-	theme_void()+ # remove background, grid, numeric labels
-	geom_text(aes(label = paste0(prevalence*100, "%")), position = position_stack(vjust = 0.5), color = 'white')+
-	scale_fill_manual(values=c("blue", "red"),labels=c("HIV-", "HIV+"))+
-	labs(fill="Group") # rename the legend title
+  geom_bar(stat = "identity", width = 1) + 
+  coord_polar("y", start = 0) +
+  theme_void()+ # remove background, grid, numeric labels
+  geom_text(aes(label = paste0(prevalence*100, "%")), position = position_stack(vjust = 0.5), color = 'white')+
+  scale_fill_manual(values=c("blue", "red"),labels=c("HIV-", "HIV+"))+
+  labs(fill="Group") # rename the legend title
 
 ## TRY Change the above code to plot the prevalence of HIV in 2001.
 
@@ -231,11 +231,11 @@ ggplot(data=measles.London, aes(x=date, y=cases))+
             label="MMR vaccination",
             y=2100, color="red"
   )+
-annotate("segment",x=vaccine.year,
-         xend=vaccine.year, y=5000,
-         yend=4500, color="blue",
-         arrow=arrow(length=unit(0.05,"npc") # define the size of the arrow
-         ))+
+  annotate("segment",x=vaccine.year,
+           xend=vaccine.year, y=5000,
+           yend=4500, color="blue",
+           arrow=arrow(length=unit(0.05,"npc") # define the size of the arrow
+           ))+
   annotate( "text",  x=vaccine.year, y=5000, # x and y coordinates of the text
             label="beginning of vaccination",
             color="red"
@@ -447,3 +447,4 @@ ggplot(hookworm, aes(epg))+stat_bin( breaks=my.breaks)+
 ## Investigate ggsave and create some pdf files
 
 ######################################################################
+  

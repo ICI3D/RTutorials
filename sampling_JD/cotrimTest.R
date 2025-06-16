@@ -25,7 +25,7 @@ set.seed(seed)
 
 ### Calculate protection proportions from odds
 oddProb <- function(o){
-	return(o/(o+1))
+  return(o/(o+1))
 }
 
 ## Participants in each arm
@@ -34,32 +34,32 @@ socNum <- floor(participants/2)
 newNum <- participants-socNum
 
 doStudy <- function(base_odds, new_odds, socNum, newNum){
-	base_cure <- oddProb(base_odds)
-	new_cure <- oddProb(base_odds*new_odds)
-	print(c(base_cure, new_cure))
-
-	setup <- tibble(
-		people = as.factor(1:participants)
-		, treatment = sample(c(
-			rep("Cotrim", socNum)
-			, rep("New", newNum)
-		))
-	)
-
-	result <- (setup
-		%>% mutate(
-			cureProb = ifelse(treatment=="Cotrim", base_cure, new_cure)
-			, cured = rbinom(participants, size=1, prob=cureProb)
-		)
-	)
-
-	mod <- glm(cured ~ treatment
-		, family=binomial()
-		, data = result
-	)
-
-	ci <- exp(confint(mod)["treatmentNew", ])
-	return(c(lwr=ci[[1]], upr=ci[[2]]))
+  base_cure <- oddProb(base_odds)
+  new_cure <- oddProb(base_odds*new_odds)
+  print(c(base_cure, new_cure))
+  
+  setup <- tibble(
+    people = as.factor(1:participants)
+    , treatment = sample(c(
+      rep("Cotrim", socNum)
+      , rep("New", newNum)
+    ))
+  )
+  
+  result <- (setup
+             |> mutate(
+               cureProb = ifelse(treatment=="Cotrim", base_cure, new_cure)
+               , cured = rbinom(participants, size=1, prob=cureProb)
+             )
+  )
+  
+  mod <- glm(cured ~ treatment
+             , family=binomial()
+             , data = result
+  )
+  
+  ci <- exp(confint(mod)["treatmentNew", ])
+  return(c(lwr=ci[[1]], upr=ci[[2]]))
 }
 
 ## Test the function
@@ -67,7 +67,7 @@ doStudy(base_odds, new_odds, socNum, newNum)
 
 ## Run the function many (numTrials) times
 trials <- replicate(numTrials
-	, doStudy(base_odds, new_odds, socNum, newNum)
+                    , doStudy(base_odds, new_odds, socNum, newNum)
 )
 
 ## Some annoying R "magic" to make trials into a decent data frame
@@ -75,11 +75,11 @@ trials <- replicate(numTrials
 ##  power – is the model confident the ratio > 1
 ##  coverage – is the true value inside the confidence interval?
 trials <- (
-	as.data.frame(t(trials))
-	%>% mutate(
-		sig = lwr>1
-		, cover = (lwr<new_odds) & (upr>new_odds)
-	)
+  as.data.frame(t(trials))
+  |> mutate(
+    sig = lwr>1
+    , cover = (lwr<new_odds) & (upr>new_odds)
+  )
 )
 
 ## print(trials)
@@ -87,6 +87,6 @@ trials <- (
 ## Coverage is good, but power is very low. 
 ## Good thing we tried the experiment first!
 print(trials 
-	%>% summarise(coverage = mean(cover), power=mean(sig))
+      |> summarise(coverage = mean(cover), power=mean(sig))
 )
 
