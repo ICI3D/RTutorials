@@ -100,7 +100,7 @@ print(base %+% groupSim(cbar=1, kappa=1, nGroups=20, Tfinal=15))
 
 ## FIND an example where increasing kappa changes a non-epidemic to an epidemic
 
-## Do you expect to be able to find an opposite example?
+## Can you find an opposite example??
 
 ## FIND an example where increasing kappa increases the total size of an epidemic that is already happening (NOT easy)
 ## How can you measure total size?

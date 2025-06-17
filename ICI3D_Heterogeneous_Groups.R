@@ -75,3 +75,17 @@ groupSim <- function(cbar, kappa, Tfinal=20, nGroups=10, h0=1e-3, steps=100){
 	))
 }
 
+groupSimPlot <-  function(cbar, kappa, Tfinal=20, nGroups=10, h0=1e-3, steps=100, desc="blank"){
+	sim <- groupSim(cbar, kappa, Tfinal, nGroups, h0, steps)
+
+	title <- paste("cbar =", cbar, "kappa =", kappa)
+	
+	(ggplot(sim)
+		+ aes(x=time)
+		+ geom_line(aes(y=I))
+		+ geom_line(aes(y=S), color="blue")
+		+ ylab("proportion of pop")
+		+ ggtitle(title)
+	) |> teeGG(desc=desc)
+}
+

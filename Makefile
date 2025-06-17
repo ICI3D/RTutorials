@@ -98,8 +98,14 @@ ICI3D_RTutorial_5_DataCleaning.batch.Rout: batchdir=data/dataCleaning/
 
 ######################################################################
 
-ICI3D_Lab_Heterogeneous_Groups.batch.Rout: ICI3D_Heterogeneous_Groups.R ICI3D_Lab_Heterogeneous_Groups.R
+pipeRdesc += ICI3D_Lab_Heterogeneous_Groups.batch
+## ICI3D_Lab_Heterogeneous_Groups.batch.noSpread.pdf:
+## ICI3D_Lab_Heterogeneous_Groups.batch.noSpread-0.pdf:
+
+ICI3D_Lab_Heterogeneous_Groups.batch.Rout.pdf: ICI3D_Lab_Heterogeneous_Groups.batch.Rout
+	$(MV) Rplots.pdf $@
 ## ICI3D_Lab_Heterogeneous_Groups.batch.Rout: ICI3D_Lab_Heterogeneous_Groups.R testing/ICI3D_Lab_Heterogeneous_Groups.answers.R 
+ICI3D_Lab_Heterogeneous_Groups.batch.Rout: ICI3D_Heterogeneous_Groups.R ICI3D_Lab_Heterogeneous_Groups.R
 ## ICI3D_Lab_Heterogeneous_Groups.batch.Rout-0.pdf: 
 
 ## ICI3D_Ex1_StochasticSpillover.batch.Rout: ICI3D_Ex1_StochasticSpillover.R testing/ICI3D_Ex1_StochasticSpillover.answers.R
@@ -161,9 +167,7 @@ makestuff/Makefile:
 	ls makestuff/Makefile
 
 -include makestuff/os.mk
-
 -include makestuff/pipeR.mk
--include makestuff/pdfpages.mk
 
 -include makestuff/git.mk
 -include makestuff/visual.mk
