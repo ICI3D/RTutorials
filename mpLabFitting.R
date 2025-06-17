@@ -87,7 +87,7 @@ hiv4init = (hiv4spec
 
 hiv4impl = mp_simulator(hiv4init
 	, time_steps = 50L
-	, outputs=c("S", "I", "N", "P", "D")
+	, outputs=c("S", "I", "N", "P", "D", "infection", "deathHIV")
 )
 
 ######################################################################
@@ -121,7 +121,7 @@ print(ggplot(basePrev)
 ## But the inferred population effects are quite dramatic!
 ## Worth keeping in mind
 baseState <- (baseSim 
-	|> filter(matrix!="P")
+	|> filter(matrix %in% c("S", "I", "D", "N"))
 	|> rename(indivs=value, state=matrix)
 )
 
@@ -136,15 +136,15 @@ print(ggplot(baseState)
 ## Now we will try calibration. Please read this article before 
 ## proceeding: https://canmod.github.io/macpan2/articles/calibration
 
-## To illustrate calibration, we add Poisson noise to the simulated number of 
-## infectious individuals. Then we will attempt to fit the model to 
-## these simulated data, to see if we can recover the parameters 
-## from the simulations.
+## To illustrate calibration, we add negative binomial noise to the simulated 
+## number of infectious individuals. Then we will attempt to fit the model to 
+## these simulated data, to see if we can recover the parameters from the 
+## simulations.
+set.seed(1)
 noisyI = (baseSim
 	|> filter(matrix == "I")
-	|> mutate(value = rpois(n(), value))
+	|> mutate(value = rnbinom(n(), mu = value, size = 5)) # size is the 'dispersion' parameter
 )
-set.seed(1)
 (noisyI
   |> rename(`Observation Year` = time)
   |> rename(`Infectious Individuals` = value)
@@ -156,25 +156,29 @@ set.seed(1)
 ## Before proceeding, think about how you might fit the model to these data
 ## using the information you just read about in the article on calibration.
 
+## options(macpan2_verbose = FALSE)
+
 ## The first step is to create a calibrator object, which is an object that 
 ## can be used to calibrate the parameters of a model specification to data.
-calibrator = (hiv4init
-	## Change the value of lambda0 so that the calibrator has to infer 
-	## the true value (0.65) from the noisy simulated data.
-  |> mp_tmb_update(default = list(lambda0 = 1, alpha=0))
-	|> mp_tmb_calibrator(
-        data = noisyI
-        
-        ## Assume that the noisy I is Poisson distributed
-      , traj = list(I = mp_poisson())
-      
-        ## The parameter to fit is the log transform of lambda0
-        ## (prefixing parameters by common transformation names
-        ## allows us to fit on the transformed scale)
-      ## , par = c("log_lambda0")
-      , par = c("log_lambda0", "alpha")
-      ## , par = c("log_lambda0", "alpha", "rho")
+calibrator = mp_tmb_calibrator(hiv4init
+  , data = noisyI
+    
+    ## Assume that the noisy I is Poisson distributed
+  , traj = list(I = mp_neg_bin(disp = mp_fit(1)))
+  
+    ## The parameter to fit is the log transform of lambda0
+    ## (prefixing parameters by common transformation names
+    ## allows us to fit on the transformed scale)
+  , par = c(
+  		log_lambda0 = mp_normal(log(0.5), sd = 0.1) ## normal pseudo-prior
+  	, alpha = mp_uniform() ## flat pseudo-prior (i.e., no prior)
+  	, log_rho = mp_normal(log(1), sd = 0.1) ## normal pseudo-prior
   )
+  , outputs = "I"
+	
+  ## Change the value of the parameters so that the calibrator has to infer 
+	## the true values from the noisy simulated data.
+	, default = list(lambda0 = 0.2, alpha = 3, rho = 1.1)
 )
 
 ## Optimize parameters in the calibrator.
@@ -182,15 +186,15 @@ calibrator = (hiv4init
 ## updating the parameter values to their optimized estimates.
 mp_optimize(calibrator)
 
-## Recall that the true value of lambda0 is 0.65.
-print(mp_default_list(hiv4init)$lambda0)
 
-## Did calibration result in a reasonable estimate of this true lambda0.
+## Recall the true values of the parameters.
+print(mp_default_list(hiv4init)[c("lambda0", "alpha", "rho")])
+
+## Did calibration result in reasonable estimates of these parameters?
 fittedCoefs = (mp_tmb_coef(calibrator, conf.int = TRUE)
  |> select(-term, -row, -col, -type)
 )
 print(fittedCoefs)
-
 
 ## The simulated data (black) that we fit to matches the predictions of the 
 ## fitted model (red) with 95% confidence intervals for the point prediction).
@@ -202,7 +206,64 @@ print(fittedCoefs)
 	
  |> ggplot()
  + geom_line(aes(time, value), colour = "red")
- + geom_ribbon(aes(time, ymin = conf.low, ymax = conf.high), alpha = 0.2, fill = "red")
+ + geom_ribbon(
+ 			aes(time, ymin = conf.low, ymax = conf.high)
+		, alpha = 0.2
+		, fill = "red"
+ )
  + geom_line(aes(time, value), data = noisyI)
+ + theme_bw()
+)
+
+
+## Joint likelihood example
+## Simulate infection (aka incidence) and number of new
+## deaths due to HIV.
+
+set.seed(1)
+twoNoisyVars = (baseSim
+	|> filter(matrix %in% c("infection", "deathHIV"))
+	|> mutate(value = rnbinom(n(), mu = value, size = 5))
+)
+(twoNoisyVars
+  |> rename(`Observation Year` = time)
+	|> mutate(matrix = ifelse(matrix == "infection", "incidence", matrix))
+  |> ggplot()
+  + geom_line(aes(`Observation Year`, value))
+	+ facet_wrap(~matrix, scales = "free")
+  + theme_bw()
+)
+
+twoVarCalibrator = mp_tmb_calibrator(hiv4init
+  , data = twoNoisyVars
+  , traj = list(
+  			infection = mp_neg_bin(disp = mp_fit(1))
+  		, deathHIV = mp_neg_bin(disp = mp_fit(1))
+  )
+  , par = list(
+	  		log_lambda0 = mp_uniform()
+	  	, alpha = mp_uniform()
+	  	, log_rho = mp_uniform()
+  )
+  , outputs = c("infection", "deathHIV")
+  , default = list(lambda0 = 0.2, alpha = 3, rho = 1.1)
+)
+mp_optimize(twoVarCalibrator)
+fittedCoefs = (mp_tmb_coef(twoVarCalibrator, conf.int = TRUE)
+ |> select(-term, -row, -col, -type)
+)
+print(fittedCoefs)
+
+(twoVarCalibrator
+ |> mp_trajectory_sd(conf.int = TRUE)
+ |> ggplot()
+ + geom_line(aes(time, value), colour = "red")
+ + geom_ribbon(
+ 			aes(time, ymin = conf.low, ymax = conf.high)
+		, alpha = 0.2
+		, fill = "red"
+ )
+ + geom_line(aes(time, value), data = twoNoisyVars)
+ + facet_wrap(~matrix, scales = "free")
  + theme_bw()
 )
