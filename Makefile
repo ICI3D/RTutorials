@@ -73,9 +73,11 @@ batch/%.R: %.R testing/%.answers.R batch.pl
 ## ICI3D_RTutorial_2.batch.Rout: ICI3D_RTutorial_2.R testing/ICI3D_RTutorial_2.answers.R
 ## ICI3D_RTutorial_3.batch.Rout: ICI3D_RTutorial_3.R testing/ICI3D_RTutorial_3.answers.R
 
-## ICI3D_Lab1_ODEmodels.batch.Rlog: batch/ICI3D_Lab1_ODEmodels.R
 ## ICI3D_Lab1_ODEmodels.batch.Rout: ICI3D_Lab1_ODEmodels.R testing/ICI3D_Lab1_ODEmodels.answers.R
+## ICI3D_Lab1_ODEmodels.batch.Rlog: batch/ICI3D_Lab1_ODEmodels.R
+
 ## ICI3D_Lab3_EpiStudyDesign.batch.Rout: ICI3D_Lab3_EpiStudyDesign.R testing/ICI3D_Lab3_EpiStudyDesign.answers.R
+
 ## ICI3D_RTutorial_1.batch.Rout: testing/ICI3D_RTutorial_1.answers.R
 ## ICI3D_RTutorial_2.batch.Rout: ICI3D_RTutorial_2.R testing/ICI3D_RTutorial_2.answers.R
 
