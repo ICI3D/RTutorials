@@ -64,12 +64,13 @@ hetero <- groupSim(cbar=2, kappa=0) ## FIXME what do you need to change to get a
 ######################################################################
 
 ## We can also try to make pictures
-library(ggplot2); theme_set(theme_bw())
+library(ggplot2); theme_set(theme_bw(base_size=14))
 
 base <- (ggplot(homo)
 	+ aes(x=time)
 	+ geom_line(aes(y=I))
 	+ geom_line(aes(y=S), color="blue")
+	+ ylab("proportion of pop")
 )
 print(base)
 

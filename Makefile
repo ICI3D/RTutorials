@@ -100,6 +100,7 @@ ICI3D_RTutorial_5_DataCleaning.batch.Rout: batchdir=data/dataCleaning/
 
 ICI3D_Lab_Heterogeneous_Groups.batch.Rout: ICI3D_Heterogeneous_Groups.R ICI3D_Lab_Heterogeneous_Groups.R
 ## ICI3D_Lab_Heterogeneous_Groups.batch.Rout: ICI3D_Lab_Heterogeneous_Groups.R testing/ICI3D_Lab_Heterogeneous_Groups.answers.R 
+## ICI3D_Lab_Heterogeneous_Groups.batch.Rout-0.pdf: 
 
 ## ICI3D_Ex1_StochasticSpillover.batch.Rout: ICI3D_Ex1_StochasticSpillover.R testing/ICI3D_Ex1_StochasticSpillover.answers.R
 ICI3D_Ex1_StochasticSpillover.batch.Rout: ICI3D_Ex1_StochasticSpillover_functions.R
@@ -140,10 +141,9 @@ seir.w.seasonal.Rout: seir.w.seasonal.R
 
 ######################################################################
 
+## Look at labnames branch for a sketched-out implementation of the renaming
 ## Edit in place
 Sources += names.txt
-
-## perl -pi -f "test.pl"
 
 ######################################################################
 
@@ -163,6 +163,7 @@ makestuff/Makefile:
 -include makestuff/os.mk
 
 -include makestuff/pipeR.mk
+-include makestuff/pdfpages.mk
 
 -include makestuff/git.mk
 -include makestuff/visual.mk
