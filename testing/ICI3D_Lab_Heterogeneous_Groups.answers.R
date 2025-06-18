@@ -5,7 +5,7 @@ hetero <- groupSim(cbar=2, kappa=0.5)
 print(hetero, n=Inf)
 
 groupSimPlot(cbar=1.0, kappa=0.0, desc="noSpread")
-groupSimPlot(cbar=3.0, kappa=0.0, desc="hetSpread")
+groupSimPlot(cbar=1.0, kappa=0.0, desc="hetSpread")
 
 groupSimPlot(cbar=1.0, kappa=0.0, desc="homoLess")
 groupSimPlot(cbar=1.0, kappa=0.0, desc="hetMore")
