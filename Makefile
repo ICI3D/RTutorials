@@ -17,6 +17,9 @@ Sources += $(wildcard *.R *.md)
 participatoryDesign2021.Rout: participatoryDesign2021.R
 	$(pipeR)
 
+participatoryDynamics25.Rout: participatoryDynamics25.R
+	$(pipeR)
+
 ######################################################################
 
 Ignore += local.mk
@@ -109,7 +112,7 @@ ICI3D_Lab_Heterogeneous_Groups.batch.Rout: ICI3D_Heterogeneous_Groups.R ICI3D_La
 ## ICI3D_Lab_Heterogeneous_Groups.batch.Rout-0.pdf: 
 
 ## labNow.homoLess.pdf: labNow.R
-pipeRdesc += labnow
+pdfDesc += labnow
 labNow.Rout: labNow.R ICI3D_Heterogeneous_Groups.R
 	$(pipeR)
 
