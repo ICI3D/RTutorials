@@ -1,4 +1,3 @@
-
 ## You should probably use a better-supported work flow than mine (JD)
 ## But there are things you can learn from it:
 #### Run your code frequently from the beginning in a clean environment
@@ -10,4 +9,5 @@
 print("Hi!")
 
 plot(1-exp(-(0:10)))
+
 

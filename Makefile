@@ -17,7 +17,7 @@ Sources += $(wildcard *.R *.md)
 participatoryDesign2021.Rout: participatoryDesign2021.R
 	$(pipeR)
 
-participatoryDynamics25.Rout: participatoryDynamics25.R
+participatoryDynamics2025.Rout: participatoryDynamics2025.R
 	$(pipeR)
 
 ######################################################################
