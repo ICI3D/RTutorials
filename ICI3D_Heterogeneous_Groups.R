@@ -88,6 +88,6 @@ groupSimPlot <-  function(cbar, kappa, Tfinal=20, nGroups=10, h0=1e-3, steps=100
 		+ geom_line(aes(y=S), color="blue")
 		+ ylab("proportion of pop")
 		+ ggtitle(title)
-	) |> teeGG(desc=desc)
+	)
 }
 
