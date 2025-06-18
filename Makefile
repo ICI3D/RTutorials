@@ -108,6 +108,9 @@ ICI3D_Lab_Heterogeneous_Groups.batch.Rout.pdf: ICI3D_Lab_Heterogeneous_Groups.ba
 ICI3D_Lab_Heterogeneous_Groups.batch.Rout: ICI3D_Heterogeneous_Groups.R ICI3D_Lab_Heterogeneous_Groups.R
 ## ICI3D_Lab_Heterogeneous_Groups.batch.Rout-0.pdf: 
 
+labNow.Rout: labNow.R ICI3D_Heterogeneous_Groups.R
+	$(pipeR)
+
 ## ICI3D_Ex1_StochasticSpillover.batch.Rout: ICI3D_Ex1_StochasticSpillover.R testing/ICI3D_Ex1_StochasticSpillover.answers.R
 ICI3D_Ex1_StochasticSpillover.batch.Rout: ICI3D_Ex1_StochasticSpillover_functions.R
 

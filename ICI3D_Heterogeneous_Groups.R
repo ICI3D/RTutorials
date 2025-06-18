@@ -42,13 +42,15 @@ hazProb <- function(h){
 
 ######################################################################
 
+## This code is terse and tricky, but probably OK if total population size 
+## (including absent R class) = 1.
+## Will be better to add N explicitly as a parameter
 groupSIR <- function(t, y, parms){
 	with(parms, {
 		n <- length(cvec)
 		S = y[1:n]
 		I = y[n+(1:n)]
-		N = S+I
-		Lambda = sum(I*cvec)/sum(N*cvec)
+		Lambda = sum(I*cvec)/mean(cvec)
 		trans = Lambda*S*cvec
 		return(list(c(-trans, trans-I)))
   })
