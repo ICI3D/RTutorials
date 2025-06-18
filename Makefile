@@ -126,7 +126,7 @@ ICI3D_Ex1_StochasticSpillover.batch.Rout: ICI3D_Ex1_StochasticSpillover_function
 
 ## ICI3D_Lab4_RCT.batch.Rout: ICI3D_Lab4_RCT.R testing/ICI3D_Lab4_RCT.answers.R
 ## ICI3D_Lab5a_introLikelihoodPlusRejectionP.R
-## ICI3D_Lab5_introLikelihood.R
+## ICI3D_Lab5_introLikelihood.batch.Rout: ICI3D_Lab5_introLikelihood.R testing/ICI3D_Lab5_introLikelihood.answers.R
 
 ## ICI3D_Lab6_MLE_SIV_HIV.batch.Rout: ICI3D_Lab6_MLE_SIV_HIV.R testing/ICI3D_Lab6_MLE_SIV_HIV.answers.R
 
