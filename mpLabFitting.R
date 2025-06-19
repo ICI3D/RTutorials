@@ -80,11 +80,17 @@ inits = list(
 ## How would you calculate R0 for this model?
 ## FIXME
 
+## produce an 'initialized' specification with default parameter
+## values, initial states, and specify that the RK4 differential
+## equation solver be used for simulations.
 hiv4init = (hiv4spec
 	|> mp_rk4()
 	|> mp_tmb_update(default = params, inits = inits)
 )
 
+## implement this specification by setting the number of
+## time steps to simulate (i.e., years in the model) and
+## the state variables and flow rates to simulate.
 hiv4impl = mp_simulator(hiv4init
 	, time_steps = 50L
 	, outputs=c("S", "I", "N", "P", "D", "infection", "deathHIV")
@@ -125,7 +131,7 @@ baseState <- (baseSim
 	|> rename(indivs=value, state=matrix)
 )
 
-## Showing state variables as a proportion of the _starting_ population size
+## Showing state variables and the total population size.
 print(ggplot(baseState)
 	+ aes(time, indivs, color=state)
 	+ geom_line()
@@ -133,7 +139,8 @@ print(ggplot(baseState)
 
 ######################################################################
 
-## Now we will try calibration. Please read this article before 
+## Now we will try calibration. This article is an introduction 
+## to this topic.
 ## proceeding: https://canmod.github.io/macpan2/articles/calibration
 
 ## To illustrate calibration, we add negative binomial noise to the simulated 
@@ -186,6 +193,7 @@ calibrator = mp_tmb_calibrator(hiv4init
 ## updating the parameter values to their optimized estimates.
 mp_optimize(calibrator)
 
+## what is the convergence code? what does this code mean?
 
 ## Recall the true values of the parameters.
 print(mp_default_list(hiv4init)[c("lambda0", "alpha", "rho")])
