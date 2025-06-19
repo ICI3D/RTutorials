@@ -1,3 +1,8 @@
+
+## Added some comments after the session
+
+######################################################################
+
 ## You should probably use a better-supported work flow than mine (JD)
 ## But there are things you can learn from it:
 #### Run your code frequently from the beginning in a clean environment
@@ -29,6 +34,10 @@ library(tidyr)
 library(ggplot2); theme_set(theme_bw(base_size=14))
 
 ## Weird units trick
+## You can completely skip this (but then you need to use one quantity per dimension)
+#### e.g., you can't use both day and year
+## OR just set the base units to 1 until you're pretty convinced it's going to work and then push from there
+## OR use it as I did to enforce careful development
 dog <- 0.3
 day <- 2.7
 

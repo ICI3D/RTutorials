@@ -18,7 +18,7 @@ my @s = split /\n{1,}/, <S>;
 foreach my $ln (@s){
 	next if $ln =~ /#.*CONSOLE/;
 	next if $ln =~ /#.*BADCODE/;
-	if ($ln =~ /#.*FIXME/ || $ln =~ /#.*FIND/){
+	if ($ln =~ /#.*FIXME/ || $ln =~ /#.*FIND/ || $ln =~ /#.*ADDCODE/){
 		say "## $ln";
 		say shift @ans;
 	}

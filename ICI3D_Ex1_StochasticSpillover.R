@@ -121,7 +121,7 @@ ggplot(ts1_long, aes(x = time, y = count, color = Compartment)) +
 # in some other maintenance population briefly entering the territory. 
 
 # TASK 1: Make a copy of all the code presented for part 1 and modify it to 
-# introduce spillover events - 
+# introduce spillover events - ADDCODE
 # make functions event_sirspill and simulate_sirspill.
 # More specifically, assume that, in addition to the transmission already 
 # occurring, there is an additional rate of infection of susceptibles of 
