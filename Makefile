@@ -14,6 +14,9 @@ alldirs += sampling_JD
 
 Sources += $(wildcard *.R *.md)
 
+particCoding_Rabies2017.Rout: particCoding_Rabies2017.R
+	$(pipeR)
+
 participatoryDesign2021.Rout: participatoryDesign2021.R
 	$(pipeR)
 
@@ -129,9 +132,6 @@ ICI3D_Ex1_StochasticSpillover.batch.Rout: ICI3D_Ex1_StochasticSpillover_function
 ## ICI3D_Lab5_introLikelihood.batch.Rout: ICI3D_Lab5_introLikelihood.R testing/ICI3D_Lab5_introLikelihood.answers.R
 
 ## ICI3D_Lab6_MLE_SIV_HIV.batch.Rout: ICI3D_Lab6_MLE_SIV_HIV.R testing/ICI3D_Lab6_MLE_SIV_HIV.answers.R
-
-## Not the current Lab 6 ## Not passing tests
-## ICI3D_Lab6_HetSIR_exercise.batch.Rout: ICI3D_Lab6_HetSIR_exercise.R ## testing/ICI3D_Lab6_HetSIR_exercise.answers.R
 
 ## ICI3D_Lab7_MCMC-Binomial.R
 ## ICI3D_Lab8_MCMC-SI_HIV.R
