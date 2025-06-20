@@ -3,14 +3,7 @@
 ## Clinic on the Meaningful Modeling of Epidemiological Data
 ## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
 ## African Institute for Mathematical Sciences, Muizenberg, RSA
-<<<<<<< HEAD
 ## (C) Steve Bellan, 2015, Seth Blumberg 2025
-
-###################################################################### 
-=======
-## (C) Steve Bellan, 2015
-######################################################################
->>>>>>> refs/remotes/origin/master
 
 ## By the end of this tutorial you should…
 
