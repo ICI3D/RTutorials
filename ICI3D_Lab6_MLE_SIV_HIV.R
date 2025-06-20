@@ -2,7 +2,7 @@
 ## Clinic on the Meaningful Modeling of Epidemiological Data
 ## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
 ## African Institute for Mathematical Sciences, Muizenberg, RSA
-## (C) Steve Bellan, 2015
+## (C) Steve Bellan, 2015, Seth Blumberg 2025
 
 ###################################################################### 
 
@@ -309,4 +309,17 @@ legend("topleft",
        c('truth', 'MLE', '95% contour (profile likelihood)', '95% contour (Fisher information matrix)')
        , lty = c(NA, NA, 1, 2), pch = c(16,16, NA, NA),
        col = c('red', rep('black',3)), bg='white', bty = 'n')
+
+######################################################
+# EXERCISES
+#
+# 1. Evaluate how the MLE estimate and confidence interval changes when there is more or lest observational noise.
+# (Hint: Change the number of people sampled during each surveillance study in the sampleEpidemic function.)
+#
+# 2. Evaluate how the MLE estimate and confidence interval changes when the frequency of surveillance.
+#
+# 3. Evaluate how the MLE estimate and confidence changes when the model used
+# to conduct the estimation differs from the 'true' model. Specifically, see what
+# happens if you only use two boxcars in the model, rather than four.
+# (Hint: You will need to make a new function for the model used to calculate the likelihood)
 
