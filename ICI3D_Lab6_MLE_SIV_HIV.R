@@ -4,7 +4,6 @@
 ## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
 ## African Institute for Mathematical Sciences, Muizenberg, RSA
 ## (C) Steve Bellan, 2015
-
 ######################################################################
 
 ## By the end of this tutorial you should…
