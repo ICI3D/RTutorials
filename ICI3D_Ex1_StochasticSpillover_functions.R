@@ -1,6 +1,6 @@
 ## Function to step forward in time to next event and update states:
 
-event_sirspill <- function(time, S, I, R, params, t_end, count.inf, count.spill) {
+event_sirspill <- function(time, S, I, R, params, t_end){ #}, count.inf, count.spill) {
 	N <- S+I+R
   with(as.list(params), {
     
@@ -13,6 +13,8 @@ event_sirspill <- function(time, S, I, R, params, t_end, count.inf, count.spill)
     
     if (total_rate == 0) {
       
+      count.inf <- 0
+      count.spill <- 0
       event_time <- t_end
       
     } else {
@@ -24,16 +26,20 @@ event_sirspill <- function(time, S, I, R, params, t_end, count.inf, count.spill)
              "Spillover" = {
                S <- S-1
                I <- I+1
-               count.spill = count.spill+1
+               count.spill <- 1
+               count.inf <- 0
              },
              "Infect" = {
                S <- S-1
                I <- I+1
-               count.inf = count.inf+1
+               count.inf <- 1
+               count.spill <- 0
              },
              "Recover" = {
                I <- I-1
                R <- R+1
+               count.spill <- 0
+               count.inf <- 0
              })
     }
     
@@ -46,13 +52,18 @@ event_sirspill <- function(time, S, I, R, params, t_end, count.inf, count.spill)
 simulate_sirspill <- function(t_end, y, params) {
   with(as.list(y), {
     
-    count.inf <-  I
-    count.spill <-  0
-    ts <- data.frame(time = 0, S = S, I = I, R = R, count.inf = I, count.spill = 0)
+    #count.inf initialised to zero- i.e. doesn't include seeding events
+    count.inf2 <-  0#I
+    count.spill2 <-  0
+    ts <- data.frame(time = 0, S = S, I = I, R = R, count.inf = 0, count.spill = 0)
     next_event <- ts
     
     while (next_event$time < t_end) {
-      next_event <- event_sirspill(next_event$time, next_event$S, next_event$I, next_event$R, params, t_end, count.inf, count.spill)
+      next_event <- event_sirspill(next_event$time, next_event$S, next_event$I, next_event$R, params, t_end)#, count.inf, count.spill)
+      count.inf2 <- count.inf2 + next_event$count.inf
+      count.spill2 <- count.spill2 + next_event$count.spill #do we want this to be cumulative, or not?
+      next_event$count.inf <- count.inf2 # replace with the cumulative version
+      next_event$count.spill <- count.spill2 # replace with the cumulative version
       ts <- rbind(ts, next_event)
     }
     
