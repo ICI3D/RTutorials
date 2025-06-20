@@ -14,7 +14,13 @@ alldirs += sampling_JD
 
 Sources += $(wildcard *.R *.md)
 
+particCoding_Rabies2017.Rout: particCoding_Rabies2017.R
+	$(pipeR)
+
 participatoryDesign2021.Rout: participatoryDesign2021.R
+	$(pipeR)
+
+participatoryDynamics2025.Rout: participatoryDynamics2025.R
 	$(pipeR)
 
 ######################################################################
@@ -73,9 +79,11 @@ batch/%.R: %.R testing/%.answers.R batch.pl
 ## ICI3D_RTutorial_2.batch.Rout: ICI3D_RTutorial_2.R testing/ICI3D_RTutorial_2.answers.R
 ## ICI3D_RTutorial_3.batch.Rout: ICI3D_RTutorial_3.R testing/ICI3D_RTutorial_3.answers.R
 
-## ICI3D_Lab1_ODEmodels.batch.Rlog: batch/ICI3D_Lab1_ODEmodels.R
 ## ICI3D_Lab1_ODEmodels.batch.Rout: ICI3D_Lab1_ODEmodels.R testing/ICI3D_Lab1_ODEmodels.answers.R
+## ICI3D_Lab1_ODEmodels.batch.Rlog: batch/ICI3D_Lab1_ODEmodels.R
+
 ## ICI3D_Lab3_EpiStudyDesign.batch.Rout: ICI3D_Lab3_EpiStudyDesign.R testing/ICI3D_Lab3_EpiStudyDesign.answers.R
+
 ## ICI3D_RTutorial_1.batch.Rout: testing/ICI3D_RTutorial_1.answers.R
 ## ICI3D_RTutorial_2.batch.Rout: ICI3D_RTutorial_2.R testing/ICI3D_RTutorial_2.answers.R
 
@@ -96,8 +104,20 @@ ICI3D_RTutorial_5_DataCleaning.batch.Rout: batchdir=data/dataCleaning/
 
 ######################################################################
 
-ICI3D_Lab_Heterogeneous_Groups.batch.Rout: ICI3D_Heterogeneous_Groups.R ICI3D_Lab_Heterogeneous_Groups.R
+pipeRdesc += ICI3D_Lab_Heterogeneous_Groups.batch
+## ICI3D_Lab_Heterogeneous_Groups.batch.noSpread.pdf:
+## ICI3D_Lab_Heterogeneous_Groups.batch.noSpread-0.pdf:
+
+ICI3D_Lab_Heterogeneous_Groups.batch.Rout.pdf: ICI3D_Lab_Heterogeneous_Groups.batch.Rout
+	$(MV) Rplots.pdf $@
 ## ICI3D_Lab_Heterogeneous_Groups.batch.Rout: ICI3D_Lab_Heterogeneous_Groups.R testing/ICI3D_Lab_Heterogeneous_Groups.answers.R 
+ICI3D_Lab_Heterogeneous_Groups.batch.Rout: ICI3D_Heterogeneous_Groups.R ICI3D_Lab_Heterogeneous_Groups.R
+## ICI3D_Lab_Heterogeneous_Groups.batch.Rout-0.pdf: 
+
+## labNow.homoLess.pdf: labNow.R
+pdfDesc += labnow
+labNow.Rout: labNow.R ICI3D_Heterogeneous_Groups.R
+	$(pipeR)
 
 ## ICI3D_Ex1_StochasticSpillover.batch.Rout: ICI3D_Ex1_StochasticSpillover.R testing/ICI3D_Ex1_StochasticSpillover.answers.R
 ICI3D_Ex1_StochasticSpillover.batch.Rout: ICI3D_Ex1_StochasticSpillover_functions.R
@@ -109,12 +129,9 @@ ICI3D_Ex1_StochasticSpillover.batch.Rout: ICI3D_Ex1_StochasticSpillover_function
 
 ## ICI3D_Lab4_RCT.batch.Rout: ICI3D_Lab4_RCT.R testing/ICI3D_Lab4_RCT.answers.R
 ## ICI3D_Lab5a_introLikelihoodPlusRejectionP.R
-## ICI3D_Lab5_introLikelihood.R
+## ICI3D_Lab5_introLikelihood.batch.Rout: ICI3D_Lab5_introLikelihood.R testing/ICI3D_Lab5_introLikelihood.answers.R
 
 ## ICI3D_Lab6_MLE_SIV_HIV.batch.Rout: ICI3D_Lab6_MLE_SIV_HIV.R testing/ICI3D_Lab6_MLE_SIV_HIV.answers.R
-
-## Not the current Lab 6 ## Not passing tests
-## ICI3D_Lab6_HetSIR_exercise.batch.Rout: ICI3D_Lab6_HetSIR_exercise.R ## testing/ICI3D_Lab6_HetSIR_exercise.answers.R
 
 ## ICI3D_Lab7_MCMC-Binomial.R
 ## ICI3D_Lab8_MCMC-SI_HIV.R
@@ -138,10 +155,9 @@ seir.w.seasonal.Rout: seir.w.seasonal.R
 
 ######################################################################
 
+## Look at labnames branch for a sketched-out implementation of the renaming
 ## Edit in place
 Sources += names.txt
-
-## perl -pi -f "test.pl"
 
 ######################################################################
 
@@ -159,7 +175,6 @@ makestuff/Makefile:
 	ls makestuff/Makefile
 
 -include makestuff/os.mk
-
 -include makestuff/pipeR.mk
 
 -include makestuff/git.mk

@@ -42,13 +42,15 @@ hazProb <- function(h){
 
 ######################################################################
 
+## This code is terse and tricky, but probably OK if total population size 
+## (including absent R class) = 1.
+## Will be better to add N explicitly as a parameter
 groupSIR <- function(t, y, parms){
 	with(parms, {
 		n <- length(cvec)
 		S = y[1:n]
 		I = y[n+(1:n)]
-		N = S+I
-		Lambda = sum(I*cvec)/sum(N*cvec)
+		Lambda = sum(I*cvec)/mean(cvec)
 		trans = Lambda*S*cvec
 		return(list(c(-trans, trans-I)))
   })
@@ -73,5 +75,19 @@ groupSim <- function(cbar, kappa, Tfinal=20, nGroups=10, h0=1e-3, steps=100){
 		, I = rowSums(Imat)
 		, cI = (Imat |> sweep(2, FUN="*", as.array(cvec)) |> rowSums())/I
 	))
+}
+
+groupSimPlot <-  function(cbar, kappa, Tfinal=20, nGroups=10, h0=1e-3, steps=100, desc="blank"){
+	sim <- groupSim(cbar, kappa, Tfinal, nGroups, h0, steps)
+
+	title <- paste("cbar =", cbar, "kappa =", kappa)
+	
+	(ggplot(sim)
+		+ aes(x=time)
+		+ geom_line(aes(y=I))
+		+ geom_line(aes(y=S), color="blue")
+		+ ylab("proportion of pop")
+		+ ggtitle(title)
+	)
 }
 

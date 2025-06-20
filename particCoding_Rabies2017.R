@@ -37,6 +37,7 @@ print(R0)
 
 #seiv(t=0, y=pop.SI, parms = values)
 
+time.out <- seq(0,5*365, 1)               # in days
 myts <- data.frame(lsoda(
     y = pop.SI,               # Initial conditions for population
     times = time.out,             # Timepoints for evaluation
@@ -45,8 +46,6 @@ myts <- data.frame(lsoda(
 ))
 
 head(myts)
-
-time.out <- seq(0,5*365, 1)               # in days
 
 doRun <- function(vaccRate) {
     values['vaccinationRate'] <- vaccRate

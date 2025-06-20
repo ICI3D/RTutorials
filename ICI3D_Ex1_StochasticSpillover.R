@@ -121,7 +121,7 @@ ggplot(ts1_long, aes(x = time, y = count, color = Compartment)) +
 # in some other maintenance population briefly entering the territory. 
 
 # TASK 1: Make a copy of all the code presented for part 1 and modify it to 
-# introduce spillover events - 
+# introduce spillover events - ADDCODE
 # make functions event_sirspill and simulate_sirspill.
 # More specifically, assume that, in addition to the transmission already 
 # occurring, there is an additional rate of infection of susceptibles of 
@@ -189,20 +189,20 @@ plot_sirspill(nTraj=16
 
 # Don't forget to erase your graphs every now and then using graphics.off().
 
-# (1) 1 infected animal to begin, with different beta and gamma values
-# c(beta = 0.3, gamma = 0.1,lambda = 0.01), 400, c(S = pop - 1, I = 1, R = 0))
+# (1) 1 infected animal to begin, no spillover, with different beta and gamma values
+# c(beta = 0.3, gamma = 0.1, lambda = 0.00), 400, c(S = pop - 1, I = 1, R = 0))
 # versus 
-# c(beta = 0.2, gamma = 0.2,lambda = 0.01), 400, c(S = pop - 1, I = 1, R = 0))
+# c(beta = 0.2, gamma = 0.2, lambda = 0.00), 400, c(S = pop - 1, I = 1, R = 0))
 
-# (2) as for (1) but with 0 infected animals to begin
-# c(beta = 0.3, gamma = 0.1,lambda = 0.01), 400, c(S = pop, I = 0, R = 0))
+# (2) 0 infected animals to begin, with spillover, with different beta and gamma values 
+# c(beta = 0.3, gamma = 0.1, lambda = 0.01), 400, c(S = pop, I = 0, R = 0))
 # versus 
-# c(beta = 0.2, gamma = 0.2,lambda = 0.01), 400, c(S = pop, I = 0, R = 0))
+# c(beta = 0.2, gamma = 0.2, lambda = 0.01), 400, c(S = pop, I = 0, R = 0))
 
-# (3) as for (1) but with a higher spillover rate
-# c(beta = 0.3, gamma = 0.1,lambda = 0.04), 400, c(S = pop-1, I = 1, R = 0))
+# (3) as for (2) but with a higher spillover rate
+# c(beta = 0.3, gamma = 0.1, lambda = 0.04), 400, c(S = pop, I = 0, R = 0))
 # versus 
-# c(beta = 0.2, gamma = 0.2,lambda = 0.04), 400, c(S = pop-1, I = 1, R = 0))
+# c(beta = 0.2, gamma = 0.2, lambda = 0.04), 400, c(S = pop, I = 0, R = 0))
 
 # Lastly, would we have been able to study these patterns using 
 # a deterministic model? If you have time, refer back to previous labs, 
