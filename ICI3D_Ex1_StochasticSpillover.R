@@ -35,7 +35,8 @@ library(tidyverse)
 
 ## Function to step forward in time to next event and update states:
 
-event_sir <- function(time, S, I, R, params, t_end, count.inf) {
+event_sir <- function(time, S, I, R, params, t_end) { #JDC: count.inf removed from args
+  
   with(as.list(params), {
     N <- S+I+R
     
@@ -48,6 +49,7 @@ event_sir <- function(time, S, I, R, params, t_end, count.inf) {
     
     if (total_rate == 0) {
       
+      count.inf <- 0
       event_time <- t_end
       
     } else {
@@ -59,11 +61,12 @@ event_sir <- function(time, S, I, R, params, t_end, count.inf) {
              "Infect" = {
                S <- S - 1
                I <- I + 1
-               count.inf = count.inf+1
+               count.inf <- 1
              },
              "Recover" = {
                I <- I - 1
                R <- R + 1
+               count.inf <- 0
              })
     }
     
@@ -76,19 +79,21 @@ event_sir <- function(time, S, I, R, params, t_end, count.inf) {
 simulate_sir <- function(t_end, y, params) {
   with(as.list(y), {
     
-    count.inf <-  I
-    ts <- data.frame(time = 0, S = S, I = I, R = R, count.inf = I)
+    count.inf2 <-  0# This will be the cumulative count
+    #count.int initialisation changed. At present, it doesn't include the infection events that seed the outbreak...
+    ts <- data.frame(time = 0, S = S, I = I, R = R, count.inf = 0) 
     next_event <- ts
     
     while (next_event$time < t_end) {
-      next_event <- event_sir(next_event$time, next_event$S, next_event$I, next_event$R, params, t_end, count.inf)
+      next_event <- event_sir(next_event$time, next_event$S, next_event$I, next_event$R, params, t_end)#JDC: count.inf removed from args
+      count.inf2 <- count.inf2 + next_event$count.inf
+      next_event$count.inf <- count.inf2 # replace with the cumulative version
       ts <- rbind(ts, next_event)
     }
     
     return(ts)
   })
 }
-
 ## Run the model for specified inputs:
 
 pop <- 50                                 	# population size
