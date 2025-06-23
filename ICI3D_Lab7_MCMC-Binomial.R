@@ -1,143 +1,190 @@
-## Introduction to MCMC 1: Estimating a posterior binomial probability
-## Clinic on the Meaningful Modeling of Epidemiological Data
-## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
-## African Institute for Mathematical Sciences, Muizenberg, RSA
-## Steve Bellan 2012, 2015
-##
-###################################################################### 
+#' Introduction to MCMC 1: Estimating a posterior binomial probability
+#' Clinic on the Meaningful Modeling of Epidemiological Data
+#' International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
+#' African Institute for Mathematical Sciences, Muizenberg, RSA
+#' Steve Bellan 2012, 2015
+#' Carl Pearson 2025
+#'
+#' By the end of this tutorial you should be able to:
+#'  * Write a likelihood function for binomially distributed data
+#'  * Explain the Metropolis-Hasting algorithm
+#'  * Explain how proposal distribution affects MCMC convergence
+#'  * Assess MCMC convergence with the Gelman-Rubin diagnostic
+#'    and trace plots
 
-## By the end of this tutorial you should…
+library(ggplot2)
+library(dplyr)
+library(tidyr)
 
-## * Understand how to write a flexible prior function for the binomial
-## * Understand the Metropolis-Hasting algorithm and explain it step by step.
-## * Know how the parameter proposal distribution affects MCMC convergence
-## * Know how to assess MCMC convergence with the Gelman-Rubin diagnostic and with trace plots
+#' Part 1: Sample Data
+#' Imagine there is a population of individuals with a 30% prevalence of some
+#' disease. If you were to draw a 100 person sample, you could estimate the
+#' population prevlance from that sample. You may recall using other techniques
+#' to make that estimate in this workshop or other courses; here, we are going
+#' to use the Bayesian perspective with MCMC to estimate the posterior
+#' probability distribution of the prevalence from this "data" and a prior
+#' distribution (informative or uninformative) for the prevalence.
 
-library(boot); library(coda)
-defaultPar <- par() ## Save the default graphic parameter settings for use later.
+true_prevalence <- .3
+sample_size <- 100
+sample_positive <- rbinom(1, sample_size, true_prevalence)
+sample_prevalence <- sample_positive / sample_size
 
-## First, let's pretend that we are sampling a population of 100 individuals with a 30% prevalence
-## for some disease and testing each of them. From this, we have a sample prevalence, which is our
-## estimate of the true prevalence. The problem considered in the simulation is to estimate the
-## posterior probability distribution of the prevalence from this sample and from a specified
-## (informative or uninformative) prior probability distribution for the prevalence.
+#' @question How do the true_ and sample_prevalence compare? What could
+#' you change to make them more likely to be close for any given draw?
 
-size <- 100
-truePrev <- .3
-sampPos <- rbinom(1, size, truePrev) ## Sample from this distribution once.
-sampPrev <- sampPos/size
+#' Part 2: Prior Estimate
+#' Now we need to specify our prior probability distribution. This corresponds
+#' our belief *before* we conducted the study regarding prevalence in the
+#' population. For example, there might be a *global* estimate of the prevalence
+#' or a previous local study some time ago. Or if this disease has a high
+#' mortality rate, we might have a reasonable guess about how many people
+#' experience it. However, we might also have little to no information, and thus
+#' choose an _uninformative_ prior, meaning we assume as wide a range of values
+#' as plausible.
+#' 
+#' Our parameter of interest is prevalence, which is bounded between 0 and 1.
+#' The `beta` distribution matches these bounds and is thus commonly used for
+#' the probability distribution for parameters that are themselves
+#' probabilities. We will use it in this example.
+#' 
+#' One reminder: for numerical stability issues, we generally prefer to use the
+#' `log` scale when working with likelihood calculations.
 
-## Now we need to specify our prior probability distribution. This designates our prior (before we
-## conducted the study) beliefs of what we think the prevalence of this population is. Frequently,
-## we have insufficient prior information to specify an informative prior. In these cases, we will
-## use an uninformative prior, meaning we that we assume a wide range of values is plausible. 
+# ignore these for now - come back and change them later
+# default_shape1 <- 1
+# default_shape2 <- 1
 
-## Our parameter of interest is prevalence, which is bounded between 0 and 1. The beta probability
-## distribution is particularly suited for such parameters and is, in fact, the most commonly used
-## probability distribution for parameters that are, themselves, probabilities. It is uniform (constand density across probabilities)
-## with parameters shape1 = 1, shape2 = 1, and can otherwise have many shapes.
-
-## We calculate both the prior and the likelihood on a log scale to avoid numerical problems
-logBetaPrior <- function(prevalence
-												 , shape1 = 1  ## Change to make informative (try 8)
-												 , shape2 = 1) ## Change to make informative (try 40)
-	dbeta(prevalence, shape1 = shape1, shape2 = shape2, log = T)
-
-## The likelihood is simply the probability of observing that many individuals test positive given
-## the number tested and a specified prevalence.
-logLikelihood <- function(prevalence,
-                          data = list(size = size, sampPos = sampPos))
-    dbinom(data$sampPos, size = data$size, prob = prevalence, log = T)
-
-## A convenience function that sums the log-likelihood and the log-prior.
-logLikePrior <- function(prevalence
-                         , shape1 = 1
-                         , shape2 = 1
-                         , data = list(size = size, sampPos = sampPos))
-    logBetaPrior(prevalence, shape1, shape2) + logLikelihood(prevalence, data)
-
-## Convenience functions 
-Prior <- function(x) exp(logBetaPrior(x))
-Likelihood <- function(x) exp(logLikelihood(x))
-LikePrior <- function(x) exp(logLikePrior(x))
-
-
-## Plots
-## Examine these plots, and write down what you think each of them means
-par(mfrow = c(2,2) ## panels
-    , mar = c(3,6,1,1) ## panel margins
-    , bty='n' ## no box around plots
-    , oma = c(1.5,0,0,0)) ## outer margins
-curve(Prior(x), 0, 1, ylab = 'prior')
-curve(Likelihood, 0, 1, ylab = 'likelihood')
-curve(LikePrior, 0, 1, ylab = 'likelihood X prior')
-curve(logLikePrior, 0,1, ylab = 'log(likelihood X prior)')
-mtext('prevalence', 1, 0, outer=T)
-
-## runMCMC runs a Markov chain Monte Carlo (MCMC) Metropolis-Hastings algorithm to
-## numerically estimate the posterior probability distribution of the prevalence. For problems this
-## simple, the posterior probability distribution can be solved for analytically. However, for
-## problems more complex than this one (such as the Introduction to MCMC-SI_HIV tutorial), numerical
-## integration using MCMC may be the only way to calculate the posterior probability distribution
-## for parameters.
-
-## We sample the prevalence parameter on the logistic-scale so that it is bounded by [-Inf, Inf] and not [0,1]
-runMCMC <- function(iterations
-                    , startvalue = runif(1, logit(.01), logit(.99)) ## random starting value
-                    , proposerSD = .5 ## standard deviation of the gaussian proposal distribution
-                    , verbose = 0){ ## for debugging
-    if(verbose > 0) browser()
-    chain <- array(dim = c(iterations + 1, 1)) ## initialize empty iterations X 1 array
-    chain[1,] <- startvalue ## set first value
-    for(ii in 1:iterations){ 
-        proposal <- rnorm(1, chain[ii,], proposerSD) ## propose next value
-        MHratio <- exp(logLikePrior(inv.logit(proposal)) - 
-                       logLikePrior(inv.logit(chain[ii,])))
-        ## If the MH-ratio is > 1, accept new value. Otherwise, accept it with probability equal to
-        ## the the MH-ratio.
-        if(runif(1) < MHratio){ 
-            chain[ii+1,] <- proposal
-        }else{ ## If rejecting it, stay at the last state.
-            chain[ii+1,] <- chain[ii,]
-        }
-    }
-    return(inv.logit(chain)) ## Transform the chain of logit-prevalence values back into prevalences
+#' @param prevalence a probability vector; the estimate(s) we wish to evaluate
+#' @param shape1 a positive numeric; see [stats::dbeta()]
+#' @param shape2 a positive numeric; see [stats::dbeta()]
+#' 
+#' @details
+#' `shape1` and `shape2` are related to the mean and variation of the prior by
+#' $$
+#' mean = shape1 / (shape1 + shape2)
+#' variation = shape1 * shape2 / ((shape1 + shape2)^2 * (shape1 + shape2 + 1))
+#' $$
+#' 
+beta_prior <- function(
+	prevalence,
+	shape1 = default_shape1, ## for 30%, should adjust shape1 and shape2 to get some estimate
+	shape2 = default_shape2  ## of the mean other than 50% and some tighter confidence
+) {
+	return(dbeta(prevalence, shape1 = shape1, shape2 = shape2, log = TRUE))
 }
 
-posteriorSample <- runMCMC(1000, proposerSD = .1) ## sample 1000 times from posterior
-par(defaultPar, bty = 'n')
-plot(posteriorSample, xlab='iteration', ylab = 'prevalence', main = 'posterior sample',
-     type = 'l', las = 1)
-
-## Compare proposal distributions
-par(mfrow = c(2,2), oma = c(0,0,2,0))
-for(sdVal in c(.05, .1, .5, 2)) {
-    posteriorSample <- runMCMC(1000, proposerSD = sdVal) 
-    plot(posteriorSample, xlab='iteration', ylab = 'prevalence',
-         main = bquote(sigma==.(sdVal)),
-         ylim = c(0,1),
-         type = 'l', las = 1)
+#' @param prevalence a probability vector; the estimate(s) we wish to evaluate
+#' @param data a list-like structure with `observed` and `size` elements; by
+#'        default, set to our sample from earlier
+#' 
+#' @details
+#' Recall: the likelihood of a particular prevalence is the probability of the
+#' observed outcome out of a particular size sample, if that prevalence were
+#' true.
+likelihood <- function(
+		prevalence,
+    data = list(size = sample_size, observed = sample_positive)
+) {
+  return(with(
+  	data, dbinom(observed, size = size, prob = prevalence, log = TRUE)
+  ))
 }
-mtext('posterior sample by proposer sd', side = 3, line = 0, outer = T)
 
-####################################################################################################
-## Questions
-####################################################################################################
+#' We generally need both the prior and the likelihood, so let's define
+#' their sum for convenience.
+#' 
+#' n.b. we use the combined parameters of [likelihood()] and [beta_prior()]
+likelihood_and_prior <- function(
+	prevalence,
+	shape1 = default_shape1, shape2 = default_shape2,
+	data = list(size = sample_size, observed = sample_positive)
+) {
+	return(beta_prior(prevalence, shape1, shape2) + likelihood(prevalence, data))
+}
 
-## Question 1: Write code to compare histograms of posterior samples
-## from proposal distributions with the 4 different proposal standard
-## deviations above for 3000 samples. Make sure each histogram has the
-## same breaks and x-axis limits.
+#' @question What did you change shape1 and shape2 to? Why?
 
-## Question 2: Sample 4 chains for 3000 iterations using the same
-## proposal distribution and plot each chains' trace on the same plot.
+#' Part 3:
+#' Let's examine some plots for our prior and likelihood functions. In the plots
+#' below, we are transforming most of our functions results from the `log` scale
+#' with the `|> exp()`
+#' 
+#' To do so, we'll make a data structure containing all the views we want to see
+#' and then plot them.
+views <- factor(
+	c(
+		"Prior", "Likelihood Only", "Likelihood & Prior", "Log(Likelihood & Prior)"
+	),
+	levels = c(
+		"Prior", "Likelihood Only", "Likelihood & Prior", "Log(Likelihood & Prior)"
+	),
+	ordered = TRUE
+)
 
-## Question 3: Use the Gelman-Rubin diagnostic (gelman.diag) to assess
-## whether those four chains have reached convergence. You will need
-## to convert the chains from 2 into "mcmc" objects (as.mcmc()), and
-## then put them into an mcmc.list (as.mcmc.list())
+plot_df <- expand.grid(prevalence = seq(0, 1, by = 0.001), view = views) |>
+	mutate(y = case_when(
+		view == views[1] ~ exp(beta_prior(prevalence)),
+		view == views[2] ~ exp(likelihood(prevalence)),
+		view == views[3] ~ exp(likelihood_and_prior(prevalence)),
+		view == views[4] ~ likelihood_and_prior(prevalence)
+	))
 
-## Challenge Question: (A) Plot the Gelman-Rubin diagnostic as a function
-## of chain length. (B) Make the same plot, but after discarding the first 100
-## iterations as a "burnin"
+ggplot(plot_df) +
+	aes(prevalence, y) +
+	geom_line() +
+	facet_wrap(~ view, scales = "free_y", nrow = 2) +
+	theme_minimal()
 
+#' Part 4: Run Metropolis-Hastings Markov Chain Monte Carlo (MCMC)
+#' For the beta-prior, binomial-likelihood, single data point case, one can
+#' directly write down the posterior distribution. But real problems are rarely
+#' as simple. This exercise demonstrates how to use MCMC techniques on a simple
+#' problem so you can see how they work, but they can also solve more
+#' complicated problems as you will see in other exercises.
+
+# qlogis and plogis are logit and inverse logit functions, respectively
+
+iterations <- 1000 # how many steps in the chain?
+chain <- array(dim = c(iterations + 1, 3)) # pre allocate storage space accordingly
+proposer <- function(previous, sd = 0.1) rnorm(1, previous, sd) # proposer for next iteration
+logit_initial_prevalence <- runif(1, qlogis(0.01), qlogis(.99))
+initial_prevalence <- plogis(logit_initial_prevalence)
+
+chain[1, ] <- c(
+	logit_initial_prevalence, initial_prevalence, likelihood_and_prior(initial_prevalence)
+)
+
+for (step in seq_len(iterations)) {
+	proposal <- proposer(chain[step, 1])
+	prop_prev <- plogis(proposal)
+	ll_proposal <- likelihood_and_prior(prop_prev)
+	metro_hasting_ratio <- exp(ll_proposal - chain[step, 3])
+	if (runif(1) < metro_hasting_ratio) { # accept proposal
+		chain[step + 1, ] <- c(proposal, prop_prev, ll_proposal)
+	} else { # reject proposal
+		chain[step + 1, ] <- chain[step, ]
+	}
+}
+
+chain_df <- as.data.frame(chain) |>
+	setNames(c("sample", "prevalence", "likelihood")) |>
+	within({ iteration <- seq_along(sample) }) |>
+	pivot_longer(cols = -c(iteration))
+
+ggplot(chain_df) + aes(iteration, value) +
+	geom_line() +
+	facet_grid(name ~ ., scales = "free_y") +
+	theme_minimal()
+
+#' Part 5: Questions!
+#' @question What is the Gelman-Rubin diagnostic?
+#' @hint you might need to look it up!
+#' 
+#' @question If you wanted to look at the G-R diagnostic, what steps would take?
+#' 
+#' @question Bonus: if you have time, start taking those steps, by:
+#'  - generating multiple independent chains
+#'  - plotting those chain trajectories
+#'  - plotting the corresponding posterior distributions
+#'  - calculating the Gelman-Rubin diagnostic
