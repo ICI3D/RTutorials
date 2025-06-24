@@ -6,8 +6,14 @@
 ## Carl Pearson 2025
 ###################################################################### 
 
+install.packages(
+	c("odin2", "dust2", "monty"),
+	repos = c("https://mrc-ide.r-universe.dev", "https://cloud.r-project.org")
+)
+
 library(odin2)
 library(monty)
+library(dust2)
 library(posterior)
 
 #' Part 1: Preview Review
@@ -20,10 +26,13 @@ sample_positive <- rbinom(1, sample_size, 0.3)
 
 prev_prior <- monty::monty_dsl({
 	true_prevalence ~ Beta(shape1, shape2)
-}, fixed = list(shape1 = 20, shape2 = 80))
+}, fixed = list(shape1 = 2, shape2 = 8))
 
 prev_likelihood <- monty::monty_model_function(
-	\(true_prevalence) dbinom(sample_positive, sample_size, true_prevalence, log = TRUE)
+	\(true_prevalence, size, positive) sum(dbinom(
+		sample_positive, sample_size, true_prevalence,
+		log = TRUE
+	)), fixed = list(size = sample_size, positive = sample_positive)
 )
 
 prev_posterior <- prev_prior + prev_likelihood
@@ -31,7 +40,7 @@ prev_posterior <- prev_prior + prev_likelihood
 result <- monty_sample(
 	prev_posterior,
 	monty_sampler_adaptive(matrix(1)),
-	n_steps = 1000, n_chains = 10
+	n_steps = 1000, n_chains = 4
 ) |> posterior::as_draws_df()
 
 posterior::summarise_draws(result) # `posterior` provides many options for summarizing chains

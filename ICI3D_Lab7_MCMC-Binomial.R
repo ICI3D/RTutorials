@@ -51,9 +51,10 @@ sample_prevalence <- sample_positive / sample_size
 #' One reminder: for numerical stability issues, we generally prefer to use the
 #' `log` scale when working with likelihood calculations.
 
-# ignore these for now - come back and change them later
-# default_shape1 <- 1
-# default_shape2 <- 1
+# ignore these for now - come back and change them later to change your
+# prior
+default_shape1 <- 2
+default_shape2 <- 10
 
 #' @param prevalence a probability vector; the estimate(s) we wish to evaluate
 #' @param shape1 a positive numeric; see [stats::dbeta()]
