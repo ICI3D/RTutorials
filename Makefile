@@ -1,4 +1,4 @@
-## This is ICI3D/RTutorials
+## This is ICI3D/RTutorials ##### * answers branch!!!!
 ## https://github.com/ICI3D/RTutorials
 
 -include target.mk
@@ -133,7 +133,8 @@ ICI3D_Ex1_StochasticSpillover.batch.Rout: ICI3D_Ex1_StochasticSpillover_function
 
 ## ICI3D_Lab6_MLE_SIV_HIV.batch.Rout: ICI3D_Lab6_MLE_SIV_HIV.R testing/ICI3D_Lab6_MLE_SIV_HIV.answers.R
 
-## ICI3D_Lab7_MCMC-Binomial.R
+## ICI3D_Lab7_MCMC-Binomial.batch.Rout: ICI3D_Lab7_MCMC-Binomial.R testing/ICI3D_Lab7_MCMC-Binomial.answers.R
+
 ## ICI3D_Lab8_MCMC-SI_HIV.R
 ## ICI3D_Lab_SampDistrVariability.R
 
