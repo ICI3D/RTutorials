@@ -14,3 +14,12 @@ figures: $(patsubst %,plot.%,${TARS})
 
 clean:
 	rm -f target*.csv
+
+######################################################################
+
+# Pipeline session
+## plot_script.R
+## somescript.R
+
+# Carl's other session
+## participatory2025stochastic.R
