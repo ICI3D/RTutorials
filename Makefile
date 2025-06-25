@@ -10,6 +10,8 @@ vim_session:
 
 ######################################################################
 
+Ignore += pipelines
+
 alldirs += sampling_JD
 
 Sources += $(wildcard *.R *.md)
