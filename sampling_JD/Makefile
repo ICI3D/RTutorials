@@ -55,6 +55,12 @@ study_design_rep.Rout: study_design_rep.R
 
 ######################################################################
 
+### Live coding 2025
+
+rabiesCluster.Rout: rabiesCluster.R
+
+######################################################################
+
 ### Makestuff
 
 Sources += Makefile
