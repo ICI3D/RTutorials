@@ -141,7 +141,7 @@ print(ggplot(baseState)
 
 ## Now we will try calibration. This article is an introduction 
 ## to this topic.
-## proceeding: https://canmod.github.io/macpan2/articles/calibration
+## https://canmod.github.io/macpan2/articles/calibration
 
 ## To illustrate calibration, we add negative binomial noise to the simulated 
 ## number of infectious individuals. Then we will attempt to fit the model to 
