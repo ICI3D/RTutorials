@@ -116,6 +116,7 @@ ICI3D_Lab_Heterogeneous_Groups.batch.Rout.pdf: ICI3D_Lab_Heterogeneous_Groups.ba
 ICI3D_Lab_Heterogeneous_Groups.batch.Rout: ICI3D_Heterogeneous_Groups.R ICI3D_Lab_Heterogeneous_Groups.R
 ## ICI3D_Lab_Heterogeneous_Groups.batch.Rout-0.pdf: 
 
+Ignore += labNow.*.pdf
 ## labNow.homoLess.pdf: labNow.R
 pdfDesc += labnow
 labNow.Rout: labNow.R ICI3D_Heterogeneous_Groups.R
