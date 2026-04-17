@@ -163,6 +163,16 @@ Sources += names.txt
 
 ######################################################################
 
+## Migration
+
+Ignore += index.out
+index.out: $(wildcard *.R) Makefile
+	ls $^ > $@
+
+Sources += migrate.txt
+
+######################################################################
+
 ### Makestuff
 
 ## Makefile gutted 2021 Jun 21 (Mon)
