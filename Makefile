@@ -172,6 +172,10 @@ index.out: $(wildcard *.R) Makefile
 
 Sources += migrate.txt
 
+Ignore += mv.bash
+mv.bash: migrate.txt mv.pl
+	$(PUSHRO)
+
 ######################################################################
 
 ### Makestuff
