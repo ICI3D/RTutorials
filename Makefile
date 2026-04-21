@@ -176,6 +176,10 @@ Ignore += mv.bash
 mv.bash: migrate.txt mv.pl
 	$(PUSHRO)
 
+Ignore += links.perl
+links.perl: migrate.txt links.pl
+	$(PUSHRO)
+
 ######################################################################
 
 ### Makestuff
