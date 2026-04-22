@@ -61,6 +61,8 @@ branchdir:
 
 Sources += $(wildcard *.pl)
 
+## Several answers files need to be renamed after big renaming 2026 Apr 21 (Tue)
+
 ## Processing machinery
 ## Make an answers file that allows batch.pl to convert the published file into something that runs
 ## Started with a hard-coded batch, then decided to do a weird, flexible batchdir variable. Don't do that; in cases where you want to batch from elsewhere, make new rules
@@ -82,24 +84,24 @@ batch/%.R: %.R testing/%.answers.R batch.pl
 ## ICI3D_RTutorial_2.batch.Rout: ICI3D_RTutorial_2.R testing/ICI3D_RTutorial_2.answers.R
 ## ICI3D_RTutorial_3.batch.Rout: ICI3D_RTutorial_3.R testing/ICI3D_RTutorial_3.answers.R
 
-## ICI3D_Lab1_ODEmodels.batch.Rout: ICI3D_Lab1_ODEmodels.R testing/ICI3D_Lab1_ODEmodels.answers.R
-## ICI3D_Lab1_ODEmodels.batch.Rlog: batch/ICI3D_Lab1_ODEmodels.R
+## ICI3D_Lab_ODEmodels.batch.Rout: ICI3D_Lab_ODEmodels.R testing/ICI3D_Lab_ODEmodels.answers.R
+## ICI3D_Lab_ODEmodels.batch.Rlog: batch/ICI3D_Lab_ODEmodels.R
 
-## ICI3D_Lab3_EpiStudyDesign.batch.Rout: ICI3D_Lab3_EpiStudyDesign.R testing/ICI3D_Lab3_EpiStudyDesign.answers.R
+## ICI3D_Lab_EpiStudyDesign.batch.Rout: ICI3D_Lab_EpiStudyDesign.R testing/ICI3D_Lab_EpiStudyDesign.answers.R
 
 ## ICI3D_RTutorial_1.batch.Rout: testing/ICI3D_RTutorial_1.answers.R
 ## ICI3D_RTutorial_2.batch.Rout: ICI3D_RTutorial_2.R testing/ICI3D_RTutorial_2.answers.R
 
 ## Two Tutorial 4 files; this one is obsolete, I think
-## ICI3D_RTutorial_4_VisualizingData.Rout: ICI3D_RTutorial_4_VisualizingData.R testing/ICI3D_RTutorial_4_VisualizingData.answers.R
+## ICI3D_previous_VisualizingData.Rout: ICI3D_previous_VisualizingData.R testing/ICI3D_previous_VisualizingData.answers.R
 
 ## Warning! This uses setwd, and thus default plots are made elsewhere
-## ICI3D_RtvTutorial_4.batch.pdf: ICI3D_RtvTutorial_4.R testing/ICI3D_RtvTutorial_4.answers.R
-Ignore += ICI3D_RtvTutorial_4.batch.pdf
-ICI3D_RtvTutorial_4.batch.pdf: ICI3D_RtvTutorial_4.batch.Rout
+## ICI3D_RTutorial_4.batch.pdf: ICI3D_RTutorial_4.R testing/ICI3D_RTutorial_4.answers.R
+Ignore += ICI3D_RTutorial_4.batch.pdf
+ICI3D_RTutorial_4.batch.pdf: ICI3D_RTutorial_4.batch.Rout
 	$(MV) data/visualizingData/Rplots.pdf $@
-## ICI3D_RtvTutorial_4.batch.Rout: ICI3D_RtvTutorial_4.R testing/ICI3D_RtvTutorial_4.answers.R
-## batch/ICI3D_RtvTutorial_4.R: ICI3D_RtvTutorial_4.R testing/ICI3D_RtvTutorial_4.answers.R
+## ICI3D_RTutorial_4.batch.Rout: ICI3D_RTutorial_4.R testing/ICI3D_RTutorial_4.answers.R
+## batch/ICI3D_RTutorial_4.R: ICI3D_RTutorial_4.R testing/ICI3D_RTutorial_4.answers.R
 
 ## Not working, something about where is the data!
 ICI3D_RTutorial_5_DataCleaning.batch.Rout: batchdir=data/dataCleaning/
@@ -123,22 +125,24 @@ pdfDesc += labnow
 labNow.Rout: labNow.R ICI3D_Heterogeneous_Groups.R
 	$(pipeR)
 
-## ICI3D_Ex1_StochasticSpillover.batch.Rout: ICI3D_Ex1_StochasticSpillover.R testing/ICI3D_Ex1_StochasticSpillover.answers.R
-ICI3D_Ex1_StochasticSpillover.batch.Rout: ICI3D_Ex1_StochasticSpillover_functions.R
+######################################################################
 
-## ICI3D_Lab1_ODEmodels.batch.Rout: ICI3D_Lab1_ODEmodels.R testing/ICI3D_Lab1_ODEmodels.answers.R
+## ICI3D_Example_StochasticSpillover.batch.Rout: ICI3D_Example_StochasticSpillover.R testing/ICI3D_Example_StochasticSpillover.answers.R
+ICI3D_Example_StochasticSpillover.batch.Rout: ICI3D_Example_StochasticSpillover_functions.R
 
-## ICI3D_Lab2_Heterogeneity.R
-## ICI3D_Lab3_EpiStudyDesign.batch.Rout: ICI3D_Lab3_EpiStudyDesign.R testing/ICI3D_Lab3_EpiStudyDesign.answers.R
+## ICI3D_Lab_ODEmodels.batch.Rout: ICI3D_Lab_ODEmodels.R testing/ICI3D_Lab_ODEmodels.answers.R
 
-## ICI3D_Lab4_RCT.batch.Rout: ICI3D_Lab4_RCT.R testing/ICI3D_Lab4_RCT.answers.R
-## ICI3D_Lab5a_introLikelihoodPlusRejectionP.R
-## ICI3D_Lab5_introLikelihood.batch.Rout: ICI3D_Lab5_introLikelihood.R testing/ICI3D_Lab5_introLikelihood.answers.R
+## ICI3D_Lab_Heterogeneity.R
+## ICI3D_Lab_EpiStudyDesign.batch.Rout: ICI3D_Lab_EpiStudyDesign.R testing/ICI3D_Lab_EpiStudyDesign.answers.R
 
-## ICI3D_Lab6_MLE_SIV_HIV.batch.Rout: ICI3D_Lab6_MLE_SIV_HIV.R testing/ICI3D_Lab6_MLE_SIV_HIV.answers.R
+## ICI3D_Lab_RCT.batch.Rout: ICI3D_Lab_RCT.R testing/ICI3D_Lab_RCT.answers.R
+## ICI3D_Lab_LikelihoodPlusRejectionP.R
+## ICI3D_Lab_introLikelihood.batch.Rout: ICI3D_Lab_introLikelihood.R testing/ICI3D_Lab_introLikelihood.answers.R
 
-## ICI3D_Lab7_MCMC-Binomial.R
-## ICI3D_Lab8_MCMC-SI_HIV.R
+## ICI3D_Lab_MLE_SIV_HIV.batch.Rout: ICI3D_Lab_MLE_SIV_HIV.R testing/ICI3D_Lab_MLE_SIV_HIV.answers.R
+
+## ICI3D_Lab_MCMC-Binomial.R
+## ICI3D_Lab_MCMC-SI_HIV.R
 ## ICI3D_Lab_SampDistrVariability.R
 
 ######################################################################
@@ -177,6 +181,7 @@ Ignore += mv.bash
 mv.bash: migrate.txt mv.pl
 	$(PUSHRO)
 
+## perl -pi links.perl Makefile
 Ignore += links.perl
 links.perl: migrate.txt links.pl
 	$(PUSHRO)
