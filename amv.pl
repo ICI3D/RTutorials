@@ -6,5 +6,5 @@ while(<>){
 	my ($old, $new) = split /\t/;
 	$old =~ s/.R$//;
 	$new =~ s/.R$//;
-	say "s/$old/$new/g;";
+	say "git mv $old.answers.R $new.answers.R";
 }

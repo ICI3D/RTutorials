@@ -139,6 +139,8 @@ ICI3D_Example_StochasticSpillover.batch.Rout: ICI3D_Example_StochasticSpillover_
 ## ICI3D_Lab_LikelihoodPlusRejectionP.R
 ## ICI3D_Lab_introLikelihood.batch.Rout: ICI3D_Lab_introLikelihood.R testing/ICI3D_Lab_introLikelihood.answers.R
 
+## ICI3D_Lab_LikelihoodCompare.batch.Rout: ICI3D_Lab_LikelihoodCompare.R testing/ICI3D_Lab_LikelihoodCompare.answers.R
+
 ## ICI3D_Lab_MLE_SIV_HIV.batch.Rout: ICI3D_Lab_MLE_SIV_HIV.R testing/ICI3D_Lab_MLE_SIV_HIV.answers.R
 
 ## ICI3D_Lab_MCMC-Binomial.R
@@ -169,7 +171,7 @@ Sources += names.txt
 
 ######################################################################
 
-## Migration
+## Migration TEMPORARY 2026 Apr 22 (Wed). Could delete soon (or keep migrate txt for reference)
 
 Ignore += index.out
 index.out: $(wildcard *.R) Makefile
@@ -181,7 +183,12 @@ Ignore += mv.bash
 mv.bash: migrate.txt mv.pl
 	$(PUSHRO)
 
+## This was run in the testing/ subdirectory
+amv.bash: migrate.txt amv.pl
+	$(PUSHRO)
+
 ## perl -pi links.perl Makefile
+## perl -pi links.perl testing/
 Ignore += links.perl
 links.perl: migrate.txt links.pl
 	$(PUSHRO)
