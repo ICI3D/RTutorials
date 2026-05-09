@@ -1,9 +1,8 @@
-#' Introduction to MCMC 1: Estimating a posterior binomial probability
-#' Clinic on the Meaningful Modeling of Epidemiological Data
-#' International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
-#' African Institute for Mathematical Sciences, Muizenberg, RSA
+#' Introduction to Inference: Understanding MCMC with Binomial Data
+#' [MMED](https://www.ici3d.org/MMED)
 #' Steve Bellan 2012, 2015
-#' Carl Pearson 2025
+#' Carl Pearson 2025, 2026
+#' Claire Perrin Smith 2026
 #'
 #' By the end of this tutorial you should be able to:
 #'  * Write a likelihood function for binomially distributed data
