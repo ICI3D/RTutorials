@@ -11,6 +11,10 @@
 #'  * Assess MCMC convergence with the Gelman-Rubin diagnostic
 #'    and trace plots
 
+#' Revisit the notion of population true value => distribution of plausible samples
+#'  - have them generate the plot, using a functional form they'll use again later?
+#'  - have them add a particular observation
+
 library(ggplot2)
 library(dplyr)
 library(tidyr)
@@ -28,6 +32,38 @@ true_prevalence <- .3
 sample_size <- 100
 sample_positive <- rbinom(1, sample_size, true_prevalence)
 sample_prevalence <- sample_positive / sample_size
+
+#' @carl have them make the dbinom link
+#' and then insert into our figure code
+
+#' @carl have them convert that code into a likelihood function
+#' and feed that into a plot we provide
+
+#' @carl have them write a prior "function" to feed to prior + likelihood = posterior plot
+#' 
+
+#' @carl build up MCMC answer:
+#'  - implement a proposal distribution + acceptance rejection logic
+#'  - insert that into a loop structure that we provide, FROM A STARTING POINT WE PROVIDE
+#'  - that loop structure should do a pass, draw a plot, prompt for do 1 step more
+#'  - also provide a run-until-option
+#'  - MVP++: also provide a save animation option
+
+#' prompt with "what if we started at a different (bad) place?" (repeat previous, but from
+#' different BAD starting point that we provide)
+
+#' have them run the chain sampling code that we provide - have them provide
+#' that method all of their previous inputs, plus the good and bad starting points,
+#' and some points of their choice
+#' should be another step-step-etc-continue loop, but plot is chains and posteriors
+#' needs to show R hat calculation as well
+ 
+
+#' have them implement the three different proposals, drop them into the chain sampling code
+#' and see the final results
+
+######## EVERYTHING BELOW IS OLD - POTENTIALLY USEFUL FOR ABOVE, BUT NO LONGER NECESSARILY IN CODE
+
 
 #' @question How do the true_ and sample_prevalence compare? What could
 #' you change to make them more likely to be close for any given draw?
