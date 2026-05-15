@@ -380,7 +380,7 @@ if(c(T, F, F)){ 1 + 1 } ## BADCODE
 
 ## The probability-distribution section of this tutorial was aided by
 ## information available at
-## http://www.stat.umn.edu/geyer/5102/examp/rlook.html.
+## https://www.stat.umn.edu/geyer/5101/examp/rlook.html.
 
 ## If you are unfamiliar with or rusty on your understanding of the
 ## binomial distribtion, you may also want to work through the introductory
