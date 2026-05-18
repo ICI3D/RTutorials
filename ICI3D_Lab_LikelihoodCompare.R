@@ -68,4 +68,4 @@ samples <- coda.samples(model, variable.names = "p", n.iter = iterate)
 
 quantile(as.vector(as.matrix(samples)), c(0.025, 0.975))
 
-## Note that Bayesian and Frequentist are making different assumptions and therefore estimating fundamentally different quantities (though very similar). By contrast, the exploration methods are _trying_ to estimate the same quantities as the direct methods, but using exploration (and also approximation, in the frequentist case); they are clumsier for simpler problems, but more flexible.
+## Note that Bayesian and Frequentist approaches are making different assumptions and therefore estimating fundamentally different quantities (though with very similar values in this case). By contrast, the exploration methods are _trying_ to estimate the same quantities as the direct methods, but using exploration (and also approximation, in the frequentist case); they are clumsier for simpler problems, but more flexible.
