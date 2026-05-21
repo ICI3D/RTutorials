@@ -1,9 +1,8 @@
-#' Introduction to MCMC 1: Estimating a posterior binomial probability
-#' Clinic on the Meaningful Modeling of Epidemiological Data
-#' International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
-#' African Institute for Mathematical Sciences, Muizenberg, RSA
+#' Introduction to Inference: Understanding MCMC with Binomial Data
+#' [MMED](https://www.ici3d.org/MMED)
 #' Steve Bellan 2012, 2015
-#' Carl Pearson 2025
+#' Carl Pearson 2025, 2026
+#' Claire Perrin Smith 2026
 #'
 #' By the end of this tutorial you should be able to:
 #'  * Write a likelihood function for binomially distributed data
@@ -11,6 +10,10 @@
 #'  * Explain how proposal distribution affects MCMC convergence
 #'  * Assess MCMC convergence with the Gelman-Rubin diagnostic
 #'    and trace plots
+
+#' Revisit the notion of population true value => distribution of plausible samples
+#'  - have them generate the plot, using a functional form they'll use again later?
+#'  - have them add a particular observation
 
 library(ggplot2)
 library(dplyr)
@@ -29,6 +32,38 @@ true_prevalence <- .3
 sample_size <- 100
 sample_positive <- rbinom(1, sample_size, true_prevalence)
 sample_prevalence <- sample_positive / sample_size
+
+#' @carl have them make the dbinom link
+#' and then insert into our figure code
+
+#' @carl have them convert that code into a likelihood function
+#' and feed that into a plot we provide
+
+#' @carl have them write a prior "function" to feed to prior + likelihood = posterior plot
+#' 
+
+#' @carl build up MCMC answer:
+#'  - implement a proposal distribution + acceptance rejection logic
+#'  - insert that into a loop structure that we provide, FROM A STARTING POINT WE PROVIDE
+#'  - that loop structure should do a pass, draw a plot, prompt for do 1 step more
+#'  - also provide a run-until-option
+#'  - MVP++: also provide a save animation option
+
+#' prompt with "what if we started at a different (bad) place?" (repeat previous, but from
+#' different BAD starting point that we provide)
+
+#' have them run the chain sampling code that we provide - have them provide
+#' that method all of their previous inputs, plus the good and bad starting points,
+#' and some points of their choice
+#' should be another step-step-etc-continue loop, but plot is chains and posteriors
+#' needs to show R hat calculation as well
+ 
+
+#' have them implement the three different proposals, drop them into the chain sampling code
+#' and see the final results
+
+######## EVERYTHING BELOW IS OLD - POTENTIALLY USEFUL FOR ABOVE, BUT NO LONGER NECESSARILY IN CODE
+
 
 #' @question How do the true_ and sample_prevalence compare? What could
 #' you change to make them more likely to be close for any given draw?
