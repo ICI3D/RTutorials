@@ -1,11 +1,20 @@
-## Introduction to Infectious Disease Dynamics
+#####################################################################
+
+## Lab: ODE models in R
+
+#####################################################################
 ## Clinic on the Meaningful Modeling of Epidemiological Data
 ## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
-## African Institute for Mathematical Sciences, Muizenberg, RSA
+## https://www.ici3d.org
 ##
-## Juliet R.C. Pulliam, 2012-2018
+## Attribution: Juliet R.C. Pulliam (2012)
+## Last update: Cari van Schalkwyk (2026)
 ##
-##
+## Some Rights Reserved
+## CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
+
+#####################################################################
+
 ## The goal of this tutorial is to acquaint you with ways of
 ## analysing simple infectious disease models in R. By the end of
 ## this tutorial, you should be able to:
@@ -32,8 +41,7 @@ rm(list=ls())                   # Clear all variables and functions
 ## We will now define a function to describe a simple SIR model with
 ## constant population size and no population turnover (that is, no
 ## births and deaths). This model was discussed in "Introduction to dynamic
-## modeling of infectious diseases," and slides are available here:
-## https://ndownloader.figshare.com/files/8541817
+## modeling of infectious diseases".
 ##
 ## The version of the model we'll work with here has 3 state variables (though
 ## only two of these need to be specified to define the state of the system,
@@ -52,8 +60,7 @@ rm(list=ls())                   # Clear all variables and functions
 ## If you do not remember the model, review the lecture notes before you proceed
 ## with this tutorial. If you're not entirely comfortable with the distinction
 ## between state variables and parameters, you may also want to review the
-## DAIDD Glossary:
-## https://github.com/ICI3D/MMEDparticipants/raw/master/Resources/DAIDD2016_Glossary.pdf
+## DAIDD Glossary at https://www.ici3d.org/MMED/resources/
 
 ## We will now define a function that describes the change in the state
 ## variables with time. The function takes the input t (the current time), y (a
@@ -103,7 +110,7 @@ N0 <- 7780000
 ## initial values of our 2 state variables:
 
 pop.SI <- c(S = 0.065*N0,  # Initially 6.5% of the population is susceptible
-                I = ???)       # ENTER THE NUMBER INITIALLY INFECTED (20.5) ## FIXME
+            I = ???)       # ENTER THE NUMBER INITIALLY INFECTED (20.5) ## FIXME
 
 ## Notice that I've named the two values in the initial population vector to
 ## help us keep track of which value is which. This also allows us to take
@@ -122,10 +129,10 @@ values <- c(beta = 3.6,        # Transmission coefficient
 ## R0 = beta / gamma, as follows:
 
 values["beta"]/values["gamma"] # value of R0
-                               # HINT: Try putting this command inside the
-                               # function as.numeric() to keep R from
-                               # confusingly retaining the name of the first
-                               # value.
+# HINT: Try putting this command inside the
+# function as.numeric() to keep R from
+# confusingly retaining the name of the first
+# value.
 
 ## Now that we have defined the inputs, we are ready to try out our function!
 
@@ -153,7 +160,7 @@ pop.next <- pop.SI + unlist(sir(t=time,y=pop.SI,parms=values)) * delta.t
 ## state variables through time. Remember, however, that the differential
 ## equations describe the rates of change in the limit as delta.t goes to zero.
 ## It turns out that using the above discrete time approximation of this
-## process, as we have done on the spreadsheets (Track B) and live coding
+## process, as we have done on the spreadsheets and live coding
 ## example, leads to rapid accumulation of error in our estimate of the state
 ## variables through time, even if we set our value of delta.t to be very
 ## small. Luckily for us, there are a number of algorithms that have been
@@ -206,7 +213,7 @@ lsoda(
   times = time.out,             # Timepoints for evaluation
   func = sir,                   # Function to evaluate
   parms = values                # Vector of parameters
-  )
+)
 
 ## Well, that seems to have done something, but it's hard to understand the
 ## output. Let's make it easier to look at by saving the output as a data.frame
@@ -217,7 +224,7 @@ ts.sir <- data.frame(lsoda(
   times = time.out,             # Timepoints for evaluation
   func = sir,                   # Function to evaluate
   parms = values                # Vector of parameters
-  ))
+))
 
 ## Now let's look at the output:
 
@@ -238,17 +245,16 @@ subset(ts.sir,time==365)
 ## through time, we can plot to output from lsoda(). Remember that the
 ## parameters we have used are the same as in the live coding example, so
 ## this is a model of a measles epidemic in New York. We'll label the plot
-## accordingly. (You'll learn a lot more about plotting - and modifying the
+## accordingly. (There is more to learn about plotting - and modifying the
 ## appearance of plots - in Tutorial 4.)
+library(ggplot2)
 
-plot(ts.sir$time,               # Time on the x axis
-     ts.sir$I,                  # Number infected (I) on the y axis
-     xlab = "Time in days",     # Label the x axis
-     ylab = "Number infected",  # Label the y axis
-     main = "Measles in New York",    # Plot title
-     xlim = c(0,400),           #
-     type = "l",                # Use a line plot
-     bty = "n")                 # Remove the box around the plot
+ggplot(aes(x=time, y=I), data = ts.sir) + # Time on the x axis, number infected (I) on the y axis
+  geom_line()+
+  xlab("Time in days")+
+  ylab("Number infected")+
+  ggtitle("Measles in New York")+
+  xlim(c(0,400))
 
 ## While there are many more infecteds at time 365 than there were at time 0,
 ## there are a lot fewer than there were at time 200, and it looks like the
