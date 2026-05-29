@@ -1,5 +1,5 @@
 ## Likelihood Comparisons
-## (C) Steve Bellan, Cari van Schalkwyk and the ICI3D team 2009–2025
+## JD, based on the ICI3D Intro likelihoods lab
 
 ## The code is made available under a Creative Commons Attribution 4.0 International License. You
 ## are free to reuse this code provided that you give appropriate credit, provide a link to the
