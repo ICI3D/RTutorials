@@ -1,12 +1,18 @@
 ## This is ICI3D/RTutorials
 ## https://github.com/ICI3D/RTutorials
 
+## This Makefile has been made by and for JD over many years; I can push it aside if anyone wants to do something friendlier with make in this directory.
+
 -include target.mk
 
 -include makestuff/perl.def
 
 vim_session:
 	bash -cl "vmt"
+
+######################################################################
+
+## LabTemplate.R
 
 ######################################################################
 
