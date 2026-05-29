@@ -1,29 +1,32 @@
 #####################################################################
 
-## Lab: ODE models in R
+## Lab: LAB TITLE [no number]
 
 #####################################################################
+
 ## Clinic on the Meaningful Modeling of Epidemiological Data
 ## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
 ## https://www.ici3d.org
 ##
-## Attribution: Juliet R.C. Pulliam (2012)
-## Last update: Cari van Schalkwyk (2026)
+## Attribution: ORIGINAL (date)
+##              SUBSEQUENT (date)
+##              YOU (date) ## if you did something interesting
+## Last update: Probably your name here, unless you're last above
 ##
 ## Some Rights Reserved
 ## CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
 
 #####################################################################
 
-## The goal of this lab is to acquaint you with ways of
+## The goal of this tutorial is to acquaint you with ways of
 ## analysing simple infectious disease models in R. By the end of
-## this lab, you should be able to:
+## this tutorial, you should be able to:
 ##
 ##  * create a function describing a system of ODE's
 ##  * use the package deSolve to numerically analyze a system of ODEs
 ##  * plot the output of different types of functions
 ##
-## NOTE: The comments will guide you through the lab but you
+## NOTE: The comments will guide you through the tutorial but you
 ## should make sure you understand what the code is doing.  Some
 ## function arguments are assigned to ?.  This will give you an
 ## error. You should try out values for these arguments as
@@ -58,7 +61,7 @@ rm(list=ls())                   # Clear all variables and functions
 ## gamma - 1 / the infectious period
 ##
 ## If you do not remember the model, review the lecture notes before you proceed
-## with this lab. If you're not entirely comfortable with the distinction
+## with this tutorial. If you're not entirely comfortable with the distinction
 ## between state variables and parameters, you may also want to review the
 ## DAIDD Glossary at https://www.ici3d.org/MMED/resources/
 
