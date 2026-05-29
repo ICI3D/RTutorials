@@ -1,24 +1,52 @@
-## Introduction to Likelihood
-## (C) Steve Bellan, Cari van Schalkwyk and the ICI3D team 2009–2025
+#####################################################################
 
-## The code is made available under a Creative Commons Attribution 4.0 International License. You
-## are free to reuse this code provided that you give appropriate credit, provide a link to the
-## license, and indicate if changes were made. You may do so in any reasonable manner, but not in
-## any way that suggests the licensor endorses you or your use. Giving appropriate credit includes
-## citation of the original repository.
+## Lab: Introduction to Likelihood
 
-## Set margins for plotting.
-par(mar=c(6,4,4,2))
+#####################################################################
 
-## Say we are randomly sampling from a population of people in a town
+## Clinic on the Meaningful Modeling of Epidemiological Data
+## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
+## https://www.ici3d.org
+
+## Attribution: Steve Bellan (2009)
+##              Cari van Schalkwyk
+##              Jonathan Dushoff
+
+## Some Rights Reserved
+## CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
+
+#####################################################################
+
+## The GOAL of this lab is FIXME:
+## By the end of this lab, you should be able to:
+##
+##  * FIXME:
+##  * FIXME:
+##  * FIXME:
+##
+## NOTE: The comments will guide you through the lab but you
+## should make sure you understand what the code is doing.  Some
+## code may have question marks and cause errors. 
+## You should fill these in; often you will find suggestions in the comments
+
+## Before you start, it is a good idea to clear your workspace.
+## In rstudio, do this with Session/Restart
+## There is also a hotkey, which you should memorize and use frequently
+## In plain R, just quit `q()` and then start again
+
+######################################################################
+
+## Section 1: FIXME:
+
+## Imagine we are randomly sampling from a population of people in a town
 ## of size 1,000,000 and we sample 100 people from that population.
 sampleSize <- 100
-## Say that the true HIV prevalence in that population of size 1,000,000
+## We assume that the true HIV prevalence in the whole population 
 ## is 30%, i.e. 300,000 are HIV positive.
-true.prev <- .3
+truePrev <- .3
 
-## Sample from this distribution once 
-## samplePos <- rbinom(1,100,.3)
+set.seed(3)
+samplePos <- rbinom(1, sampleSize, truePrev)
 
 ## You can use the above code to sample from this distribution, but
 ## we'll set it at 28 just so everyone is working on the same example
@@ -35,15 +63,15 @@ color.vec <- rep("black",sampleSize+1)
 color.vec[samplePos+1] <-	"purple"
 
 ### Create a histogram of the binomial distribution function with the
-### true prevalence, highlighting the value we sampled.
-barplot.obj <- barplot(dbinom(0:sampleSize,size=sampleSize, prob=true.prev),
+### truePrevalence, highlighting the value we sampled.
+barplot.obj <- barplot(dbinom(0:sampleSize,size=sampleSize, prob=truePrev),
                        xlab="number HIV+", names.arg=c(0:sampleSize),
                        ylab="probability", col=color.vec, border = NA, space =0)
 
 ## A politician is claiming that HIV prevalence is 20%
 ## Given that we found samplePos
 samplePos
-## positives, would we accept or reject the hypothesis that the true prevalence is .2?
+## positives, would we accept or reject the hypothesis that the truePrevalence is .2?
 potential.prev <- .2
 
 ## Calculate the probability of getting every single possible value
