@@ -18,7 +18,7 @@
 
 #####################################################################
 
-## GOAL of this lab is.
+## The GOAL of this lab is FILL IN HERE
 ## By the end of this lab, you should be able to:
 ##
 ##  * CREATE a horrific monster
@@ -33,7 +33,7 @@
 ## Before you start, it is a good idea to clear your workspace.
 ## In rstudio, do this with Session/Restart
 ## There is also a hotkey, which you should memorize and use frequently
-## In plain R, just quit and restart `q()`
+## In plain R, just quit `q()` and then start again
 
 ######################################################################
 ## Section 1: Creating a monster capable of devouring Tokyo
