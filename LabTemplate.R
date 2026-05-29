@@ -21,9 +21,9 @@
 ## GOAL of this lab is.
 ## By the end of this lab, you should be able to:
 ##
-##  * create a function describing a system of ODE's
-##  * use the package deSolve to numerically analyze a system of ODEs
-##  * plot the output of different types of functions
+##  * CREATE a horrific monster
+##  * REFUSE TO CREATE a horrific monster
+##  * WRITE A SCRIPT to automatically log the actions of the monster that you are definitely not going to create
 ##
 ## NOTE: The comments will guide you through the lab but you
 ## should make sure you understand what the code is doing.  Some
