@@ -146,7 +146,7 @@ ICI3D_Example_StochasticSpillover.batch.Rout: ICI3D_Example_StochasticSpillover_
 
 ## ICI3D_Lab_introLikelihood.batch.Rout: ICI3D_Lab_introLikelihood.R testing/ICI3D_Lab_introLikelihood.answers.R
 
-## ICI3D_Lab_LikelihoodCompare.batch.Rout: ICI3D_Lab_LikelihoodCompare.R testing/ICI3D_Lab_LikelihoodCompare.answers.R
+## LikelihoodExamples.batch.Rout: LikelihoodExamples.R testing/LikelihoodExamples.answers.R
 
 ## ICI3D_Lab_MLE_SIV_HIV.batch.Rout: ICI3D_Lab_MLE_SIV_HIV.R testing/ICI3D_Lab_MLE_SIV_HIV.answers.R
 
