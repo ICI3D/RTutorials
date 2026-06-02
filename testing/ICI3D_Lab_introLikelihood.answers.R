@@ -1,1 +1,2 @@
-## Before
+library(shellpipes)
+startGraphics()
