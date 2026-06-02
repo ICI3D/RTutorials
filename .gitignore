@@ -77,3 +77,12 @@ all.time
 .Rhistory
 *.Rout*
 *.wrapR.*
+
+## LaTeX intermediate files
+*.aux
+*.log
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.toc
+*.out
