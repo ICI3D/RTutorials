@@ -12,10 +12,6 @@ vim_session:
 
 ######################################################################
 
-## LabTemplate.R
-
-######################################################################
-
 Ignore += pipelines
 
 alldirs += sampling_JD
@@ -53,6 +49,20 @@ Ignore += branchdir
 
 branchdir:
 	git clone https://github.com/ICI3D/RTutorials $@
+
+
+######################################################################
+
+## Updating 2026 Jun 02 (Tue)
+
+## LabTemplate.R
+
+## LikelihoodExamples.batch.Rout: LikelihoodExamples.R testing/LikelihoodExamples.answers.R
+
+## ICI3D_Lab_introLikelihood.batch.Rout: ICI3D_Lab_introLikelihood.R testing/ICI3D_Lab_introLikelihood.answers.R
+
+autopipeR = defined
+## introBayes.Rout: introBayes.R ICI3D_Lab_introLikelihood.R
 
 ######################################################################
 
@@ -143,10 +153,6 @@ ICI3D_Example_StochasticSpillover.batch.Rout: ICI3D_Example_StochasticSpillover_
 
 ## ICI3D_Lab_RCT.batch.Rout: ICI3D_Lab_RCT.R testing/ICI3D_Lab_RCT.answers.R
 ## ICI3D_Lab_LikelihoodPlusRejectionP.R
-
-## ICI3D_Lab_introLikelihood.batch.Rout: ICI3D_Lab_introLikelihood.R testing/ICI3D_Lab_introLikelihood.answers.R
-
-## LikelihoodExamples.batch.Rout: LikelihoodExamples.R testing/LikelihoodExamples.answers.R
 
 ## ICI3D_Lab_MLE_SIV_HIV.batch.Rout: ICI3D_Lab_MLE_SIV_HIV.R testing/ICI3D_Lab_MLE_SIV_HIV.answers.R
 
