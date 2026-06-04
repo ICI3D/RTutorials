@@ -1,4 +1,6 @@
 
+## JD: 
+## sir_ode is beautifully clean and clear
 
 ## ODES
 
@@ -20,6 +22,7 @@ sir_ode <- function(parms, x){
   dIdt <- +infections -recoveries
   dRdt <- +recoveries  
   
+  ## Note that these names are lost; you need to check the order of input and output values here
   dXdt <- c(dSdt, dIdt, dRdt)
   
   return(dXdt)
