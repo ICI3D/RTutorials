@@ -66,6 +66,14 @@ autopipeR = defined
 
 ######################################################################
 
+## Reviewing (temporary files)
+
+## manual source
+tempLC.Rout: tempLC.R tempLCfuns.R
+	$(pipeR)
+
+######################################################################
+
 ## Building macpan labs 2025 May 20 (Tue)
 
 ## mpLabCompartmental.batch.Rout: mpLabCompartmental.R testing/mpLabCompartmental.answers.R
