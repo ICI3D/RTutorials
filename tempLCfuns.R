@@ -1,6 +1,7 @@
 
 ## JD: 
 ## sir_ode is beautifully clean and clear
+## but I later decided I don't love the name
 
 ## ODES
 
