@@ -162,7 +162,7 @@ ICI3D_Example_StochasticSpillover.batch.Rout: ICI3D_Example_StochasticSpillover_
 ## ICI3D_Lab_RCT.batch.Rout: ICI3D_Lab_RCT.R testing/ICI3D_Lab_RCT.answers.R
 ## ICI3D_Lab_LikelihoodPlusRejectionP.R
 
-## ICI3D_Lab_MLE_SIV_HIV.batch.Rout: ICI3D_Lab_MLE_SIV_HIV.R testing/ICI3D_Lab_MLE_SIV_HIV.answers.R
+## ICI3D_Lab_MLE_HIVmodel.batch.Rout: ICI3D_Lab_MLE_HIVmodel.R testing/ICI3D_Lab_MLE_HIVmodel.answers.R
 
 ## ICI3D_Lab_MCMC-Binomial.R
 ## ICI3D_Lab_MCMC-SI_HIV.R
