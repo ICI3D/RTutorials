@@ -216,6 +216,14 @@ links.perl: migrate.txt links.pl
 
 ######################################################################
 
+## scripts.filemerge: scripts.md
+
+scripts.lsd:
+	ls -d *.R *.md *.txt > $@
+	
+
+######################################################################
+
 ### Makestuff
 
 ## Makefile gutted 2021 Jun 21 (Mon)
