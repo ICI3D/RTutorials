@@ -218,9 +218,9 @@ links.perl: migrate.txt links.pl
 
 ## scripts.filemerge: scripts.md
 
+Ignore += scripts.lsd
 scripts.lsd:
 	ls -d *.R *.md *.txt > $@
-	
 
 ######################################################################
 
