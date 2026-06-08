@@ -33,6 +33,7 @@
 ## Before you start, it is a good idea to clear your workspace.
 ## In rstudio, do this with Session/Restart
 ## There is also a hotkey, which you should memorize and use frequently
+## ctrl-shift-F10 (or cmd-shift-F10 on Mac)
 ## In plain R, just quit `q()` and then start again
 
 ######################################################################
