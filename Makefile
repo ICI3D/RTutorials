@@ -8,7 +8,7 @@
 -include makestuff/perl.def
 
 vim_session:
-	bash -cl "vmt LabTemplate.R scripts.md"
+	bash -ic "vmt LabTemplate.R scripts.md"
 
 ######################################################################
 
