@@ -119,7 +119,7 @@ binom.test(samplePos, sampleSize, hypoPrevVal, alternative = "two.sided")
 ## Section 3: Maximum Likelihood approach to construct confidence intervals ####
 ################################################################################
 
-## Create a vector of hypothesize prevalences spanning 0-1 with 10000 values
+## Create a vector of hypothesized prevalences spanning 0-1 with 10000 values
 ## These are all potential "null hypotheses".
 hypoPrevs <- seq(0,1, length=10000)
 
@@ -294,15 +294,19 @@ prevalence <- 0.01
 ##
 ## P(+) is the total probability of testing positive. 
 ## Since some people without the virus will also test positive, 
-false_positive <- 0.05
+false_positive_rate <- 0.05
 
 ## P(+) is: 
 ## P(+ | MMEV)P(MMEV) plus P(+ | no MMEV)P(no MMEV)
 ##
-## Therefore P(MMEV | + ) = 
-(sensitivity * prevalence) / (sensitivity * prevalence + false_positive*(1-prevalence))
+## Our posterior estimate of P(MMEV) is a ratio:
+## the probability of seeing what we saw (a positive test) with MMEV
+## over the total probability of seeing what we saw
+(sensitivity * prevalence) / (sensitivity * prevalence + false_positive_rate*(1-prevalence))
 
 ## Task 5: 
 ## How does the probability of having MMEV after a positive test change if prevalence changes to 10%
-## And if prevalence stays at 1%, but the false positive percentage reduces to 2.5%?
+
+## What if prevalence stays at 1%, but the false positive rate reduces to 2.5%?
+
 ## What if the sensitivity drops to 95%?
