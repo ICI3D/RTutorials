@@ -1,8 +1,8 @@
-#####################################################################
+################################################################################
 
-## Lab: Introduction to Likelihood
+#### Lab: Introduction to Likelihood ####
 
-#####################################################################
+################################################################################
 
 ## Clinic on the Meaningful Modeling of Epidemiological Data
 ## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
@@ -16,9 +16,10 @@
 ## Some Rights Reserved
 ## CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
 
-#####################################################################
+################################################################################
 
-## The GOAL of this lab is FIXME:
+## The GOAL of this lab is to understand the concepts explored in the 
+## Intro to Likelihood lecture.
 ## By the end of this lab, you should be able to:
 ##
 ##  * FIXME:
@@ -35,9 +36,9 @@
 ## There is also a hotkey, which you should memorize and use frequently
 ## In plain R, just quit `q()` and then start again
 
-######################################################################
-
-## Section 1: Sampling from a hypothetical population
+################################################################################
+#### Section 1: Sampling from a hypothetical population ####
+################################################################################
 
 ## Imagine we are randomly sampling from a population of people in a town
 ## of size 1,000,000 and we sample 100 people from that population.
@@ -47,10 +48,10 @@ sampleSize <- 100
 truePrev <- .3
 
 ## Let's take a sample
-print(rbinom(1, sampleSize, truePrev))
+rbinom(1, sampleSize, truePrev)
 
 ## Examine 10 possible samples
-print(rbinom(10, sampleSize, truePrev))
+rbinom(10, sampleSize, truePrev)
 
 ## If we set.seed, we can all work through the example the same way
 set.seed(3)
@@ -77,9 +78,9 @@ barplot.obj <- barplot(pvec
 	, main = paste("Sample probabilities for prevalence of", truePrev)
 )
 
-######################################################################
-
-## Section 2: FIXME:
+################################################################################
+#### Section 2: Evaluating hypothetical prevalence ####
+################################################################################
 
 ## Someone is claiming that the true HIV prevalence in our population is 20%
 hypoPrevVal <- .2
@@ -101,7 +102,7 @@ barplot.obj <- barplot(pvec
 ##What is the probability of observing 28/100, under this hypothesised prevalence?
 dbinom(samplePos, sampleSize, hypoPrevVal)
 
-## This should correspond to the purple bar in the histogram
+## This should correspond to the height of purple bar in the histogram
 
 ## Now do a classic test:
 
@@ -114,11 +115,11 @@ binom.test(samplePos, sampleSize, hypoPrevVal, alternative = "two.sided")
 ## with different hypothesized prevalence and/or samplePos
 ## Explain what you see.
 
-#######################################################################
-## Now let's use the Maximum Likelihood approach to construct confidence intervals.
-####################################################################### 
+################################################################################
+## Section 3: Maximum Likelihood approach to construct confidence intervals ####
+################################################################################
 
-## Create a vector of hypothesieze prevalences spanning 0-1 with 10000 values
+## Create a vector of hypothesize prevalences spanning 0-1 with 10000 values
 ## These are all potential "null hypotheses".
 hypoPrevs <- seq(0,1, length=10000)
 
@@ -153,6 +154,7 @@ plot(hypoPrevs, -log(likelihoods), type = "l", col = "purple", col.main = "white
 ## Typically we test one parameter at a time and use df=1
 lrtCrit <- qchisq(.95, df = 1)/2
 print(lrtCrit)
+
 ## We reject a hypothesized parameter value if its likelihood
 ## is this far below the optimum
 
@@ -162,7 +164,6 @@ print(lrtCrit)
 min.l <- min(-log(likelihoods))
 abline(h = min.l + lrtCrit, lwd = 3, lty = 2)
 
-######################################################################
 ## It's hard to see this so let's zoom in
 
 zmin <- 0.15
@@ -172,7 +173,6 @@ zmax <- 0.45
 zoom <- (hypoPrevs>=zmin) & (hypoPrevs <= zmax)
 zPrevs <- hypoPrevs[zoom]
 zLike <- likelihoods[zoom]
-print(zPrevs)
 
 plot(zPrevs, -log(zLike), type = "l", col = "purple", col.main = "white",
      bty = "n", lwd = 3, xlab = "hypoPrevalences (our models)",
@@ -252,7 +252,7 @@ arrows(ci.u, min.l + 2*lrtCrit, ci.u, min.l, length = .2)
 text(ci.l, min.l + 2*lrtCrit, ci.l,cex = 1,pos = 3)
 text(ci.u, min.l + 2*lrtCrit, ci.u,cex = 1,pos = 3)
 
-## Compare this confidence interval to the one that used only the first sample
+## Compare this confidence interval to the one that used only the first sample. What do you notice?
 
 ## Let us again compare confidence intervals calculated using binom.test() and using the Likelihood
 ## Ratio Test.
@@ -267,3 +267,42 @@ print(ci.likelihood)
 ## For this example, do you think it was worth the trouble constructing Likelihood based confidence intervals (CIs)?
 ## Under what circumstances might you use classical tests for CIs?
 ## Under what circumstances would likelihood-based tests be better for CIs?
+
+################################################################################
+#### Section 4: Bayesian calculations using MMEV example ####
+################################################################################
+## MMEV is a viral infection that can cause a serious disease (called MMED)
+## MMED patients are unable to control their urge to fit models to data
+## The rapid MMEV test gives a positive result:
+##   -- 100% of the time for people with the virus (sensitivity)
+##   -- 5% of the time for people without the virus (false positive rate)
+##   -- The population prevalence of MMEV is 1%
+##
+## You test a random person from this population, and the result is positive.
+## What is the probability that they have MMEV?
+## 
+## Using Bayes theorem:
+## 
+## P(MMEV ∣ +) = P(+ ∣ MMEV)P(MMEV) / P(+)	
+## 
+## Let's break that down:
+## P(+ ∣ MMEV) or the probablity that you test positive if you have the virus or sensitivity
+sensitivity <- 1
+##
+## P(MMEV) or the probability that this random person has MMEV is the population prevalence 
+prevalence <- 0.01
+##
+## P(+) is the total probability of testing positive. 
+## Since some people without the virus will also test positive, 
+false_positive <- 0.05
+
+## P(+) is: 
+## P(+ | MMEV)P(MMEV) plus P(+ | no MMEV)P(no MMEV)
+##
+## Therefore P(MMEV | + ) = 
+(sensitivity * prevalence) / (sensitivity * prevalence + false_positive*(1-prevalence))
+
+## Task 5: 
+## How does the probability of having MMEV after a positive test change if prevalence changes to 10%
+## And if prevalence stays at 1%, but the false positive percentage reduces to 2.5%?
+## What if the sensitivity drops to 95%?
