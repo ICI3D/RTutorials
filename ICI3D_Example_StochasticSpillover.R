@@ -8,7 +8,7 @@
 ## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
 ## https://www.ici3d.org
 
-## Attribution: Rebecca Borchering (date)
+## Attribution: Rebecca Borchering (2015, 2018)
 ##              Reshma Kassanjee (2025)
 
 ## Some Rights Reserved
