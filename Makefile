@@ -141,7 +141,7 @@ ICI3D_Lab_Heterogeneous_Groups.batch.Rout.pdf: ICI3D_Lab_Heterogeneous_Groups.ba
 	$(MV) Rplots.pdf $@
 ## ICI3D_Lab_Heterogeneous_Groups.batch.Rout: ICI3D_Lab_Heterogeneous_Groups.R testing/ICI3D_Lab_Heterogeneous_Groups.answers.R 
 ICI3D_Lab_Heterogeneous_Groups.batch.Rout: ICI3D_Heterogeneous_Groups.R ICI3D_Lab_Heterogeneous_Groups.R
-## ICI3D_Lab_Heterogeneous_Groups.batch.Rout-0.pdf: 
+## batch/ICI3D_Lab_Heterogeneous_Groups.R
 
 Ignore += labNow.*.pdf
 ## labNow.homoLess.pdf: labNow.R

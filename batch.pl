@@ -24,3 +24,5 @@ foreach my $ln (@s){
 	}
 	else {say $ln;}
 }
+
+say "## END main script" if @ans;
