@@ -66,14 +66,16 @@ autopipeR = defined
 
 ######################################################################
 
-## Reviewing (temporary files)
+## Live-coding and live-coding prep
 
-## manual source
-tempLC.Rout: tempLC.R tempLCfuns.R
-	$(pipeR)
+ICI3D_Live_Intro_Implementation.Rout: ICI3D_Live_Intro_Implementation.R
 
 Ignore += tmp/
 sirLC.Rout: tmp/sirLC.R
+	$(pipeR)
+
+## manual source
+tempLC.Rout: tempLC.R tempLCfuns.R
 	$(pipeR)
 
 ######################################################################
