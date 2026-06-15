@@ -121,7 +121,7 @@ batch/%.R: %.R testing/%.answers.R batch.pl
 
 ## Warning! This uses setwd, and thus default plots are made elsewhere
 ## ICI3D_RTutorial_4.batch.pdf: ICI3D_RTutorial_4.R testing/ICI3D_RTutorial_4.answers.R
-Ignore += ICI3D_RTutorial_4.batch.pdf
+Ignore += *.batch.pdf
 ICI3D_RTutorial_4.batch.pdf: ICI3D_RTutorial_4.batch.Rout
 	$(MV) data/visualizingData/Rplots.pdf $@
 ## ICI3D_RTutorial_4.batch.Rout: ICI3D_RTutorial_4.R testing/ICI3D_RTutorial_4.answers.R
