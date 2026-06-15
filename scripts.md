@@ -34,6 +34,30 @@ ICI3D_Lab_ODEmodels.R
 ICI3D_Lab_RCT.R
 ICI3D_Lab_SampDistrVariability.R
 
+## Live
+
+First SIR implementation; this version introduced 2026, should look for predecessors
+* ICI3D_Live_Intro_Implementation.R
+
+## Participatory
+This is a fairly random sample and randomly named. Other participatory coding is elsewhere, still working on this
+particCodingDynMod2016.R
+particCoding_Rabies2017.R
+participatoryCoding2016.R
+participatory_coding_2024.R
+participatoryCoding_HIVTB.R
+participatoryCoding_IRSmalaria2014.R
+participatoryCoding_MalariaITN_2017.R
+participatoryDesign2021.R
+ParticipatoryDynamicModel_TB.R
+participatoryDynamics2025.R
+
+## macpan (under development, maybe a bit out of date?)
+mpLabCompartmental.R
+mpLabFitting.R
+mpNotesCompartmental.R
+
+## Unsorted
 ICI3D_previous_VisualizingData.R
 ICI3D_spillover_introductions.R
 binomialDistribution.R
@@ -49,19 +73,6 @@ introBayes.R
 labNow.R
 librariesNeeded.R
 LikelihoodExamples.R
-mpLabCompartmental.R
-mpLabFitting.R
-mpNotesCompartmental.R
-particCodingDynMod2016.R
-particCoding_Rabies2017.R
-participatoryCoding2016.R
-participatory_coding_2024.R
-participatoryCoding_HIVTB.R
-participatoryCoding_IRSmalaria2014.R
-participatoryCoding_MalariaITN_2017.R
-participatoryDesign2021.R
-ParticipatoryDynamicModel_TB.R
-participatoryDynamics2025.R
 seir_cumInc.R
 seir.R
 seir.w.seasonal.R
