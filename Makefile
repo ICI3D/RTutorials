@@ -72,6 +72,7 @@ autopipeR = defined
 tempLC.Rout: tempLC.R tempLCfuns.R
 	$(pipeR)
 
+Ignore += tmp/
 sirLC.Rout: tmp/sirLC.R
 	$(pipeR)
 
