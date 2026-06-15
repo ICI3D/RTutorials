@@ -149,4 +149,8 @@ print(base + groupSim(cbar=1, kappa=1, nGroups=20, Tfinal=15))
 
 ## Plot how the mean contact rates (cI and cS) change through time in some of your simulations FIXME
 
+## ADDCODE
+
 ## What functions could you write to make your explorations easier or more efficient?
+
+## ADDCODE
