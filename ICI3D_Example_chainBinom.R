@@ -18,15 +18,17 @@
 
 ## Clear all variables and functions
 
+rm(list=ls())
+
+## Load the tidyverse package for data manipulation and plotting
+
+library(tidyverse)
+
 #####################################################################
 
 ## Section 1: Chain Binomial SIR model
 
 #####################################################################
-
-rm(list=ls())
-
-library(tidyverse)
 
 ## sir.cb(): Function that runs a chain binomial SIR model for a given population
 ## size and R0 value, outputting a tibble with columns representing time,
