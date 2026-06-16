@@ -1,16 +1,29 @@
-library(dplyr)
-library(tidyr)
+#####################################################################
+
+## Live coding session: Introduction to model implementation in R
+
+#####################################################################
+
+## Clinic on the Meaningful Modeling of Epidemiological Data
+## International Clinics on Infectious Disease Dynamics and Data (ICI3D) Program
+## https://www.ici3d.org
+
+## Attribution: Jonathan Dushoff 2026
+## Made from scratch as a live coding session, but based on work by Juliet Pulliam, Reshma Kassanjee and others
+
+## 2025 version is here https://drive.google.com/file/d/1GFA1k7ckK5lvpml-05tW1u4xqE5EQrrJ/
+
+## Some Rights Reserved
+## CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
+
+#####################################################################
 
 ## This is a live-coding session showing how to implement an SIR model in R
 
+## GOAL: reproduce the work done in the spreadsheet, but in a way easier to check, extend and modify.
+
 ## Script should discuss units!!!!
 ## Need to specify levels so that S, I, R show up in order on plots
-
-## This version JD 2026
-## 2025 version is here https://drive.google.com/file/d/1GFA1k7ckK5lvpml-05tW1u4xqE5EQrrJ/
-## Need to track down earlier versions
-
-## Goal: reproduce the work done in the spreadsheet, but in a way easier to check, extend and modify.
 
 ## Note: We ended up with an SIRS model, based on this diagram
 ## https://github.com/dushoff/SIR_model_family/blob/master/outputs/sirs.three.pdf
