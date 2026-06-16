@@ -12,7 +12,21 @@ library(tidyr)
 
 ## Goal: reproduce the work done in the spreadsheet, but in a way easier to check, extend and modify.
 
+## Note: We ended up with an SIRS model, based on this diagram
+## https://github.com/dushoff/SIR_model_family/blob/master/outputs/sirs.three.pdf
+
 sirRates <- function(states, params){
+	with(as.list(c(states, params)), {
+		N <- S+I+R
+		trans <- beta*S*I/N
+		recov <- gam*I
+		return(c(
+			dS=-trans, dI=trans-recov, dR=recov
+		))
+	})
+}
+
+sirsRates <- function(states, params){
 	with(as.list(c(states, params)), {
 		N <- S+I+R
 		trans <- beta*S*I/N
@@ -24,10 +38,11 @@ sirRates <- function(states, params){
 	})
 }
 
-## sirRates(
-	## params = c(beta=0.5, gam=0.25, sig=0)
-	## , states = c(S=9999, I=1, R=0)
-## )
+## Test our first rates function
+sirRates(
+	params = c(beta=0.5, gam=0.25, sig=0)
+	, states = c(S=9999, I=1, R=0)
+)
 
 stepSim <- function(states, params, timeStep, finTime, ratefun){
 	time <-0
@@ -41,11 +56,12 @@ stepSim <- function(states, params, timeStep, finTime, ratefun){
 	return(sim)
 }
 
+## Now running with a new function name
 sim_wide <- stepSim(
 	params = c(beta=0.5, gam=0.25, sig=0.01)
 	, states = c(S=9999, I=1, R=0)
 	, timeStep=1, finTime=300
-	, ratefun = sirRates
+	, ratefun = sirsRates
 )
 
 ## Tested and set aside
@@ -63,3 +79,5 @@ print(ggplot(sim_long)
 	+ aes(time, indivs, color=compartment)
 	+ geom_line()
 )
+
+## Next steps would be to make wrapper function to simulate and plot different models and parameters for easy comparison
