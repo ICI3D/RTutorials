@@ -16,15 +16,16 @@
 ## Some Rights Reserved
 ## CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
 
-################################################################################
+######################################################################
 
 ## The GOAL of this lab is to understand the concepts explored in the 
 ## Intro to Likelihood lecture.
-## By the end of this lab, you should be able to:
+## In this lab you will:
 ##
-##  * FIXME:
-##  * FIXME:
-##  * FIXME:
+##  * Visualize how likelihood profiles are constructed
+##  * Explore maximum likelihood and classic confidence intervals for binomial draws
+##  * Discuss the relative advantages and disadvantages of each
+##  * Review and extend the Bayesian logic calculation from the statistical philosophy lecture
 ##
 ## NOTE: The comments will guide you through the lab but you
 ## should make sure you understand what the code is doing.  Some
@@ -36,9 +37,9 @@
 ## There is also a hotkey, which you should memorize and use frequently
 ## In plain R, just quit `q()` and then start again
 
-################################################################################
+######################################################################
 #### Section 1: Sampling from a hypothetical population ####
-################################################################################
+######################################################################
 
 ## Imagine we are randomly sampling from a population of people in a town
 ## of size 1,000,000 and we sample 100 people from that population.
@@ -78,9 +79,9 @@ barplot.obj <- barplot(pvec
 	, main = paste("Sample probabilities for prevalence of", truePrev)
 )
 
-################################################################################
+############################################################
 #### Section 2: Evaluating hypothetical prevalence ####
-################################################################################
+############################################################
 
 ## Someone is claiming that the true HIV prevalence in our population is 20%
 hypoPrevVal <- .2
@@ -115,9 +116,9 @@ binom.test(samplePos, sampleSize, hypoPrevVal, alternative = "two.sided")
 ## with different hypothesized prevalence and/or samplePos
 ## Explain what you see.
 
-################################################################################
+######################################################################
 ## Section 3: Maximum Likelihood approach to construct confidence intervals ####
-################################################################################
+######################################################################
 
 ## Create a vector of hypothesized prevalences spanning 0-1 with 10000 values
 ## These are all potential "null hypotheses".
@@ -176,7 +177,7 @@ zLike <- likelihoods[zoom]
 
 plot(zPrevs, -log(zLike), type = "l", col = "purple", col.main = "white",
      bty = "n", lwd = 3, xlab = "hypoPrevalences (our models)",
-     ylab = "-log(likelihood)",  main = "we minimizing -log(likelihood)")
+     ylab = "-log(likelihood)",  main = "minimizing -log(likelihood)")
 abline(h = min.l + lrtCrit, lwd = 3, lty = 2)
 
 ## Calculate CI
@@ -217,6 +218,7 @@ totlikelihood <- likelihoods*likelihoods2
 ## written totalLogLike <- logLikes + logLikes2
 ## But here we wanted to stay with total for a while to show a comparison curve
 
+## It's a different color to help us keep track of which example we're looking at 🙂
 ## Let's see what the total likelihood curve looks like:
 plot(hypoPrevs, totlikelihood, col = "red", type = "l", lwd = 2,
      xlab = "potential HIV prevalences", ylab = "likelihood",
@@ -268,9 +270,10 @@ print(ci.likelihood)
 ## Under what circumstances might you use classical tests for CIs?
 ## Under what circumstances would likelihood-based tests be better for CIs?
 
-################################################################################
+######################################################################
 #### Section 4: Bayesian calculations using MMEV example ####
-################################################################################
+######################################################################
+
 ## MMEV is a viral infection that can cause a serious disease (called MMED)
 ## MMED patients are unable to control their urge to fit models to data
 ## The rapid MMEV test gives a positive result:
@@ -306,7 +309,12 @@ false_positive_rate <- 0.05
 
 ## Task 5: 
 ## How does the probability of having MMEV after a positive test change if prevalence changes to 10%
+## ADDCODE
 
 ## What if prevalence stays at 1%, but the false positive rate reduces to 2.5%?
+## ADDCODE
 
 ## What if the sensitivity drops to 95%?
+## ADDCODE
+
+## What do you think is the most important benefit of having very high test sensitivity?
