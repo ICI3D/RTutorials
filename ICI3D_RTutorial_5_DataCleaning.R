@@ -45,8 +45,6 @@
 ## We will be using the 'tidyverse' family of R functions to read in
 ## and clean the data. Let's get started.
 
-## Data are available at https://github.com/ICI3D/datasets under the dataCleaning folder
-
 library(tidyverse) # Load the tidyverse package
 dat  <-  read_csv("tutorial5.csv") # read in the "data"
 
@@ -77,14 +75,10 @@ dat		        # Look at the beginning of the dataset
 ##    measles
 
 ## The read_csv() function has read in most of our data as characters.
-## Note that this is a different behavior from what would have happened
-## using the read.csv() function demonstrated in Thumbi's lecture, and
-## this fixes the problem he demonstrated where factors are sometimes
-## treated as numbers when they shouldn't be. It also gives us some
-## useful information about problems we're likely to discover with
-## the dataset as we explore further - for example, the fact that the
-## Age_annes column has been read in as characters indicates there are
-## likely to be some problematic entries.
+## It also gives us some useful information about problems we're likely 
+## to discover with the dataset as we explore further - for example, 
+## the fact that the Age_annes column has been read in as characters 
+## indicates there are likely to be some problematic entries.
 
 ## We should always go through our data sets to ensure that
 ## R treats each variable as the appropriate data type. To do this,
@@ -98,7 +92,6 @@ dat		        # Look at the beginning of the dataset
 #########
 ##
 ## Decide what data type each variable in the data set should be.
-## Refer to the lectures on study design or data cleaning, if necessary.
 ##
 #########
 
@@ -131,15 +124,10 @@ dat <- rename(dat
 ##  * testResult - the result of a diagnostic test for IgM antibodies against
 ##    measles
 ##
-##  We will also create some new variables as we clean the data:
+##  We will also create a new variable as we clean the data:
 ##
 ##  * ageYearsContinuous - the person's (approximate) age in years, as a
-##  continuous
-##  variable (double)
-##  * vaccinationStatus - whether the person had been previously
-##  vaccinated (logical)
-##  * testStatus - additional information about the person's diagnostic
-##  status (character)
+##  continuous variable (double)
 
 ######################################################################
 ##
