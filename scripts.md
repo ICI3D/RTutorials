@@ -19,12 +19,13 @@ ICI3D_Example_StochasticSpillover_functions.R
 ICI3D_Example_StochasticSpillover.R
 
 ## Labs
-ICI3D_Lab_EpiStudyDesign.answers.R
 ICI3D_Lab_EpiStudyDesign.R
+* ICI3D_Lab_EpiStudyDesign.answers.R
 
 ICI3D_Lab_Heterogeneity.R ## Old heterogeneity (stochastic)
 ICI3D_Lab_Heterogeneous_Groups.R ## new deterministic
 * ICI3D_Heterogeneous_Groups.R ## a service file
+
 ICI3D_Lab_introLikelihood.R
 ICI3D_Lab_LikelihoodPlusRejectionP.R
 ICI3D_Lab_MCMC-Binomial.R
