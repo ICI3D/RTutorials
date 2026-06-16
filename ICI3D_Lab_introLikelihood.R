@@ -57,7 +57,7 @@ rbinom(10, sampleSize, truePrev)
 set.seed(3)
 samplePos <- rbinom(1, sampleSize, truePrev)
 samplePrev <- samplePos/sampleSize
-print(samplePrev)
+print(samplePrev) ## Should be 0.28
 
 ## Create a color vector for every possible number of HIV+ people we
 ## could have found when sampling 100 people (0:100 means 101
@@ -144,7 +144,7 @@ plot(hypoPrevs, likelihoods, col = "purple", type = "l", lwd = 2,
 ## (it is analogous to the sum of squares in a classic test)
 plot(hypoPrevs, -log(likelihoods), type = "l", col = "purple", col.main = "white",
      bty = "n", lwd = 3, xlab = "hypoPrevalences (our models)",
-     ylab = "-log(likelihood)",  main = "we usually minimize the -log(likelihood)")
+     ylab = "-log(likelihood)",  main = "minimizing -log(likelihood)")
 
 ## We can use the Likelihood Ratio Test (LRT) to calculate confidence intervals. 
 ## There is a deep approximation here, but:
@@ -176,7 +176,7 @@ zLike <- likelihoods[zoom]
 
 plot(zPrevs, -log(zLike), type = "l", col = "purple", col.main = "white",
      bty = "n", lwd = 3, xlab = "hypoPrevalences (our models)",
-     ylab = "-log(likelihood)",  main = "we usually minimize the -log(likelihood)")
+     ylab = "-log(likelihood)",  main = "we minimizing -log(likelihood)")
 abline(h = min.l + lrtCrit, lwd = 3, lty = 2)
 
 ## Calculate CI
