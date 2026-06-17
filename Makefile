@@ -60,7 +60,7 @@ branchdir:
 ## LikelihoodExamples.batch.Rout: LikelihoodExamples.R testing/LikelihoodExamples.answers.R
 
 ## ICI3D_Lab_introLikelihood.batch.Rout: ICI3D_Lab_introLikelihood.R testing/ICI3D_Lab_introLikelihood.answers.R
-## ICI3D_Lab_introLikelihood.extras.R
+## ICI3D_Lab_introLikelihood.extras.Rout: ICI3D_Lab_introLikelihood.extras.R
 
 autopipeR = defined
 ## introBayes.Rout: introBayes.R ICI3D_Lab_introLikelihood.R
