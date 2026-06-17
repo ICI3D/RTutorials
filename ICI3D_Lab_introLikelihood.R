@@ -197,6 +197,7 @@ binom.test(samplePos, sampleSize, samplePos/sampleSize, alternative = "two.sided
 print(ci.likelihood)
 
 ## Are the results similar?
+## ADDCODE how would you show this graphically?
 
 ## Task 3: We do another prevalence survey, sampling 200 people from the same population with a true HIV prevalence of 30%
 ## We believe that the two samples are independent of each other 
