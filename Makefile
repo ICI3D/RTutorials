@@ -140,21 +140,19 @@ ICI3D_RTutorial_5_DataCleaning.batch.Rout: batchdir=data/dataCleaning/
 
 ######################################################################
 
+## Machinery for experimenting with students' parameters in real time
+
+ICI3D_Lab_Heterogeneous_Groups.batch.Rout: ICI3D_Heterogeneous_Groups.Rout
+## ICI3D_Lab_Heterogeneous_Groups.batch.Rout: ICI3D_Lab_Heterogeneous_Groups.R testing/ICI3D_Lab_Heterogeneous_Groups.answers.R 
+
 pipeRdesc += ICI3D_Lab_Heterogeneous_Groups.batch
-## ICI3D_Lab_Heterogeneous_Groups.batch.noSpread.pdf:
-## ICI3D_Lab_Heterogeneous_Groups.batch.noSpread-0.pdf:
+## ICI3D_Lab_Heterogeneous_Groups.batch.firstExp.pdf: testing/ICI3D_Lab_Heterogeneous_Groups.answers.R 
+
+labNow.Rout: labNow.R ICI3D_Heterogeneous_Groups.R
+	$(pipeR)
 
 ICI3D_Lab_Heterogeneous_Groups.batch.Rout.pdf: ICI3D_Lab_Heterogeneous_Groups.batch.Rout
 	$(MV) Rplots.pdf $@
-## ICI3D_Lab_Heterogeneous_Groups.batch.Rout: ICI3D_Lab_Heterogeneous_Groups.R testing/ICI3D_Lab_Heterogeneous_Groups.answers.R 
-ICI3D_Lab_Heterogeneous_Groups.batch.Rout: ICI3D_Heterogeneous_Groups.R ICI3D_Lab_Heterogeneous_Groups.R
-## batch/ICI3D_Lab_Heterogeneous_Groups.R
-
-Ignore += labNow.*.pdf
-## labNow.homoLess.pdf: labNow.R
-pdfDesc += labnow
-labNow.Rout: labNow.R ICI3D_Heterogeneous_Groups.R
-	$(pipeR)
 
 ######################################################################
 
