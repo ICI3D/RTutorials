@@ -14,7 +14,7 @@
 ## * Create 95% CIs and contours from the hessian matrix
 ## * Create 95% CIs and contours based on the likelihood ratio
 
-library(boot); library(deSolve); library(ellipse);
+library(boot); library(deSolve); library(ellipse); library(ggplot2);
 
 ## Function that makes a list of disease parameters with default values
 disease_params <- function(Beta = 0.9 ## transmission coefficient when prevalence is 0
@@ -84,14 +84,19 @@ sampleEpidemic <- function(simDat # Simulated "data" which we treat as real
 trueParms <- disease_params() # Default model parameters are defined in lines 20-26
 simDat <- simEpidemic(init, parms = trueParms) # Simulated epidemic (underlying process)
 
-par(bty='n', lwd = 2)
 # Plot simulated prevalence through time:
-with(simDat, plot(time, P, xlab = '', ylab = 'prevalence', type = 'l', ylim = c(0,.4), col='red', las = 1))
 ## Take cross-sectional sample of individuals to get prevalence estimates at multiple time points:
 set.seed(1) # Initiate the random number generator (so everyone's simulation looks the same)
 myDat <- sampleEpidemic(simDat) # Simulate data from the sampling process (function defined above)
-points(myDat$time, myDat$sampPrev, col = 'red', pch = 16, cex = 2) # Plot sample prevalence at each time point
-arrows(myDat$time, myDat$uci, myDat$time, myDat$lci, col = 'red', len = .025, angle = 90, code = 3) # Plot 95% CIs around the sample prevalences
+
+p1 <- ggplot() +
+  geom_line(data = simDat, aes(x = time, y = P), color = 'red', linewidth = 1) +
+  geom_errorbar(data = myDat, aes(x = time, ymin = lci, ymax = uci), color = 'red', width = 0.5) +
+  geom_point(data = myDat, aes(x = time, y = sampPrev), color = 'red', size = 3) +
+  ylim(0, 0.4) +
+  labs(x = '', y = 'prevalence') +
+  theme_classic(base_size = 12)
+print(p1)
 
 ## To start, we need to write a likelihood function that gives the probability that a given parameter set
 ## (Beta, alpha values) would generate the observed data. Remember that we are assuming that there is some
@@ -193,14 +198,26 @@ log_Beta.fit <- MLEfits["log_Beta"]
 ## converge? Look at ?optim to understand it.
 
 ## Plot MLE fit time series
-par(bty='n', lwd = 2, las = 1)
-with(simDat, plot(time, P, xlab = '', ylab = 'prevalence', type = 'l', ylim = c(0,.4), col='red'))
 fitDat <- simEpidemic(init, parms = subsParms(optim.vals$par, trueParms))
-with(fitDat, lines(time, P, col='blue'))
-points(myDat$time, myDat$sampPrev, col = 'red', pch = 16, cex = 2)
-arrows(myDat$time, myDat$uci, myDat$time, myDat$lci, col = 'red', len = .025, angle = 90, code = 3)
-legend("topleft", c('truth', 'observed', 'fitted'), lty = c(1, NA, 1), pch = c(NA,16, NA),
-       col = c('red', 'red', 'blue'), bty = 'n')
+p2 <- ggplot() +
+  geom_line(data = simDat, aes(x = time, y = P, color = "truth"), linewidth = 1) +
+  geom_line(data = fitDat, aes(x = time, y = P, color = "fitted"), linewidth = 1) +
+  geom_errorbar(data = myDat, aes(x = time, ymin = lci, ymax = uci, color = "observed"), width = 0.5) +
+  geom_point(data = myDat, aes(x = time, y = sampPrev, color = "observed"), size = 3) +
+  scale_color_manual(name = NULL, 
+                     values = c("truth" = "red", "observed" = "red", "fitted" = "blue"),
+                     breaks = c("truth", "observed", "fitted")) +
+  guides(color = guide_legend(override.aes = list(
+    linetype = c("solid", "blank", "solid"),
+    shape = c(NA, 16, NA)
+  ))) +
+  ylim(0, 0.4) +
+  labs(x = '', y = 'prevalence') +
+  theme_classic(base_size = 12) +
+  theme(legend.position = c(0.15, 0.85),
+        legend.background = element_blank(),
+        legend.key = element_blank())
+print(p2)
 
 ######################################################################
 ## Contour plots with the hessian
@@ -213,20 +230,31 @@ legend("topleft", c('truth', 'observed', 'fitted'), lty = c(1, NA, 1), pch = c(N
 fisherInfMatrix <- solve(optim.vals$hessian) ## invert the Hessian, to estimate the covar-var matrix of parameter estimates
 
 ## Initialize plot of parameters
-plot(1,1, type = 'n', log = 'xy',
-     ## xlim = range(alpha.seq), ylim = range(Beta.seq),
-     xlim = c(2,15), ylim = c(.5,2),
-     las = 1,
-     xlab = expression(alpha), ylab = expression(beta),
-     main = "-log(likelihood) contours", bty = "n")
-## Add true parameter values to the plot
-with(trueParms, points(alpha, Beta, pch = 16, cex = 2, col = 'red'))
-## Add MLE to the plot
-points(exp(MLEfits['log_alpha']), exp(MLEfits['log_Beta']), pch = 16, cex = 2, col = 'black')
-## Add 95% contour ellipse from Hessian
-lines(exp(ellipse(fisherInfMatrix, centre = MLEfits, level = .95)))
-legend("topleft", c('truth', 'MLE', '95% Confidence Region'), lty = c(NA, NA, 1), pch = c(16,16, NA),
-       col = c('red', 'black', 'black'), bg='white', bty = 'n')
+ellipse_coords <- as.data.frame(exp(ellipse(fisherInfMatrix, centre = MLEfits, level = .95)))
+colnames(ellipse_coords) <- c("alpha", "Beta")
+
+p3 <- ggplot() +
+  geom_point(data = data.frame(alpha = trueParms$alpha, Beta = trueParms$Beta),
+             aes(x = alpha, y = Beta, color = "truth"), size = 3) +
+  geom_point(data = data.frame(alpha = exp(MLEfits['log_alpha']), Beta = exp(MLEfits['log_Beta'])),
+             aes(x = alpha, y = Beta, color = "MLE"), size = 3) +
+  geom_path(data = ellipse_coords, aes(x = alpha, y = Beta, color = "95% Confidence Region"), linewidth = 1) +
+  scale_x_log10() +
+  scale_y_log10() +
+  coord_cartesian(xlim = c(2, 15), ylim = c(0.5, 2)) +
+  labs(x = expression(alpha), y = expression(beta), title = "-log(likelihood) contours") +
+  scale_color_manual(name = NULL,
+                     values = c("truth" = "red", "MLE" = "black", "95% Confidence Region" = "black"),
+                     breaks = c("truth", "MLE", "95% Confidence Region")) +
+  guides(color = guide_legend(override.aes = list(
+    shape = c(16, 16, NA),
+    linetype = c("blank", "blank", "solid")
+  ))) +
+  theme_classic(base_size = 12) +
+  theme(legend.position = c(0.2, 0.85),
+        legend.background = element_rect(fill = "white", color = NA),
+        legend.key = element_blank())
+print(p3)
 
 ######################################################################
 ## Contour plots with likelihood profiles
@@ -291,26 +319,40 @@ ml.val <- optim.vals$value
 conf.cutoff <- ml.val + qchisq(.95,2)/2
 
 ## Show likelihood contours
-par(cex = 1.2)
-plot(1,1, type = 'n', log = 'xy',
-     ## xlim = range(alpha.seq), ylim = range(Beta.seq),
-     xlim = c(3,15), ylim = c(.5,2),
-     xlab = expression(alpha), ylab = expression(beta),
-     main = "-log(likelihood) contours", bty = "n")
-.filled.contour(alpha.seq, Beta.seq, mat, levels = seq(min(mat), max(mat), l=20), col = topo.colors(20))
-## Add contour for 95% CI from likelihood ratio
-contour(alpha.seq, Beta.seq, mat, levels = c(conf.cutoff),
-        col = "black", lwd = 2, labels = "", labcex = .2, add = T)
-## Add contour for 95% CI from Hessian
-lines(exp(ellipse(fisherInfMatrix, centre = MLEfits, level = .95)), lty = 2)
-## Add MLE to the plot
-points(exp(log_alpha.fit), exp(log_Beta.fit), pch = 16, cex = 1, col = 'black')
-## Add true parameter values to the plot
-with(trueParms, points(alpha, Beta, pch = 16, cex = 1, col = 'red'))
-legend("topleft",
-       c('truth', 'MLE', '95% contour (profile likelihood)', '95% contour (Fisher information matrix)')
-       , lty = c(NA, NA, 1, 2), pch = c(16,16, NA, NA),
-       col = c('red', rep('black',3)), bg='white', bty = 'n')
+grid_df <- expand.grid(alpha = alpha.seq, Beta = Beta.seq)
+grid_df$z <- as.vector(mat)
+levels_val <- seq(min(mat), max(mat), l=20)
+topo_colors_list <- topo.colors(length(levels_val) - 1)
+
+p4 <- ggplot() +
+  geom_contour_filled(data = grid_df, aes(x = alpha, y = Beta, z = z), breaks = levels_val) +
+  scale_fill_manual(values = topo_colors_list, guide = "none") +
+  geom_contour(data = grid_df, aes(x = alpha, y = Beta, z = z, color = "95% contour (profile likelihood)"),
+               breaks = c(conf.cutoff), linewidth = 1) +
+  geom_path(data = ellipse_coords, aes(x = alpha, y = Beta, color = "95% contour (Fisher information matrix)"),
+            linetype = "dashed", linewidth = 1) +
+  geom_point(data = data.frame(alpha = exp(log_alpha.fit), Beta = exp(log_Beta.fit)),
+             aes(x = alpha, y = Beta, color = "MLE"), size = 3) +
+  geom_point(data = data.frame(alpha = trueParms$alpha, Beta = trueParms$Beta),
+             aes(x = alpha, y = Beta, color = "truth"), size = 3) +
+  scale_x_log10() +
+  scale_y_log10() +
+  coord_cartesian(xlim = c(3, 15), ylim = c(0.5, 2)) +
+  labs(x = expression(alpha), y = expression(beta), title = "-log(likelihood) contours") +
+  scale_color_manual(name = NULL,
+                     values = c("truth" = "red", "MLE" = "black",
+                                "95% contour (profile likelihood)" = "black",
+                                "95% contour (Fisher information matrix)" = "black"),
+                     breaks = c("truth", "MLE", "95% contour (profile likelihood)", "95% contour (Fisher information matrix)")) +
+  guides(color = guide_legend(override.aes = list(
+    shape = c(16, 16, NA, NA),
+    linetype = c("blank", "blank", "solid", "dashed")
+  ))) +
+  theme_classic(base_size = 12) +
+  theme(legend.position = "top",
+        legend.background = element_rect(fill = "white", color = "gray80"),
+        legend.key = element_blank())
+print(p4)
 
 ######################################################
 # EXERCISES
