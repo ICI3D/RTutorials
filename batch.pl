@@ -20,6 +20,7 @@ foreach my $ln (@s){
 	next if $ln =~ /#.*BADCODE/;
 	if ($ln =~ /#.*FIXME/ || $ln =~ /#.*FIND/ || $ln =~ /#.*ADDCODE/){
 		say "## $ln";
+		say "## Inserting";
 		say shift @ans;
 	}
 	else {say $ln;}

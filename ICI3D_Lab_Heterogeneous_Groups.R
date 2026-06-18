@@ -18,11 +18,11 @@
 
 ## The GOAL of this lab is to help you build intuition for how heterogeneity in contact mixing patterns affects infectious disease dynamics. 
 
-## You will explore TODO:
+## You will explore a simple SIR simulator that divides the population into groups based on activity level
+
+## You will reinforce and probe your understanding of how heterogeneity affects the size of epidemics
 
 ######################################################################
-
-## TODO: are there question marks?
 
 ## NOTE: The comments will guide you through the lab but you
 ## should make sure you understand what the code is doing.  Some
@@ -36,7 +36,7 @@
 ## In plain R, just quit `q()` and then start again
 
 ######################################################################
-## Section 1: TODO:
+## Section 1: Explore the base model
 ######################################################################
 
 library(deSolve) ## For integrating ODEs
@@ -52,6 +52,7 @@ source("ICI3D_Heterogeneous_Groups.R")
 
 ## We do these simulations by making a continuous number of groups
 ## makeGroups() makes a list of contact rates with a given mean and “kappa”
+## mean is the mean reproductive number, what we called Rnull
 ## kappa represents the squared CV (σ²/μ²) of the mixing rates in the population
 
 ## You can see the arguments of any function with args()
@@ -67,7 +68,7 @@ boxplot(makeGroups(n=10, m=2, kappa=1)
 ## Even kappa=1 (standard deviation equals mean) gives big differences between groups
 
 ## Try different values for n, m and kappa
-## Do you think boxplot is a good way to look at this distribution? can you think oof other ways?
+## Do you think boxplot is a good way to look at this distribution? can you think of other ways?
 ## Estimates for human sexual mixing typically have values of kappa>1
 
 ## Our simple simulator function is called groupSim
@@ -119,8 +120,8 @@ print(base + hetero)
 ## Which had a larger number of total infections? What's a good way to tell?
 
 ######################################################################
-
-## Experimenting
+## Section 2: Experiment
+######################################################################
 
 ## It's now pretty easy to try scenarios with different parameters, e.g.,
 
@@ -137,7 +138,7 @@ print(base + groupSim(cbar=1, kappa=1, nGroups=20, Tfinal=15))
 ## Can you find an opposite example??
 
 ## FIND an example where increasing kappa increases the total size of an epidemic that is already happening (NOT easy)
-## How can you measure total size?
+## How can you measure total size reliably?
 
 ## FIND an example where increasing kappa _reduces_ the total size of an epidemic
 
@@ -147,9 +148,7 @@ print(base + groupSim(cbar=1, kappa=1, nGroups=20, Tfinal=15))
 
 ## Extra
 
-## Plot how the mean contact rates (cI and cS) change through time in some of your simulations FIXME
-
-## ADDCODE
+## Plot how the mean contact rates (cI and cS) change through time in some of your simulations ADDCODE
 
 ## What functions could you write to make your explorations easier or more efficient?
 

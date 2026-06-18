@@ -25,6 +25,7 @@ ICI3D_Lab_EpiStudyDesign.R
 ICI3D_Lab_Heterogeneity.R ## Old heterogeneity (stochastic)
 ICI3D_Lab_Heterogeneous_Groups.R ## new deterministic
 * ICI3D_Heterogeneous_Groups.R ## a service file
+* git log -- labNow.R ## a presentation file from 2025, gone now
 
 ICI3D_Lab_introLikelihood.R
 ICI3D_Lab_LikelihoodPlusRejectionP.R
@@ -71,7 +72,6 @@ hetSIRfxnMASTER.R
 hivAndFertilityExtension.R
 hivAndFertility.R
 introBayes.R
-labNow.R
 librariesNeeded.R
 LikelihoodExamples.R
 seir_cumInc.R
