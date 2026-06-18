@@ -19,6 +19,10 @@
 #' includes providing example calls of the functions in @examples blocks.
 #' The code in @examples blocks
 
+################################################################################
+# SECTION 0: SETUP #############################################################
+################################################################################
+
 library(deSolve)
 library(ggplot2)
 library(ellipse)
@@ -82,7 +86,6 @@ disease_params <- function(
   )
   return(as.list(environment()))
 }
-
 
 #' @title Initialize State Variables from Prevalence
 #'
@@ -196,19 +199,23 @@ dHIV_SI4 <- function(tt, yy, parms) {
 #' simEpidemic()
 simEpidemic <- function(
   init = initialize_from_prev(),
+  parms = disease_params(),
   tseq = seq(1976, 2015, by = 1 / 12),
-  modFunction = dHIV_SI4,
-  parms = disease_params()
+  t0 = 1976,
+  modFunction = dHIV_SI4
 ) {
+  tkeep <- unique(sort(tseq))
+  tcalc <- unique(sort(c(t0, tkeep)))
   # n.b. a `within` block works within a data frame to calculate new values
   return(
-    lsoda(init, tseq, modFunction, parms = parms) |>
+    lsoda(init, tcalc, modFunction, parms = parms) |>
       as.data.frame() |>
       within({
         I <- I1 + I2 + I3 + I4
         N <- S + I
         P <- I / N
-      })
+      }) |>
+      subset(time %in% tkeep)
   )
 }
 
@@ -242,7 +249,7 @@ sampleEpidemic <- function(
   numSamp = rep(80, length(sampleDates)),
   seed = 1
 ) {
-  set.seed(1)
+  set.seed(seed)
   data_subset <- subset(simDat, time %in% sampleDates)
   if (nrow(data_subset) != length(sampleDates)) {
     warning(
@@ -254,25 +261,28 @@ sampleEpidemic <- function(
 
   return(
     within(data_subset, {
-      numSamp <- numSamp
-      numPos <- rbinom(length(numSamp), numSamp, P)
-      sampPrev <- numPos / numSamp
-      lci <- mapply(
-        function(x, n) binom.test(x, n)$conf.int[1],
+      numSamp <- numSamp # save the number of samples
+      numPos <- rbinom(length(numSamp), numSamp, P) # draw samples
+      .bt <- t(mapply(
+        function(x, n) {
+          tmp <- binom.test(x, n)
+          unname(c(tmp$estimate, tmp$conf.int))
+        },
         x = numPos,
         n = numSamp
-      )
-      uci <- mapply(
-        function(x, n) binom.test(x, n)$conf.int[2],
-        x = numPos,
-        n = numSamp
-      )
+      ))
+      sampPrev <- .bt[, 1]
+      lci <- .bt[, 2]
+      uci <- .bt[, 3]
     })[, c("time", "numSamp", "numPos", "sampPrev", "lci", "uci")]
   )
 }
 
+################################################################################
+# SECTION 1: CREATE AN EPIDEMIC TRUTH + OBSERVATION ############################
+################################################################################
+
 ## Run system of ODEs for "true" parameter values
-# Default model parameters are defined in lines 20-26
 trueParms <- disease_params()
 # Simulated epidemic (underlying process)
 simDat <- simEpidemic(parms = trueParms)
@@ -282,28 +292,18 @@ myDat <- sampleEpidemic(simDat)
 
 # Plot simulated prevalence and sample data using ggplot2
 plot_sim_vs_obs <- ggplot() +
-  geom_line(
-    data = simDat,
-    aes(x = time, y = P),
-    color = "red",
-    linewidth = 1
-  ) +
-  geom_point(
-    data = myDat,
-    aes(x = time, y = sampPrev),
-    color = "red",
-    size = 3
-  ) +
-  geom_errorbar(
-    data = myDat,
-    aes(x = time, ymin = lci, ymax = uci),
-    color = "red",
-    width = 0.5,
-    linewidth = 1
-  ) +
-  scale_y_continuous(limits = c(0, 0.4)) +
+  aes(x = time) +
+  geom_line(aes(y = P, color = "latent"), simDat) +
+  geom_point(aes(y = sampPrev, color = "observed"), myDat) +
+  geom_errorbar(aes(ymin = lci, ymax = uci, color = "observed"), myDat) +
   labs(x = NULL, y = "prevalence") +
-  theme_classic()
+  theme_classic() +
+  theme(
+    legend.position = "inside",
+    legend.position.inside = c(0.5, 0.05),
+    legend.justification.inside = c(0.5, 0),
+    legend.direction = "horizontal"
+  )
 
 print(plot_sim_vs_obs)
 
@@ -312,7 +312,7 @@ print(plot_sim_vs_obs)
 ## the observed data. Remember that we are assuming that there is some true
 ## underlying epidemic curve that is deterministic and the data we observe
 ## are only noisy because of sampling/observation error (not because the
-## underlying curve is also noisy--i.e. process error--which would be
+## underlying curve is also noisy, i.e. process error, which would be
 ## particularly likely for epidemics in small populations).
 
 ## We assume binomial sampling errors. So we can write the -log-likelihood as
@@ -342,11 +342,10 @@ print(plot_sim_vs_obs)
 #' nllikelihood(disease_params(Beta = 3, alpha = 1))
 nllikelihood <- function(
   parms = disease_params(),
-  obsDat = myDat,
-  t0 = 1976
+  obsDat = myDat
 ) {
-  simDat <- simEpidemic(tseq = c(t0, obsDat$time), parms = parms)[-1, ]
-  ## What are the rows from our simulation at which we have observed data?
+  # simulate an epidemic corresponding to parms, evaluated
+  simDat <- simEpidemic(tseq = obsDat$time, parms = parms)
   nlls <- -dbinom(
     obsDat$numPos,
     obsDat$numSamp,
@@ -467,9 +466,10 @@ plot_mle_fit <- plot_sim_vs_obs +
 
 print(plot_mle_fit)
 
-######################################################################
-## Contour plots with the hessian
-######################################################################
+################################################################################
+# SECTION 2: INVESTIGATE MLE ###################################################
+################################################################################
+
 ## The Hessian matrix gives you the curvature of the likelihood function at the
 ## maximum likelihood estimate (MLE) of the fitted parameters. In other words,
 ## it tells you the second derivative around MLE, which can be used to
@@ -483,11 +483,11 @@ fisherInfMatrix <- solve(optim.vals$hessian)
 # Extract ellipse coordinates
 ellipse_coords <- as.data.frame(
   exp(ellipse(fisherInfMatrix, centre = MLEfits, level = 0.95))
-)
-colnames(ellipse_coords) <- c("alpha", "Beta")
+) |>
+  setNames(c("alpha", "Beta"))
 
 # True parameters data frame
-true_df <- data.frame(alpha = trueParms$alpha, Beta = trueParms$Beta)
+true_df <- trueParms[c("alpha", "Beta")] |> as.data.frame()
 
 # MLE parameters data frame
 mle_df <- data.frame(
@@ -497,19 +497,12 @@ mle_df <- data.frame(
 
 # Plot contours using ggplot2
 contour_plot <- ggplot() +
-  geom_point(
-    data = true_df,
-    aes(x = alpha, y = Beta, color = "truth"),
-    size = 4
-  ) +
-  geom_point(
-    data = mle_df,
-    aes(x = alpha, y = Beta, color = "MLE"),
-    size = 4
-  ) +
+  aes(x = alpha, y = Beta) +
+  geom_point(aes(color = "truth"), true_df, size = 4) +
+  geom_point(aes(color = "MLE"), mle_df, size = 4) +
   geom_path(
-    data = ellipse_coords,
-    aes(x = alpha, y = Beta, color = "95% Confidence Region"),
+    aes(color = "95% Confidence Region"),
+    ellipse_coords,
     linewidth = 1
   ) +
   scale_x_log10(limits = c(2, 15)) +
@@ -541,9 +534,8 @@ contour_plot <- ggplot() +
 
 print(contour_plot)
 
-######################################################################
 ## Contour plots with likelihood profiles
-######################################################################
+##
 ## With all other parameters fixed to their initial values, lets look at a
 ## contour likelihood plot over Beta and alpha.  To do this we write wrapper
 ## functions of log_Beta and log_alpha to feed to outer() and then
@@ -589,7 +581,7 @@ alpha.seq
 Beta.seq <- exp(seq(log_Beta.fit - 1, log_Beta.fit + 1, l = res))
 Beta.seq
 
-## The function outer() now evaluates objXalpha_BetaVEC on this grid. ?outer
+## The function outer() now evaluates objXalpha_Beta on this grid. ?outer
 mat <- outer(alpha.seq, Beta.seq, objXalpha_Beta) # this can take a long time
 
 ## Make a contour plot that shows the confidence regions in red.  Likelihood
@@ -620,8 +612,6 @@ plot_profile_contours <- plot_profile_contours +
   geom_contour(
     data = grid_df,
     aes(
-      x = alpha,
-      y = Beta,
       z = z,
       color = "95% contour (profile likelihood)"
     ),
