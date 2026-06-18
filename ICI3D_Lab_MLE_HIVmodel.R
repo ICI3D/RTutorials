@@ -21,8 +21,6 @@
 
 library(deSolve)
 library(ggplot2)
-
-library(boot)
 library(ellipse)
 
 #' @title Check if a value is a positive scalar
@@ -405,6 +403,7 @@ objFXN <- function(
   parms <- subsParms(fit.params, fixed.params)
   nllikelihood(parms, obsDat = obsDat) ## then call likelihood
 }
+guess.params <- c(log_Beta = log(5), log_alpha = log(8))
 objFXN(guess.params, disease_params())
 
 ## Select initial values for fitted parameters from which optimization routine
@@ -497,7 +496,7 @@ mle_df <- data.frame(
 )
 
 # Plot contours using ggplot2
-ggplot() +
+contour_plot <- ggplot() +
   geom_point(
     data = true_df,
     aes(x = alpha, y = Beta, color = "truth"),
@@ -539,6 +538,8 @@ ggplot() +
   theme(
     plot.title = element_text(hjust = 0.5)
   )
+
+print(contour_plot)
 
 ######################################################################
 ## Contour plots with likelihood profiles
@@ -602,12 +603,20 @@ grid_df <- expand.grid(alpha = alpha.seq, Beta = Beta.seq)
 grid_df$z <- as.vector(mat)
 
 # Plot likelihood contours using ggplot2
-ggplot() +
+plot_profile_contours <- contour_plot
+
+# Prepend the filled contour layer so it is drawn at the bottom
+plot_profile_contours$layers <- c(
   geom_contour_filled(
     data = grid_df,
     aes(x = alpha, y = Beta, z = z),
     breaks = seq(min(mat), max(mat), length.out = 20)
-  ) +
+  ),
+  plot_profile_contours$layers
+)
+
+# Add the profile likelihood contour on top and update scales
+plot_profile_contours <- plot_profile_contours +
   geom_contour(
     data = grid_df,
     aes(
@@ -619,28 +628,7 @@ ggplot() +
     breaks = conf.cutoff,
     linewidth = 1
   ) +
-  geom_path(
-    data = ellipse_coords,
-    aes(
-      x = alpha,
-      y = Beta,
-      color = "95% contour (Fisher information matrix)"
-    ),
-    linewidth = 1,
-    linetype = "dashed"
-  ) +
-  geom_point(
-    data = true_df,
-    aes(x = alpha, y = Beta, color = "truth"),
-    size = 3
-  ) +
-  geom_point(
-    data = mle_df,
-    aes(x = alpha, y = Beta, color = "MLE"),
-    size = 3
-  ) +
   scale_x_log10(limits = c(3, 15)) +
-  scale_y_log10(limits = c(0.5, 2)) +
   scale_fill_viridis_d(name = "Negative Log-Likelihood") +
   scale_color_manual(
     name = NULL,
@@ -648,31 +636,24 @@ ggplot() +
       "truth" = "red",
       "MLE" = "black",
       "95% contour (profile likelihood)" = "black",
-      "95% contour (Fisher information matrix)" = "black"
+      "95% Confidence Region" = "black"
     ),
     breaks = c(
       "truth",
       "MLE",
       "95% contour (profile likelihood)",
-      "95% contour (Fisher information matrix)"
+      "95% Confidence Region"
     ),
     guide = guide_legend(
       override.aes = list(
         shape = c(16, 16, NA, NA),
-        linetype = c("blank", "blank", "solid", "dashed")
+        linetype = c("blank", "blank", "solid", "solid")
       )
     )
   ) +
-  labs(
-    x = expression(alpha),
-    y = expression(beta),
-    title = "-log(likelihood) contours"
-  ) +
-  theme_classic() +
-  theme(
-    plot.title = element_text(hjust = 0.5),
-    legend.position = "right"
-  )
+  theme(legend.position = "right")
+
+print(plot_profile_contours)
 
 ######################################################
 # EXERCISES
