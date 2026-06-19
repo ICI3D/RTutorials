@@ -148,6 +148,7 @@ ICI3D_Lab_Heterogeneous_Groups.batch.Rout: ICI3D_Heterogeneous_Groups.Rout
 pipeRdesc += ICI3D_Lab_Heterogeneous_Groups.batch
 ## ICI3D_Lab_Heterogeneous_Groups.batch.firstExp.pdf: testing/ICI3D_Lab_Heterogeneous_Groups.answers.R 
 
+Ignore += labNow.*.pdf
 labNow.Rout: labNow.R ICI3D_Heterogeneous_Groups.R
 	$(pipeR)
 
