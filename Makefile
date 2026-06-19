@@ -244,6 +244,7 @@ makestuff/Makefile:
 
 -include makestuff/os.mk
 -include makestuff/pipeR.mk
+-include makestuff/pdfpages.mk
 
 -include makestuff/git.mk
 -include makestuff/visual.mk
