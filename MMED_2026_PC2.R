@@ -115,10 +115,10 @@ gillespie <- function(
 	n
 ) {
 	outputs <- list()
-	for (i in 1:n) {
+	for (i in seq_len(n)) {
 		time <- 0
 		states <- states_init
-
+		outputs[[i]] <- list()
 		outputs[[i]][[1]] <- data.frame(
 			time = 0,
 			S = states_init[["S"]],
@@ -205,10 +205,9 @@ test_function <- function(
 	sigma,
 	mu_r,
 	years = 20,
-	state_init = c(S = 700, E = 0, I = 1, V = 300),
-	timeSteps = seq(0, years * days_per_year, by = 1)
+	state_init = c(S = 680, E = 20, I = 1, V = 300),
+	n = 10
 ) {
-	N <- sum(state_init)
 	pars <- list(
 		mu = mu,
 		beta = beta,
@@ -216,13 +215,20 @@ test_function <- function(
 		sigma = sigma,
 		mu_r = mu_r
 	)
-	ode(state_init, timeSteps, dRabies, pars) |>
+	gillespie(
+		state_init,
+		dRabies,
+		event_map,
+		pars,
+		years * days_per_year,
+		n = n
+	) |>
 		as.data.frame() |>
 		pivot_longer(
-			!time,
+			-c(time, sample_id),
 			names_to = "compartment"
 		) |>
-		plotter(N)
+		plotter()
 }
 
 test_function(
