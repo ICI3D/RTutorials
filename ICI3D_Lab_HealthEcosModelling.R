@@ -1,5 +1,7 @@
 
-## Lab: Health economics in dynamical modelling 
+#####################################################################
+
+## Lab: Introduction to health economics in dynamical modelling 
 
 #####################################################################
 ## Clinic on the Meaningful Modeling of Epidemiological Data
@@ -12,16 +14,21 @@
 ## CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
 ##
 #####################################################################
+
+##		The goal of this to lab is to complete a simple health 
+##		economics modelling exercise in R.
 ##
-##    In this lab, we will build on Lab: ODE models in R
-##      (https://github.com/ICI3D/RTutorials/blob/master/ICI3D_Lab_ODEmodels.R) 
-##    To include a vaccination intervention
-##    The vaccine has 100% efficacy — those who receive it are fully protected
-##    Define and simulate alternative intervention scenarios
-##    Estimate the epidemiological impact of vaccination on disease incidence (I)
-##    Attach costs to key health outcomes and interventions
-##    Calculate and interpret the Incremental Cost-Effectiveness Ratio (ICER)
-##  
+##		In this lab, you will: 
+##    - Define and simulate alternative vaccination intervention scenarios
+##    - Estimate the epidemiological impact of vaccination on disease incidence
+##    - Attach costs to key health outcomes and interventions
+##    - Calculate and interpret the Incremental Cost-Effectiveness Ratio (ICER)
+##
+##    In this lab, we will build on 'Lab: ODE models in R'
+##      (https://github.com/ICI3D/RTutorials/blob/master/ICI3D_Lab_ODEmodels.R). 
+##    We will extend the SIR model to include a vaccination intervention.
+##		
+
 #####################################################################
 # Install packages if haven't got them
 # install.packages("tidyverse")
@@ -33,8 +40,6 @@ library(tidyverse)
 library(deSolve)
 library(reshape2)
 
-# Set your working directories
-setwd("C:/2026/2026_MMED/")
 
 # ------------------------------------------------------------------------------
 # Specify model scenarios 
@@ -53,7 +58,6 @@ cost_treatment <- 200   # USD, treatment course per case
 #   only individuals who are diagnosed and treated incur this cost.
 #   Treatment uptake: proportion of incident cases that reach treatment.
 #   Accounts for lost to follow-up, non-diagnosis, refusal, incomplete treatment.
-#   treatment_uptake = 1 - lost individuals 
 #   
 treatment_uptake <- 0.85   # 85% treated, 15% lost individuals 
 
@@ -69,11 +73,12 @@ vaccine_efficacy <- 1.00   # 100% protection in those vaccinated
 # ------------------------------------------------------------------------------
 sir_equations <- function(time, state, parameters) {
   with(as.list(c(state, parameters)), {
-    N  <- S + I + R
-    dS <- -beta * S * (I / N)           
+  	N  <- S + I + R
+  	dS <- -beta * S * (I / N)           
     dI <-  beta * S * (I / N) - gamma * I
     dR <-  gamma * I
-    return(list(c(dS, dI, dR)))
+    cumcases <- beta * S * (I / N)    
+    return(list(c(dS, dI, dR, cumcases)))
   })
 }
 
@@ -81,7 +86,7 @@ sir_equations <- function(time, state, parameters) {
 # Epidemiological parameters (apply to both scenarios)
 # ------------------------------------------------------------------------------
 parameters_values <- c(
-  beta  = 0.4,   # Infectious contact rate (per person per day)
+  beta  = 0.7,   # Infectious contact rate (per person per day)
   gamma = 0.5    # Recovery rate (per day)
 )
 
@@ -98,16 +103,29 @@ time_values <- seq(0, 120, by = 0.25)   # 120-day epidemic horizon
 # Run Baseline: No vaccine
 # ------------------------------------------------------------------------------
 sir_baseline <- as.data.frame(ode(
-  y     = c(S = S0_base, I = I0, R = 0),
+  y     = c(S = S0_base, I = I0, R = 0, cumcases = 0),
   times = time_values,
   func  = sir_equations,
   parms = parameters_values
 ))
 sir_baseline$Scenario <- "Baseline (no vaccine)"
 
+head(sir_baseline,10)
+# what information is this data frame showing?
+
 # ------------------------------------------------------------------------------
 # Run Intervention: Vaccine applied before epidemic
 # ------------------------------------------------------------------------------
+
+# For the intervention scenario:
+#		- a proportion of S individuals are vaccinated at time 0
+#		- there is no ongoing vaccination
+#		- to indicate that the (successfully) vaccinated people are protected
+#			from infection), we move them into state R at time 0. 
+#		- Alternatively, we could have created a separate component for them (e.g. V)
+#	The number of people from S who are moved into R due to the intervention
+#		depends on vaccine coverage and vaccine efficacy.
+
 n_offered   <- round(vaccine_coverage * S0_base)
 n_protected <- round(n_offered * vaccine_efficacy)
 S0_vax      <- S0_base - n_protected
@@ -115,29 +133,30 @@ R0_vax      <- n_protected
 
 
 sir_vaccine <- as.data.frame(ode(
-  y     = c(S = S0_vax, I = I0, R = R0_vax),
+  y     = c(S = S0_vax, I = I0, R = R0_vax, cumcases = 0),
   times = time_values,
   func  = sir_equations,
   parms = parameters_values
 ))
 sir_vaccine$Scenario <- "Intervention (vaccine)"
 
-# ------------------------------------------------------------------------------
-# Compute incidence (new cases per time step) for each scenario
-# ------------------------------------------------------------------------------
-add_incidence <- function(df) {
-  inc <- c(0, -diff(df$S))
-  inc[inc < 0] <- 0   # suppress ODE numerical noise
-  df$new_cases <- inc
-  df
-}
+head(sir_vaccine,10)
+# what information is this data frame showing?
 
-# view simulations over time
-sir_baseline <- add_incidence(sir_baseline)
-view (sir_baseline)
+# ------------------------------------------------------------------------------
+# Compare cumulative cases over time for each scenario
+# ------------------------------------------------------------------------------
 
-sir_vaccine  <- add_incidence(sir_vaccine)
-view (sir_vaccine)
+CasesByScenario <- bind_rows(sir_baseline %>% select(time, Scenario, cumcases)
+														 , sir_vaccine %>% select(time, Scenario, cumcases))
+
+ggplot(CasesByScenario, 
+			 mapping = aes(x = time, y = cumcases, color = Scenario)) +
+	labs(x = 'Time (days)', y  = 'Cumulative cases') +
+	geom_line(size = 2) +
+	theme_minimal() +
+	theme(text = element_text(size = 20))  
+
 
 # ------------------------------------------------------------------------------
 # Sum total impact in both scenarios 
@@ -146,17 +165,19 @@ view (sir_vaccine)
 TotalImpact <- data.frame(
   Scenario = c("Baseline (no vaccine)", "Intervention (vaccine)"),
   TotalCases = c(
-    sum(sir_baseline$new_cases, na.rm = TRUE),
-    sum(sir_vaccine$new_cases, na.rm = TRUE)
-  )
+    max(sir_baseline$cumcases),
+    max(sir_vaccine$cumcases))
 )
+
+TotalImpact
+# what information is this data frame showing?
 
 # ------------------------------------------------------------------------------
 # Sum total cost in both scenarios
 # ------------------------------------------------------------------------------
 
-treated_baseline <- sum(sir_baseline$new_cases, na.rm = TRUE) * treatment_uptake
-treated_vaccine  <- sum(sir_vaccine$new_cases, na.rm = TRUE) * treatment_uptake
+treated_baseline <- max(sir_baseline$cumcases) * treatment_uptake
+treated_vaccine  <- max(sir_vaccine$cumcases) * treatment_uptake
 
 TotalCost <- data.frame(
   Scenario = c("Baseline (no vaccine)", "Intervention (vaccine)"),
@@ -173,6 +194,9 @@ TotalCost <- data.frame(
     TotalCost = VaccineCost + TreatmentCost
   )
 
+TotalCost
+# what information is this data frame showing?
+
 # ------------------------------------------------------------------------------
 # Calculate Incremental Cost-Effectiveness
 # ------------------------------------------------------------------------------
@@ -186,7 +210,6 @@ baseline_cost <- TotalCost$TotalCost[
 ]
 
 Analysis <- TotalImpact %>%
-  filter(Scenario != "Baseline (no vaccine)") %>%
   left_join(
     TotalCost %>% select(Scenario, TotalCost),
     by = "Scenario"
@@ -201,8 +224,9 @@ Analysis <- TotalImpact %>%
     ICER          = IncCost / CasesAverted
   )
 
-# View all the calcuations performed
-View(Analysis)
+# View all the calculations performed
+Analysis
+# what information is this data frame showing?
 
 # ==============================================================================
 # Discussion Questions
@@ -218,14 +242,11 @@ View(Analysis)
 #   the vaccine. Low coverage may result from supply constraints, hesitancy, or
 #   access barriers.
 #
-#   a) Change vaccine_coverage to XXX and re-run the model.
+#   a) Change vaccine_coverage to 20% and 50% in turn, and re-run the model.
 #      How does this affect total cases and the ICER?
 #
-#   b) Is there a coverage level below which the vaccine is no longer
-#      cost-effective under a $500 per case averted threshold?
-#      Explore a range of values (e.g. 0.10, 0.20, 0.30, ...) to find it.
-#
-#   c) Compare the effect of halving coverage vs. halving efficacy.
+#   b) Compare the effect of halving coverage vs. halving efficacy.
 #      Which has a bigger impact on cases averted and on the ICER? Why might
 #      that be?
+#
 # ------------------------------------------------------------------------------
