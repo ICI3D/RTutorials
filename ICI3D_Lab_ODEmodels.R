@@ -8,7 +8,7 @@
 ## https://www.ici3d.org
 ##
 ## Attribution: Juliet R.C. Pulliam (2012)
-## Last update: Cari van Schalkwyk (2026)
+## Last update: 2026
 ##
 ## Some Rights Reserved
 ## CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)
