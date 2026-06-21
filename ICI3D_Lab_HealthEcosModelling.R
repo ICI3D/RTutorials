@@ -153,7 +153,7 @@ CasesByScenario <- bind_rows(sir_baseline %>% select(time, Scenario, cumcases)
 ggplot(CasesByScenario, 
 			 mapping = aes(x = time, y = cumcases, color = Scenario)) +
 	labs(x = 'Time (days)', y  = 'Cumulative cases') +
-	geom_line(size = 2) +
+	geom_line(linewidth = 2) +
 	theme_minimal() +
 	theme(text = element_text(size = 20))  
 

@@ -158,7 +158,7 @@ ICI3D_Lab_Heterogeneous_Groups.batch.Rout.pdf: ICI3D_Lab_Heterogeneous_Groups.ba
 
 ######################################################################
 
-## ICI3D_Lab_Health_Economics.batch.Rout: ICI3D_Lab_Health_Economics.R testing/ICI3D_Lab_Health_Economics.answers.R
+## ICI3D_Lab_HealthEcosModelling.batch.Rout: ICI3D_Lab_HealthEcosModelling.R testing/ICI3D_Lab_HealthEcosModelling.answers.R
 
 ######################################################################
 
