@@ -148,12 +148,17 @@ ICI3D_Lab_Heterogeneous_Groups.batch.Rout: ICI3D_Heterogeneous_Groups.Rout
 pipeRdesc += ICI3D_Lab_Heterogeneous_Groups.batch
 ## ICI3D_Lab_Heterogeneous_Groups.batch.firstExp.pdf: testing/ICI3D_Lab_Heterogeneous_Groups.answers.R 
 
+## Tried to do something fancier for het lab, but wound up needing to spin a temporary file again
 Ignore += labNow.*.pdf
 labNow.Rout: labNow.R ICI3D_Heterogeneous_Groups.R
 	$(pipeR)
 
 ICI3D_Lab_Heterogeneous_Groups.batch.Rout.pdf: ICI3D_Lab_Heterogeneous_Groups.batch.Rout
 	$(MV) Rplots.pdf $@
+
+######################################################################
+
+## ICI3D_Lab_Health_Economics.batch.Rout: ICI3D_Lab_Health_Economics.R testing/ICI3D_Lab_Health_Economics.answers.R
 
 ######################################################################
 
