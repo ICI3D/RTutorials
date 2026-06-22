@@ -18,6 +18,8 @@ alldirs += sampling_JD
 
 Sources += $(wildcard *.R *.md)
 
+autopipeR = defined
+
 particCoding_Rabies2017.Rout: particCoding_Rabies2017.R
 	$(pipeR)
 
@@ -53,16 +55,20 @@ branchdir:
 
 ######################################################################
 
+Sources += revisionNotes.md
+
 ## Updating 2026 Jun 02 (Tue)
 
 ## LabTemplate.R
 
 ## LikelihoodExamples.batch.Rout: LikelihoodExamples.R testing/LikelihoodExamples.answers.R
 
+## Like introLikelihood, but uses 
+## ICI3D_Lab_LikelihoodPlusRejectionP.Rout: ICI3D_Lab_LikelihoodPlusRejectionP.R
+
 ## ICI3D_Lab_introLikelihood.batch.Rout: ICI3D_Lab_introLikelihood.R testing/ICI3D_Lab_introLikelihood.answers.R
 ## ICI3D_Lab_introLikelihood.extras.Rout: ICI3D_Lab_introLikelihood.extras.R
 
-autopipeR = defined
 ## introBayes.Rout: introBayes.R ICI3D_Lab_introLikelihood.R
 
 ######################################################################
@@ -171,7 +177,6 @@ ICI3D_Example_StochasticSpillover.batch.Rout: ICI3D_Example_StochasticSpillover_
 ## ICI3D_Lab_EpiStudyDesign.batch.Rout: ICI3D_Lab_EpiStudyDesign.R testing/ICI3D_Lab_EpiStudyDesign.answers.R
 
 ## ICI3D_Lab_RCT.batch.Rout: ICI3D_Lab_RCT.R testing/ICI3D_Lab_RCT.answers.R
-## ICI3D_Lab_LikelihoodPlusRejectionP.R
 
 ## ICI3D_Lab_MLE_HIVmodel.batch.Rout: ICI3D_Lab_MLE_HIVmodel.R testing/ICI3D_Lab_MLE_HIVmodel.answers.R
 

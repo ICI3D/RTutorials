@@ -90,9 +90,8 @@ RR
 ##  was actually observed, ASSUMING that there is truly no relationship 
 ##  between the row variable and the column variable (here, disease
 ##  and exposure). If the probability is "large", then our result is 
-##  consistent with our original assumption of no relationship.  If the 
-##  probability is small, our result suggests that maybe we should 
-##  reconsider our initial assumption.  In other words, maybe disease
+##  consistent with the null assumption of no relationship.  If the 
+##  probability is small, this means our data are suggesting that disease
 ##  and exposure are really related to each other.
 ##
 ##
@@ -124,7 +123,7 @@ nodis
 expo
 noexp
 
-##  Now, the idea is to generate a distribution of relative risks under the 
+##  Now, the idea is to generate a distribution of relative risks under the “null”
 ##  assumption that there truly is no association between exposure and 
 ##  disease.  First let's walk through one iteration.  We'll set up a vector 
 ##  of 0's and 1's (0 means no disease and 1 means diseased)
@@ -143,16 +142,15 @@ exp1
 sum(exp1)
 
 ##  We have enough information to compute a simulated RR under our 
-##  assumption of 'no association between disease and exposure.  The
+##  null assumption of 'no association between disease and exposure.  The
 ##  following code does the job - before you enter it, make a prediction - 
-##  what value do you expect it to be?
+##  what RR do you expect under the null assumption?
  
 rr_1time = (sum(exp1)/expo)/((dis - sum(exp1))/noexp)
 
 ##  Display the relative risk
 
 rr_1time
-
 
 ##  Now, we'll repeat the above process 100000 times to generate an 
 ##  entire distribution.  Make sure you run the entire next segment
@@ -194,6 +192,5 @@ mean(RRs)
 results<- ifelse(RRs <=0.73077,1,0)
 sum(results)/n
 
-##  What do you think?  Was our initial assumption valid, or is our
-##  result consistent with the idea that Vitamin C helps to prevent
+##  What do you think?  Did our null assumption survive, or does our result provide evidence that Vitamin C helps to prevent
 ##  colds?
