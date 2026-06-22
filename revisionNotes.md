@@ -1,6 +1,10 @@
-LikelihoodExamples
+
 ICI3D_Lab_introLikelihood
 ICI3D_Lab_MLE_HIVmodel
+
+LikelihoodExamples
+
 ICI3D_Lab_MCMC-Binomial.R
 ICI3D_Lab_MCMC-SI_HIV.R
+
 ICI3D_Lab_SampDistrVariability.R
