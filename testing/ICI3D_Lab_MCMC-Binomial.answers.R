@@ -13,13 +13,25 @@
 #'
 #' -----------------------------------------------------------------------------
 
-makeActiveBinding("???", \() stop("Replace Me!", call. = FALSE), parent.frame())
+################################################################################
+# STEP 0: SETUP ################################################################
+################################################################################
 
+#' Setup the `???` object you need replace
+makeActiveBinding(
+  "???",
+  \(msg) {
+    stop(sprintf("Error: you need to %s!", msg), call. = FALSE)
+  },
+  parent.frame()
+)
+
+#' Load packages
 library(dplyr)
 library(ggplot2)
 library(patchwork)
-set.seed(42)
 
+#' Setup Reference Plotting Colors
 plot_colors <- c(
   posterior = "#00b300",
   likelihood = "#cc00ff",
@@ -31,14 +43,16 @@ plot_colors <- c(
   other_samples = "lightgrey"
 )
 
-# reference values
+#' Setup Reference Values
 true_prevalence <- 0.3
 sample_size <- 100L
 observation <- 28L
 
-#' Breakout 1: Recall the Binomial
+set.seed(42)
 
-#' Fill in the correct distribution function
+################################################################################
+# STEP 1: RECALL THE BINOMIAL ##################################################
+################################################################################
 
 dMystery <- function(observed_positive) {
   return(dbinom(
@@ -50,6 +64,7 @@ dMystery <- function(observed_positive) {
 
 #' First, let's simulate many experiments of sample_size = 100
 
+set.seed(42)
 random_samples <- data.frame(
   sample_id = seq_len(1000),
   observed_positive = rbinom(
