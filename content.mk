@@ -7,6 +7,10 @@ Sources += $(wildcard *.R)
 
 ## Sandbox
 
+Ignore += sand/
+## 2026 Jun 23 (Tue)
+## sand/mcmc.Rout: sand/mcmc.R
+
 Sources += $(wildcard *.R)
 
 ICI3D_Ex1_StochasticSpillover.Rout: ICI3D_Ex1_StochasticSpillover.R
