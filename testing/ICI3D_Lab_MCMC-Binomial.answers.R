@@ -362,7 +362,7 @@ likelihood_plot <- function(
       ))
   }
 
-  if (!is.null(binom_ci) | !is.null(lr_ci)) {
+  if (!is.null(binom_ci) || !is.null(lr_ci)) {
     p <- p + scale_linetype_views()
   }
 
