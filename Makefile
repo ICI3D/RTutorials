@@ -180,7 +180,7 @@ ICI3D_Example_StochasticSpillover.batch.Rout: ICI3D_Example_StochasticSpillover_
 
 ## ICI3D_Lab_MLE_HIVmodel.batch.Rout: ICI3D_Lab_MLE_HIVmodel.R testing/ICI3D_Lab_MLE_HIVmodel.answers.R
 
-## ICI3D_Lab_MCMC-Binomial.R
+## ICI3D_Lab_MCMC-Binomial.batch.Rout: ICI3D_Lab_MCMC-Binomial.R testing/ICI3D_Lab_MCMC-Binomial.answers.R
 ## ICI3D_Lab_MCMC-SI_HIV.R
 ## ICI3D_Lab_SampDistrVariability.R
 
