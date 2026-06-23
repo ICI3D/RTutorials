@@ -1,6 +1,8 @@
 ## Likelihood Comparisons
 ## JD, based on the ICI3D Intro likelihoods lab
 
+## Graphical stuff under construction (ran out of time preparing for revision lecture)
+
 ## The code is made available under a Creative Commons Attribution 4.0 International License. You
 ## are free to reuse this code provided that you give appropriate credit, provide a link to the
 ## license, and indicate if changes were made. You may do so in any reasonable manner, but not in
@@ -28,21 +30,24 @@ samplePos <- 28
 #### Frequentist approach
 
 ## Direct
-binom.test(samplePos, sampleSize)$conf.int
+binomInt <- binom.test(samplePos, sampleSize)$conf.int
+print(binomInt)
 
 ## Exploration (find the maximum likelihood)
 
-confint(mle2(
+mlInt <- confint(mle2(
 	function(p) -dbinom(samplePos, size = sampleSize, prob = p, log = TRUE)
 	, start = list(p = 0.5)
 ))
+print(mlInt)
 
 #### Bayesian approach
 
 ## Direct (based on Jeffreys prior)
 alpha = 0.05
 sampleNeg = sampleSize-samplePos
-qbeta(c(alpha/2, 1-alpha/2), samplePos+1/2, sampleNeg+1/2)
+bayesCalcInt <- qbeta(c(alpha/2, 1-alpha/2), samplePos+1/2, sampleNeg+1/2)
+print(bayesCalcInt)
 
 ## Exploration (MCMC sampling)
 
@@ -66,6 +71,22 @@ update(model, burn)
 
 samples <- coda.samples(model, variable.names = "p", n.iter = iterate)
 
-quantile(as.vector(as.matrix(samples)), c(0.025, 0.975))
+bayesMCMCint <- quantile(as.vector(as.matrix(samples)), c(0.025, 0.975))
+print(bayesMCMCint)
 
 ## Note that Bayesian and Frequentist approaches are making different assumptions and therefore estimating fundamentally different quantities (though with very similar values in this case). By contrast, the exploration methods are _trying_ to estimate the same quantities as the direct methods, but using exploration (and also approximation, in the frequentist case); they are clumsier for simpler problems, but more flexible.
+
+######################################################################
+
+cicomp <- data.frame(test=c("exact", "mle")
+	, est = c(bt$estimate, bt$estimate)
+	, lower = c(bt$conf.int[[1]], ci.likelihood[[1]])
+	, upper = c(bt$conf.int[[2]], ci.likelihood[[2]])
+)
+###
+print(ggplot(cicomp)
+	+ aes(x = est, y = test)
+	+ geom_linerange(aes(xmin = lower, xmax = upper))
+	+ geom_point(size = 3)
+	+ labs(x = "Probability", y = NULL)
+)
