@@ -106,6 +106,7 @@ dbinom(samplePos, sampleSize, hypoPrevVal)
 ## Now do a classic test:
 
 binom.test(samplePos, sampleSize, hypoPrevVal, alternative = "two.sided")
+binom.test(samplePos, sampleSize, hypoPrevVal, alternative = "greater")
 
 ## Task 1: Explain what we learn from the binom.test
 ## Focus on the confidence intervals; don't worry about the P value (or about the "guess" (hypoPrevVal)
