@@ -31,7 +31,6 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(patchwork)
-library(gganimate)
 
 #' Setup Reference Plotting Colors
 plot_colors <- c(
