@@ -36,13 +36,17 @@ ICI3D_Lab_ODEmodels.R
 ICI3D_Lab_RCT.R
 ICI3D_Lab_SampDistrVariability.R
 
-## Live
+## Demonstration
+dynamicalFeverModelScript.R
+dynamicalFeverScript.R
 
-First SIR implementation; this version introduced 2026, should look for predecessors
+## Live
+First SIR implementation (after spreadsheet, before labs); this version introduced 2026, should look for predecessors
 * ICI3D_Live_Intro_Implementation.R
 
 ## Participatory
-This is a fairly random sample and randomly named. Other participatory coding is elsewhere, still working on this
+This is a fairly random sample and randomly named. Other participatory coding is elsewhere, still working on this.
+
 particCodingDynMod2016.R
 particCoding_Rabies2017.R
 participatoryCoding2016.R
@@ -53,6 +57,19 @@ participatoryCoding_MalariaITN_2017.R
 participatoryDesign2021.R
 ParticipatoryDynamicModel_TB.R
 participatoryDynamics2025.R
+
+### Imported from sampling_JD
+cotrimStudy.R
+cotrimTest.R
+fluExperiment_again.R
+fluExperiment.R
+fluStudy.R
+fluTest.R
+multistudy.R
+rabiesCluster.R
+study_design.R
+study_design_rep.R
+study.R
 
 ## macpan (under development, maybe a bit out of date?)
 mpLabCompartmental.R
@@ -65,8 +82,6 @@ ICI3D_spillover_introductions.R
 binomialDistribution.R
 boxcars.R
 DerivExponential.R
-dynamicalFeverModelScript.R
-dynamicalFeverScript.R
 hetero_play.R
 hetSIRfxnMASTER.R
 hivAndFertilityExtension.R
