@@ -58,18 +58,26 @@ participatoryDesign2021.R
 ParticipatoryDynamicModel_TB.R
 participatoryDynamics2025.R
 
+######################################################################
 ### Imported from sampling_JD
+
+## Malaria drug comparison -- also 2018?
 cotrimStudy.R
 cotrimTest.R
+
+## Flu 2018: CRCT, seems very ambitious
 fluExperiment_again.R
 fluExperiment.R
 fluStudy.R
 fluTest.R
+
+## PreP 2023
 multistudy.R
-rabiesCluster.R
 study_design.R
 study_design_rep.R
 study.R
+
+######################################################################
 
 ## macpan (under development, maybe a bit out of date?)
 mpLabCompartmental.R

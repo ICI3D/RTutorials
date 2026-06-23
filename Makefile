@@ -29,6 +29,8 @@ participatoryDesign2021.Rout: participatoryDesign2021.R
 participatoryDynamics2025.Rout: participatoryDynamics2025.R
 	$(pipeR)
 
+ICI3D_Participatory_Design_2026_pertussis.Rout: ICI3D_Participatory_Design_2026_pertussis.R
+
 ######################################################################
 
 Ignore += local.mk
@@ -44,18 +46,6 @@ data:
 	$(linkdirname)
 
 ######################################################################
-
-## Branching
-
-Ignore += branchdir
-
-branchdir:
-	git clone https://github.com/ICI3D/RTutorials $@
-
-
-######################################################################
-
-Sources += revisionNotes.md
 
 ## Updating 2026 Jun 02 (Tue)
 
