@@ -18,13 +18,9 @@
 ################################################################################
 
 #' Setup the `???` object you need replace
-makeActiveBinding(
-  "???",
-  \(msg) {
-    stop(sprintf("Error: you need to %s!", msg), call. = FALSE)
-  },
-  parent.frame()
-)
+`???` <- function(msg) {
+  stop(sprintf("Error: you need to %s!", msg), call. = FALSE)
+}
 
 #' Load packages
 library(dplyr)
@@ -197,7 +193,7 @@ binomial_ci <- function(observed_positive, sample_size, target_ci) {
 set.seed(42)
 random_samples <- data.frame(
   sample_id = seq_len(1000),
-  observed_positive = `???`("simulate binomial random samples")
+  observed_positive = rbinom(1000, sample_size, true_prevalence)
 )
 
 #' What is the probability of observing `observed_positive` in a sample of size
@@ -208,7 +204,13 @@ dMystery <- function(
   true_prevalence,
   log = FALSE
 ) {
-  `???`("What is the probability distribution for observing this event?")
+  # dbinom is the probability mass function of the binomial distribution
+  dbinom(
+    observed_positive,
+    size = sample_size,
+    prob = true_prevalence,
+    log = log
+  )
 }
 
 
@@ -284,7 +286,12 @@ lMystery <- function(
   sample_size = 100L,
   log = FALSE
 ) {
-  `???`("calculate the likelihood of the prevalence")
+  dMystery(
+    observed_positive = observed_positive,
+    sample_size = sample_size,
+    true_prevalence = true_prevalence,
+    log = log
+  )
 }
 
 #' @title A Likelihood Plotting Function
@@ -390,7 +397,7 @@ ggsave(
 
 #' Introduce a prior which takes no position on the prevalence
 priorMystery <- function(latent_probability) {
-  `???`("calculate the prior probability")
+  dunif(latent_probability, 0, 1)
 }
 
 #' Define a function to calculate the posterior probability
@@ -453,7 +460,7 @@ ggsave(
 # about the current value
 
 proposalMystery <- function(initial_prevalence, proposal_width = 0.1) {
-  `???`("propose a new prevalence value")
+  return(initial_prevalence + proposal_width * runif(n = 1L, min = -1, max = 1))
 }
 
 # now let's iteratively use that proposal
