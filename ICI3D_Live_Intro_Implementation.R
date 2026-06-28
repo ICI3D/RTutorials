@@ -70,6 +70,7 @@ stepSim <- function(states, params, timeStep, finTime, ratefun){
 }
 
 ## Now running with a new function name
+## (substituted sirsRates for sirsRates; could merge them by letting the waning parameter be zero to get an sir).
 sim_wide <- stepSim(
 	params = c(beta=0.5, gam=0.25, sig=0.01)
 	, states = c(S=9999, I=1, R=0)
@@ -77,7 +78,7 @@ sim_wide <- stepSim(
 	, ratefun = sirsRates
 )
 
-## Tested and set aside
+## Tested (as a code test) and set aside
 ## simf <- (simf |> mutate(N=S+I+R))
 
 sim_long <- (sim_wide

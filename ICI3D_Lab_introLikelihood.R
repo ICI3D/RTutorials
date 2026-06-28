@@ -26,9 +26,7 @@
 ##  * Review and extend the Bayesian logic calculation from the statistical philosophy lecture
 ##
 ## NOTE: The comments will guide you through the lab but you
-## should make sure you understand what the code is doing.  Some
-## code may have question marks and cause errors. 
-## You should fill these in; often you will find suggestions in the comments
+## should make sure you understand what the code is doing. 
 
 ## Before you start, it is a good idea to clear your workspace.
 ## In rstudio, do this with Session/Restart

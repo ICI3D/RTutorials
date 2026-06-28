@@ -28,6 +28,7 @@
 ## NOTE: The comments will guide you through the lab but you
 ## should make sure you understand what the code is doing.  Some
 ## code may have question marks and cause errors. 
+## FIXME: Take out the above line if no question marks in this lab.
 ## You should fill these in; often you will find suggestions in the comments
 
 ## Before you start, it is a good idea to clear your workspace.
