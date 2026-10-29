@@ -60,7 +60,8 @@ groupSIR <- function(t, y, parms){
 groupSim <- function(cbar, kappa, Tfinal=20, nGroups=10, h0=1e-3, steps=100){
 	groups <- 1:nGroups
 	cvec <- makeGroups(n=nGroups, m=cbar, kappa=kappa)
-	I0 <- hazProb(h0*cvec/mean(cvec))
+	## Each group is 1/nGroups of the population
+	I0 <- hazProb(h0*cvec/mean(cvec))/nGroups
 	sim <- lsoda(
 		y = c(1/nGroups-I0, I0) 
 		, times = (0:steps)*Tfinal/steps
@@ -69,11 +70,14 @@ groupSim <- function(cbar, kappa, Tfinal=20, nGroups=10, h0=1e-3, steps=100){
 	)
 	Smat <- sim[, 1 + groups]
 	Imat <- sim[, nGroups + 1 + groups]
+	Rmat <- 1/nGroups - Smat - Imat
 	return(tibble(time = sim[,1]
 		, S = rowSums(Smat)
 		, cS = (Smat |> sweep(2, FUN="*", as.array(cvec)) |> rowSums())/S
 		, I = rowSums(Imat)
 		, cI = (Imat |> sweep(2, FUN="*", as.array(cvec)) |> rowSums())/I
+		, R = rowSums(Rmat)
+		, cR = (Rmat |> sweep(2, FUN="*", as.array(cvec)) |> rowSums())/R
 	))
 }
 
@@ -100,7 +104,7 @@ groupRatePlot <- function(cbar, kappa, Tfinal=20, nGroups=10, h0=1e-3, steps=100
 		+ aes(x=time)
 		+ geom_line(aes(y=cI))
 		+ geom_line(aes(y=cS), color="blue")
-		+ ylab("proportion of pop")
+		+ ylab("mean mixing rate")
 		+ ggtitle(title)
 		+ ylim(yrange)
 	)
